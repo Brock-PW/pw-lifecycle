@@ -14,10 +14,10 @@ while ($true) {
     $change = $watcher.WaitForChanged([System.IO.WatcherChangeTypes]::Changed, 500)
 
     if (-not $change.TimedOut) {
-        # Debounce: wait for file to finish writing
         Start-Sleep -Milliseconds 800
-
-        Write-Host "`n[$([datetime]::Now.ToString('HH:mm:ss'))] Change detected in $targetFile — committing..."
+        $ts = [datetime]::Now.ToString('HH:mm:ss')
+        Write-Host ""
+        Write-Host "[$ts] Change detected in $targetFile - committing..."
 
         Set-Location $repoPath
         git add $targetFile
@@ -27,7 +27,7 @@ while ($true) {
         if ($?) {
             Write-Host "Pushed to main successfully."
         } else {
-            Write-Host "Push failed — check credentials or network."
+            Write-Host "Push failed - check credentials or network."
         }
     }
 }
