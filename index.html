@@ -22,10 +22,10 @@
   .search-wrap input { border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 5px 10px; font-size: 12px; background: #f5f4f0; color: #2c2c2a; outline: none; width: 180px; }
   .search-wrap input:focus { border-color: #7F77DD; }
 
-  .canvas { padding: 32px; display: flex; justify-content: center; }
-  .fc-wrap { position: relative; width: 100%; max-width: 720px; }
+  .canvas { padding: 24px 32px; display: flex; justify-content: center; }
+  .fc-wrap { position: relative; width: 100%; max-width: 1400px; }
 
-  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; }
   .node-box { cursor: pointer; }
   .node-box:hover rect, .node-box:hover polygon { filter: brightness(0.94); }
 
@@ -68,7 +68,7 @@
 <header>
   <div style="display:flex;align-items:center;gap:10px">
     <h1>Prevailing Wisdom — Customer Lifecycle</h1>
-    <span class="version-badge">v2.0</span>
+    <span class="version-badge">v3.0</span>
   </div>
   <span class="meta" id="last-updated">Last updated: May 26, 2026</span>
 </header>
@@ -77,7 +77,7 @@
   <span class="toolbar-label">Owner key</span>
   <div class="legend">
     <div class="leg"><div class="leg-dot" style="background:#EEEDFE;border:1px solid #AFA9EC"></div>AI agent</div>
-    <div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1px solid #5DCAA5"></div>Human (Anthy / team)</div>
+    <div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1px solid #5DCAA5"></div>Brock / team</div>
     <div class="leg"><div class="leg-dot" style="background:#FAECE7;border:1px solid #F0997B"></div>Client action</div>
     <div class="leg"><div class="leg-dot" style="background:#FAEEDA;border:1px solid #EF9F27"></div>Automated trigger</div>
     <div class="leg"><div class="leg-dot" style="background:#F1EFE8;border:1px solid #B4B2A9;transform:rotate(45deg);border-radius:1px"></div>Decision</div>
@@ -306,287 +306,323 @@
 <!-- Center drop to Stage 2 -->
 <!-- Convergence drop to Stage 2 -->
 <line x1="450" y1="640" x2="450" y2="700" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/>
-<text x="450" y="714" text-anchor="middle" style="font-size:11px;font-weight:500;letter-spacing:.07em;fill:#888780">STAGE 2 — CONSULTATION &amp; CLOSE</text>
+<text x="450" y="714" text-anchor="middle" style="font-size:12px;font-weight:600;letter-spacing:.08em;fill:#888780">STAGE 2 — CONSULTATION &amp; CLOSE</text>
 
-
-<g class="node-box" id="n-p3" data-search="inbound inquiry lead phone email" onclick="showPanel('p3',this)">
-  <rect x="190" y="744" width="280" height="52" rx="8" fill="#FAECE7" stroke="#F0997B" stroke-width="0.5"/>
-  <text x="330" y="765" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#712B13">Inbound inquiry</text>
-  <text x="330" y="783" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#993C1D">Client · phone / email / web form</text>
+<!-- Inbound inquiry -->
+<g class="node-box" id="n-p3" data-search="inbound inquiry lead phone email all 5 sources" onclick="showPanel('p3',this)">
+  <rect x="170" y="728" width="560" height="56" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="0.5"/>
+  <text x="450" y="749" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#712B13">Inbound Inquiry</text>
+  <text x="450" y="769" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#993C1D">From any of the 5 lead sources · phone · email · web form · DM · referral</text>
 </g>
-<line x1="330" y1="796" x2="330" y2="820" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="784" x2="450" y2="808" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<g class="node-box" id="n-pd2" data-search="lead type decision no dir rescue referral" onclick="showPanel('pd2',this)">
-  <polygon points="330,822 430,854 330,886 230,854" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="854" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Lead type?</text>
+<!-- Lead type decision -->
+<g class="node-box" id="n-pd2" data-search="lead type standard pw sub oversight decision" onclick="showPanel('pd2',this)">
+  <polygon points="450,810 570,846 450,882 330,846" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="846" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#444441">Lead type?</text>
 </g>
 
-<line x1="230" y1="854" x2="92" y2="854" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="162" y="846" text-anchor="middle" style="font-size:10px;fill:#888780">No DIR #</text>
-<g class="node-box" id="n-p3a" data-search="pwcr registration no dir" onclick="showPanel('p3a',this)">
-  <rect x="10" y="832" width="82" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="51" y="853" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#085041">Guide to</text>
-  <text x="51" y="868" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#085041">PWCR reg.</text>
+<!-- Left branch: Standard PW Contractor -->
+<line x1="330" y1="846" x2="180" y2="846" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="254" y="838" text-anchor="middle" style="font-size:10px;fill:#888780">Standard PW</text>
+<g class="node-box" id="n-std1" data-search="standard pw contractor own payroll CPR DAS fringe compliance" onclick="showPanel('std1',this)">
+  <rect x="20" y="824" width="160" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="100" y="844" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#085041">Standard PW</text>
+  <text x="100" y="862" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">Contractor</text>
 </g>
-<line x1="51" y1="884" x2="51" y2="934" stroke="#B4B2A9" stroke-width="1"/>
-<line x1="51" y1="934" x2="244" y2="934" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="100" y1="876" x2="100" y2="960" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="100" y1="960" x2="310" y2="960" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<line x1="430" y1="854" x2="548" y2="854" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="488" y="846" text-anchor="middle" style="font-size:10px;fill:#888780">Rescue</text>
-<g class="node-box" id="n-p3c" data-search="mid project rescue compliance audit restitution" onclick="showPanel('p3c',this)">
-  <rect x="488" y="832" width="130" height="52" rx="8" fill="#FCEBEB" stroke="#F09595" stroke-width="0.5"/>
-  <text x="553" y="853" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#791F1F">Compliance audit</text>
-  <text x="553" y="868" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#A32D2D">+ restitution calc</text>
+<!-- Right branch: Sub Oversight -->
+<line x1="570" y1="846" x2="720" y2="846" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="644" y="838" text-anchor="middle" style="font-size:10px;fill:#888780">Sub Oversight</text>
+<g class="node-box" id="n-sub1" data-search="sub oversight prime contractor subcontractor monitoring joint liability" onclick="showPanel('sub1',this)">
+  <rect x="720" y="824" width="160" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="800" y="844" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#633806">Sub Oversight</text>
+  <text x="800" y="862" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">Prime contractor</text>
 </g>
-<line x1="553" y1="884" x2="553" y2="934" stroke="#B4B2A9" stroke-width="1"/>
-<line x1="553" y1="934" x2="412" y2="934" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="800" y1="876" x2="800" y2="960" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="800" y1="960" x2="592" y2="960" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<line x1="330" y1="886" x2="330" y2="914" stroke="#B4B2A9" stroke-width="1"/>
-<text x="348" y="904" style="font-size:10px;fill:#888780">New / referral</text>
-
-<g class="node-box" id="n-p4" data-search="consultation call scope classify quote anthy brock" onclick="showPanel('p4',this)">
-  <rect x="190" y="914" width="280" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="330" y="935" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#085041">Consultation call</text>
-  <text x="330" y="953" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">Human · scope, classify, estimate cost</text>
+<!-- Price flyer + questionnaire hook (non-responders) -->
+<g class="node-box" id="n-pq1" data-search="price flyer questionnaire estimate hook non-responders project oversight" onclick="showPanel('pq1',this)">
+  <rect x="170" y="882" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+  <text x="450" y="903" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Price Flyer + Project Questionnaire</text>
+  <text x="450" y="923" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">Sent to non-responders · fills out → instant compliance estimate · hook to book call</text>
 </g>
-<line x1="330" y1="966" x2="330" y2="990" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="938" x2="450" y2="958" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<g class="node-box" id="n-p5" data-search="price flyer contract send docs ai agent" onclick="showPanel('p5',this)">
-  <rect x="190" y="990" width="280" height="52" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
-  <text x="330" y="1011" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#3C3489">Send price flyer + contract</text>
-  <text x="330" y="1029" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#534AB7">AI agent · same day · follow up T+2</text>
+<!-- Consultation call -->
+<g class="node-box" id="n-p4" data-search="consultation call scope classify quote brock team" onclick="showPanel('p4',this)">
+  <rect x="170" y="960" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="450" y="981" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Consultation Call</text>
+  <text x="450" y="1001" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Brock / team · scope · classify · build estimate · present price flyer</text>
 </g>
-<line x1="330" y1="1042" x2="330" y2="1066" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1016" x2="450" y2="1040" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
+<!-- Estimator node -->
+<g class="node-box" id="n-est1" data-search="estimator project estimate compliance cost calculator" onclick="showPanel('est1',this)">
+  <rect x="170" y="1040" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+  <text x="450" y="1061" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Build Compliance Estimate</text>
+  <text x="450" y="1081" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">AI-powered estimator tool · classifications × weeks × services = total cost</text>
+</g>
+<line x1="450" y1="1096" x2="450" y2="1120" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- Send contract -->
+<g class="node-box" id="n-p5" data-search="send contract price flyer same day follow up" onclick="showPanel('p5',this)">
+  <rect x="170" y="1120" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+  <text x="450" y="1141" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Send Estimate + Contract</text>
+  <text x="450" y="1161" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">AI agent · same day · estimate + price flyer + contract link</text>
+</g>
+<line x1="450" y1="1176" x2="450" y2="1200" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- Contract signed? -->
 <g class="node-box" id="n-pd3" data-search="contract signed decision" onclick="showPanel('pd3',this)">
-  <polygon points="330,1068 420,1096 330,1124 240,1096" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="1096" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Contract signed?</text>
+  <polygon points="450,1202 570,1234 450,1266 330,1234" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="1234" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#444441">Contract signed?</text>
 </g>
-<line x1="420" y1="1096" x2="490" y2="1096" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="453" y="1088" text-anchor="middle" style="font-size:10px;fill:#888780">No response</text>
+<line x1="570" y1="1234" x2="650" y2="1234" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="608" y="1226" text-anchor="middle" style="font-size:10px;fill:#888780">No response</text>
 <g class="node-box" id="n-p5b" data-search="auto follow up sequence t+2 t+5 t+14" onclick="showPanel('p5b',this)">
-  <rect x="490" y="1074" width="130" height="44" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="555" y="1091" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#633806">Auto follow-up</text>
-  <text x="555" y="1106" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#854F0B">T+2 · T+5 · T+14</text>
+  <rect x="650" y="1212" width="200" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="750" y="1232" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#633806">Auto follow-up</text>
+  <text x="750" y="1250" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">T+2 · T+5 · T+14 Brock</text>
 </g>
-<line x1="330" y1="1124" x2="330" y2="1148" stroke="#B4B2A9" stroke-width="1"/>
-<text x="348" y="1140" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="450" y1="1266" x2="450" y2="1290" stroke="#B4B2A9" stroke-width="1"/>
+<text x="468" y="1282" style="font-size:10px;fill:#888780">Yes</text>
 
-<text x="330" y="1164" text-anchor="middle" style="font-size:11px;font-weight:500;letter-spacing:.07em;fill:#888780">ONBOARDING</text>
+<!-- ONBOARDING header -->
+<text x="450" y="1308" text-anchor="middle" style="font-size:12px;font-weight:600;letter-spacing:.08em;fill:#888780">STAGE 3 — ONBOARDING</text>
 
 <g class="node-box" id="n-p6" data-search="project info form client fills dir number classifications" onclick="showPanel('p6',this)">
-  <rect x="190" y="1176" width="280" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="330" y="1197" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#633806">Collect project info form</text>
-  <text x="330" y="1215" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">Trigger: contract signed · client fills form</text>
+  <rect x="170" y="1320" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="450" y="1341" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Collect Project Info Form</text>
+  <text x="450" y="1361" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">Trigger: contract signed · client fills form · AI processes into Zoho</text>
 </g>
-<line x1="330" y1="1228" x2="330" y2="1252" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1376" x2="450" y2="1400" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p7" data-search="scope review rate calculation classify dir rates zoho" onclick="showPanel('p7',this)">
-  <rect x="190" y="1252" width="280" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="330" y="1273" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#085041">Scope review + rate calculation</text>
-  <text x="330" y="1291" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">Human · classify · pull rates · Zoho setup</text>
+  <rect x="170" y="1400" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="450" y="1421" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Scope Review + Rate Calculation</text>
+  <text x="450" y="1441" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Brock / team · classify · pull DIR rates · set up Zoho project record</text>
 </g>
-<line x1="330" y1="1304" x2="330" y2="1328" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1456" x2="450" y2="1480" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p8" data-search="das 140 apprentice halls 10 days contract" onclick="showPanel('p8',this)">
-  <rect x="190" y="1328" width="280" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="330" y="1349" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#633806">DAS 140 — alert apprentice halls</text>
-  <text x="330" y="1367" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">Trigger: T+8 from contract date · AI draft · human sends</text>
+  <rect x="170" y="1480" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="450" y="1501" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">DAS 140 — Alert Apprentice Halls</text>
+  <text x="450" y="1521" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">Deadline: 10 days from contract signing · AI drafts · Brock / team sends</text>
 </g>
-<line x1="330" y1="1380" x2="330" y2="1404" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1536" x2="450" y2="1560" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p9" data-search="fringe benefit statement fringes health welfare pension" onclick="showPanel('p9',this)">
-  <rect x="190" y="1404" width="280" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="330" y="1425" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#085041">Fringe benefit statement</text>
-  <text x="330" y="1443" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">Human · client signs · filed with first CPR</text>
+  <rect x="170" y="1560" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="450" y="1581" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Fringe Benefit Statement</text>
+  <text x="450" y="1601" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Brock / team produces · client signs · filed with first CPR</text>
 </g>
-<line x1="330" y1="1456" x2="330" y2="1480" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1616" x2="450" y2="1640" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<text x="330" y="1494" text-anchor="middle" style="font-size:11px;font-weight:500;letter-spacing:.07em;fill:#888780">ACTIVE PROJECT LOOP  ↻  REPEATS WEEKLY</text>
+<!-- ACTIVE LOOP header -->
+<text x="450" y="1658" text-anchor="middle" style="font-size:12px;font-weight:600;letter-spacing:.08em;fill:#888780">STAGE 4 — ACTIVE PROJECT LOOP  ↻  REPEATS WEEKLY</text>
 
+<!-- Payroll received? -->
 <g class="node-box" id="n-pd4" data-search="payroll received decision weekly" onclick="showPanel('pd4',this)">
-  <polygon points="330,1506 430,1538 330,1570 230,1538" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="1531" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Payroll received</text>
-  <text x="330" y="1548" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">this week?</text>
+  <polygon points="450,1670 570,1706 450,1742 330,1706" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="1699" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#444441">Payroll received</text>
+  <text x="450" y="1716" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">this week?</text>
 </g>
-<line x1="230" y1="1538" x2="102" y2="1538" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="166" y="1530" text-anchor="middle" style="font-size:10px;fill:#888780">No</text>
+<line x1="330" y1="1706" x2="170" y2="1706" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="250" y="1698" text-anchor="middle" style="font-size:10px;fill:#888780">No</text>
 <g class="node-box" id="n-p10b" data-search="non performance statement idle week" onclick="showPanel('p10b',this)">
-  <rect x="10" y="1516" width="92" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="56" y="1535" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#633806">Non-perf.</text>
-  <text x="56" y="1550" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#854F0B">stmt + nudge</text>
+  <rect x="20" y="1684" width="150" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="95" y="1703" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#633806">Non-performance</text>
+  <text x="95" y="1720" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">stmt + client nudge</text>
 </g>
-<line x1="56" y1="1568" x2="56" y2="1598" stroke="#B4B2A9" stroke-width="1"/>
-<line x1="56" y1="1598" x2="244" y2="1598" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<line x1="330" y1="1570" x2="330" y2="1586" stroke="#B4B2A9" stroke-width="1"/>
-<text x="348" y="1582" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="95" y1="1736" x2="95" y2="1780" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="95" y1="1780" x2="310" y2="1780" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1742" x2="450" y2="1768" stroke="#B4B2A9" stroke-width="1"/>
+<text x="468" y="1760" style="font-size:10px;fill:#888780">Yes</text>
 
 <g class="node-box" id="n-p11" data-search="cpr production certified payroll ai agent qc human" onclick="showPanel('p11',this)">
-  <rect x="190" y="1586" width="280" height="52" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
-  <text x="330" y="1607" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#3C3489">CPR production</text>
-  <text x="330" y="1625" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#534AB7">AI drafts · human QC · client signs</text>
+  <rect x="170" y="1768" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+  <text x="450" y="1789" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">CPR Production</text>
+  <text x="450" y="1809" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">AI drafts · Brock / team QC · client signs · digital = $17.50 · standard = $35</text>
 </g>
-<line x1="330" y1="1638" x2="330" y2="1662" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1824" x2="450" y2="1848" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p12" data-search="ecpr upload dir 30 day window lcptracker ecomply" onclick="showPanel('p12',this)">
-  <rect x="190" y="1662" width="280" height="52" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
-  <text x="330" y="1683" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#3C3489">ECPR upload to DIR</text>
-  <text x="330" y="1701" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#534AB7">AI agent · saves proof · 30-day window</text>
+  <rect x="170" y="1848" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+  <text x="450" y="1869" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">ECPR Upload to DIR</text>
+  <text x="450" y="1889" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">AI agent · saves proof · hard deadline: within 30 days of work performed</text>
 </g>
-<line x1="330" y1="1714" x2="330" y2="1738" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1904" x2="450" y2="1928" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
+<!-- DAS 142 needed? -->
 <g class="node-box" id="n-pd5" data-search="das 142 needed decision apprentice" onclick="showPanel('pd5',this)">
-  <polygon points="330,1740 430,1770 330,1800 230,1770" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="1762" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">DAS 142</text>
-  <text x="330" y="1779" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">needed?</text>
+  <polygon points="450,1930 570,1962 450,1994 330,1962" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="1955" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#444441">DAS 142</text>
+  <text x="450" y="1972" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">needed?</text>
 </g>
-<line x1="430" y1="1770" x2="490" y2="1770" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="458" y="1762" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="570" y1="1962" x2="660" y2="1962" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="613" y="1954" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text>
 <g class="node-box" id="n-p12b" data-search="das 142 send apprentice request 72 hours" onclick="showPanel('p12b',this)">
-  <rect x="490" y="1750" width="130" height="44" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="555" y="1767" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#633806">Send DAS 142</text>
-  <text x="555" y="1782" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#854F0B">72 hrs before site</text>
+  <rect x="660" y="1940" width="200" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="760" y="1959" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#633806">Send DAS 142</text>
+  <text x="760" y="1976" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">72 hrs before site</text>
 </g>
-<line x1="555" y1="1794" x2="555" y2="1838" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="760" y1="1992" x2="760" y2="2036" stroke="#B4B2A9" stroke-width="1"/>
 <g class="node-box" id="n-pd5b" data-search="apprentice dispatched decision" onclick="showPanel('pd5b',this)">
-  <polygon points="555,1838 625,1860 555,1882 485,1860" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="555" y="1860" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#444441">Dispatched?</text>
+  <polygon points="760,2036 830,2060 760,2084 690,2060" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="760" y="2060" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#444441">Dispatched?</text>
 </g>
-<line x1="485" y1="1860" x2="445" y2="1860" stroke="#B4B2A9" stroke-width="1"/>
-<text x="464" y="1852" text-anchor="middle" style="font-size:10px;fill:#888780">No</text>
-<line x1="445" y1="1860" x2="445" y2="1900" stroke="#B4B2A9" stroke-width="1"/>
-<line x1="445" y1="1900" x2="412" y2="1900" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<line x1="555" y1="1882" x2="555" y2="1900" stroke="#B4B2A9" stroke-width="1"/>
-<text x="570" y="1894" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="690" y1="2060" x2="640" y2="2060" stroke="#B4B2A9" stroke-width="1"/>
+<text x="663" y="2052" text-anchor="middle" style="font-size:10px;fill:#888780">No</text>
+<line x1="640" y1="2060" x2="640" y2="2110" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="640" y1="2110" x2="592" y2="2110" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="760" y1="2084" x2="760" y2="2110" stroke="#B4B2A9" stroke-width="1"/>
+<text x="776" y="2102" style="font-size:10px;fill:#888780">Yes</text>
 <g class="node-box" id="n-p12c" data-search="verify apprentice certification rate ssn dl" onclick="showPanel('p12c',this)">
-  <rect x="490" y="1900" width="130" height="44" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="555" y="1917" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#085041">Verify apprentice</text>
-  <text x="555" y="1932" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#0F6E56">cert · rate · SSN · DL</text>
+  <rect x="660" y="2110" width="200" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="760" y="2129" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#085041">Verify apprentice</text>
+  <text x="760" y="2146" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">cert · rate · SSN · DL</text>
 </g>
-<line x1="490" y1="1922" x2="412" y2="1922" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="660" y1="2136" x2="592" y2="2136" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<line x1="330" y1="1800" x2="330" y2="1890" stroke="#B4B2A9" stroke-width="1"/>
-<text x="348" y="1848" style="font-size:10px;fill:#888780">No</text>
-<line x1="330" y1="1890" x2="330" y2="1936" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="1994" x2="450" y2="2090" stroke="#B4B2A9" stroke-width="1"/>
+<text x="468" y="2048" style="font-size:10px;fill:#888780">No</text>
+<line x1="450" y1="2090" x2="450" y2="2150" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p13" data-search="monthly cac invoice training contribution summary 15th" onclick="showPanel('p13',this)">
-  <rect x="190" y="1936" width="280" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="330" y="1957" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#633806">Monthly: CAC invoice + summary</text>
-  <text x="330" y="1975" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">Trigger: 1st of month · AI produces · due 15th</text>
+  <rect x="170" y="2150" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="450" y="2171" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Monthly: CAC Invoice + Project Summary</text>
+  <text x="450" y="2191" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">Trigger: 1st of month · AI produces · CAC due by 15th</text>
 </g>
-<line x1="330" y1="1988" x2="330" y2="2012" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2206" x2="450" y2="2230" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
+<!-- Rate increase? -->
 <g class="node-box" id="n-pd6" data-search="rate increase decision july" onclick="showPanel('pd6',this)">
-  <polygon points="330,2014 420,2044 330,2074 240,2044" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="2037" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Rate increase</text>
-  <text x="330" y="2054" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">coming?</text>
+  <polygon points="450,2232 550,2262 450,2292 350,2262" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="2255" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Rate increase</text>
+  <text x="450" y="2272" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">coming?</text>
 </g>
-<line x1="420" y1="2044" x2="472" y2="2044" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="444" y="2036" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="550" y1="2262" x2="620" y2="2262" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="583" y="2254" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text>
 <g class="node-box" id="n-p13b" data-search="rate increase alert fringe benefit update july" onclick="showPanel('p13b',this)">
-  <rect x="472" y="2024" width="148" height="44" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="546" y="2041" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#633806">Alert + update fringe stmt</text>
-  <text x="546" y="2056" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#854F0B">2 weeks before effective date</text>
+  <rect x="620" y="2242" width="200" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="720" y="2261" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#633806">Alert + update fringe</text>
+  <text x="720" y="2278" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">2 wks before effective date</text>
 </g>
-<line x1="330" y1="2074" x2="330" y2="2094" stroke="#B4B2A9" stroke-width="1"/>
-<text x="348" y="2088" style="font-size:10px;fill:#888780">No / continue</text>
+<line x1="450" y1="2292" x2="450" y2="2312" stroke="#B4B2A9" stroke-width="1"/>
+<text x="468" y="2306" style="font-size:10px;fill:#888780">No / continue</text>
 
-<!-- Loop back arrow -->
-<line x1="330" y1="2094" x2="330" y2="2116" stroke="#B4B2A9" stroke-width="1"/>
-<line x1="330" y1="2116" x2="158" y2="2116" stroke="#B4B2A9" stroke-width="1"/>
-<line x1="158" y1="2116" x2="158" y2="1522" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/>
-<line x1="158" y1="1522" x2="228" y2="1522" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="140" y="1821" text-anchor="middle" style="font-size:10px;fill:#888780;writing-mode:vertical-rl">↻ next week</text>
+<!-- Weekly loop back -->
+<line x1="450" y1="2312" x2="450" y2="2340" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="450" y1="2340" x2="140" y2="2340" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="140" y1="2340" x2="140" y2="1690" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/>
+<line x1="140" y1="1690" x2="328" y2="1690" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="122" y="2016" text-anchor="middle" style="font-size:10px;fill:#888780;writing-mode:vertical-rl">↻ next week</text>
 
-<text x="330" y="2146" text-anchor="middle" style="font-size:11px;font-weight:500;letter-spacing:.07em;fill:#888780">RETENTION — PROACTIVE TOUCHPOINTS</text>
+<!-- RETENTION header -->
+<text x="450" y="2372" text-anchor="middle" style="font-size:12px;font-weight:600;letter-spacing:.08em;fill:#888780">STAGE 5 — RETENTION — PROACTIVE TOUCHPOINTS</text>
 
+<!-- Gone cold? -->
 <g class="node-box" id="n-pd7" data-search="gone cold no payroll 4 weeks decision" onclick="showPanel('pd7',this)">
-  <polygon points="330,2158 440,2192 330,2226 220,2192" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="2185" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">No payroll</text>
-  <text x="330" y="2202" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">4+ weeks?</text>
+  <polygon points="450,2384 570,2420 450,2456 330,2420" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="2413" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">No payroll</text>
+  <text x="450" y="2430" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">4+ weeks?</text>
 </g>
-<line x1="220" y1="2192" x2="102" y2="2192" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="160" y="2184" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="330" y1="2420" x2="190" y2="2420" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="260" y="2412" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text>
 <g class="node-box" id="n-p14a" data-search="gone cold auto email check in" onclick="showPanel('p14a',this)">
-  <rect x="10" y="2170" width="92" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="56" y="2189" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#633806">Gone-cold</text>
-  <text x="56" y="2204" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#854F0B">auto email</text>
+  <rect x="20" y="2398" width="170" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="105" y="2417" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#633806">Gone-cold</text>
+  <text x="105" y="2434" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">auto email</text>
 </g>
-<line x1="330" y1="2226" x2="330" y2="2250" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2456" x2="450" y2="2480" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p15" data-search="compliance risk nudge 30 day dir window" onclick="showPanel('p15',this)">
-  <rect x="190" y="2250" width="280" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="330" y="2271" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#633806">Compliance risk nudge</text>
-  <text x="330" y="2289" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">AI trigger · 30-day DIR window approaching</text>
+  <rect x="170" y="2480" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="450" y="2501" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Compliance Risk Nudge</text>
+  <text x="450" y="2521" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">AI trigger · 30-day DIR window approaching · fear + solution angle</text>
 </g>
-<line x1="330" y1="2302" x2="330" y2="2326" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2536" x2="450" y2="2560" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p16" data-search="monthly project summary email client bi-monthly" onclick="showPanel('p16',this)">
-  <rect x="190" y="2326" width="280" height="52" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
-  <text x="330" y="2347" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#3C3489">Monthly project summary</text>
-  <text x="330" y="2365" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#534AB7">AI draft · human personalizes · bi-monthly</text>
+  <rect x="170" y="2560" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+  <text x="450" y="2581" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Monthly Project Summary</text>
+  <text x="450" y="2601" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">AI drafts · Brock / team personalizes · bi-monthly cadence</text>
 </g>
-<line x1="330" y1="2378" x2="330" y2="2402" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2616" x2="450" y2="2640" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p17" data-search="anniversary referral ask 1 year partnership" onclick="showPanel('p17',this)">
-  <rect x="190" y="2402" width="280" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="330" y="2423" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#085041">Anniversary + referral ask</text>
-  <text x="330" y="2441" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">Trigger: 1-yr start date · human sends</text>
+  <rect x="170" y="2640" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="450" y="2661" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Anniversary + Referral Ask</text>
+  <text x="450" y="2681" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Trigger: 1-yr start date · Brock / team sends · $100–$200 credit offer</text>
 </g>
-<line x1="330" y1="2454" x2="330" y2="2478" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2696" x2="450" y2="2720" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
-<text x="330" y="2492" text-anchor="middle" style="font-size:11px;font-weight:500;letter-spacing:.07em;fill:#888780">PROJECT CLOSEOUT</text>
+<!-- PROJECT CLOSEOUT header -->
+<text x="450" y="2738" text-anchor="middle" style="font-size:12px;font-weight:600;letter-spacing:.08em;fill:#888780">PROJECT CLOSEOUT</text>
 
+<!-- Project ending? -->
 <g class="node-box" id="n-pd8" data-search="project ending decision closeout" onclick="showPanel('pd8',this)">
-  <polygon points="330,2504 420,2534 330,2564 240,2534" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="2527" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Project</text>
-  <text x="330" y="2544" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">ending?</text>
+  <polygon points="450,2750 550,2780 450,2810 350,2780" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="2773" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Project</text>
+  <text x="450" y="2790" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">ending?</text>
 </g>
-<line x1="240" y1="2534" x2="122" y2="2534" stroke="#B4B2A9" stroke-width="1"/>
-<text x="180" y="2526" text-anchor="middle" style="font-size:10px;fill:#888780">No</text>
-<line x1="122" y1="2534" x2="122" y2="2192" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/>
-<text x="106" y="2366" text-anchor="middle" style="font-size:10px;fill:#888780">↻ active</text>
-<line x1="330" y1="2564" x2="330" y2="2588" stroke="#B4B2A9" stroke-width="1"/>
-<text x="348" y="2580" style="font-size:10px;fill:#888780">Yes</text>
+<line x1="350" y1="2780" x2="210" y2="2780" stroke="#B4B2A9" stroke-width="1"/>
+<text x="280" y="2772" text-anchor="middle" style="font-size:10px;fill:#888780">No</text>
+<line x1="210" y1="2780" x2="210" y2="2420" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="192" y="2600" text-anchor="middle" style="font-size:10px;fill:#888780;writing-mode:vertical-rl">↻ active</text>
+<line x1="450" y1="2810" x2="450" y2="2834" stroke="#B4B2A9" stroke-width="1"/>
+<text x="468" y="2826" style="font-size:10px;fill:#888780">Yes</text>
 
 <g class="node-box" id="n-p18" data-search="final cpr affidavit zoho archive closeout" onclick="showPanel('p18',this)">
-  <rect x="190" y="2588" width="280" height="52" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="330" y="2609" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#085041">Final CPR + affidavit</text>
-  <text x="330" y="2627" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#0F6E56">Human · all uploads confirmed · Zoho archived</text>
+  <rect x="170" y="2834" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+  <text x="450" y="2855" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Final CPR + Affidavit</text>
+  <text x="450" y="2875" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Brock / team · all ECPR uploads confirmed · Zoho archived</text>
 </g>
-<line x1="330" y1="2640" x2="330" y2="2664" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2890" x2="450" y2="2914" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p19" data-search="post closeout follow up t+14 new project referral" onclick="showPanel('p19',this)">
-  <rect x="190" y="2664" width="280" height="52" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
-  <text x="330" y="2685" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#633806">Post-closeout follow-up</text>
-  <text x="330" y="2703" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#854F0B">T+14 · upcoming PW work? · referral ask</text>
+  <rect x="170" y="2914" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+  <text x="450" y="2935" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Post-Closeout Follow-Up</text>
+  <text x="450" y="2955" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">T+14 · any upcoming PW work? · referral ask</text>
 </g>
-<line x1="330" y1="2716" x2="330" y2="2740" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="450" y1="2970" x2="450" y2="2994" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
+<!-- New project? -->
 <g class="node-box" id="n-pd9" data-search="new project coming decision re-enter" onclick="showPanel('pd9',this)">
-  <polygon points="330,2742 420,2772 330,2802 240,2772" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="2765" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">New project</text>
-  <text x="330" y="2782" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">coming?</text>
+  <polygon points="450,2996 550,3026 450,3056 350,3026" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="3019" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">New project</text>
+  <text x="450" y="3036" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">coming?</text>
 </g>
-<line x1="420" y1="2772" x2="592" y2="2772" stroke="#B4B2A9" stroke-width="1"/>
-<text x="504" y="2764" text-anchor="middle" style="font-size:10px;fill:#888780">Yes → re-enter onboarding</text>
-<line x1="592" y1="2772" x2="592" y2="1191" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/>
-<line x1="592" y1="1191" x2="472" y2="1191" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<text x="610" y="1986" text-anchor="middle" style="font-size:10px;fill:#888780;writing-mode:vertical-rl">↻ re-enter</text>
-<line x1="330" y1="2802" x2="330" y2="2826" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<line x1="550" y1="3026" x2="750" y2="3026" stroke="#B4B2A9" stroke-width="1"/>
+<text x="648" y="3018" text-anchor="middle" style="font-size:10px;fill:#888780">Yes → re-enter onboarding</text>
+<line x1="750" y1="3026" x2="750" y2="1335" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/>
+<line x1="750" y1="1335" x2="732" y2="1335" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<text x="770" y="2180" text-anchor="middle" style="font-size:10px;fill:#888780;writing-mode:vertical-rl">↻ re-enter</text>
+<line x1="450" y1="3056" x2="450" y2="3080" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
 
 <g class="node-box" id="n-p20" data-search="dormant client 90 day check in renewal" onclick="showPanel('p20',this)">
-  <rect x="190" y="2826" width="280" height="52" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-  <text x="330" y="2847" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#5F5E5A">Dormant client</text>
-  <text x="330" y="2865" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#888780">90-day check-in · PWCR renewal recaptures</text>
+  <rect x="170" y="3080" width="560" height="56" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text x="450" y="3101" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#5F5E5A">Dormant Client</text>
+  <text x="450" y="3121" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#888780">90-day check-in · June PWCR renewal blast recaptures annually</text>
 </g>
-<line x1="330" y1="2878" x2="330" y2="2902" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
-<rect x="260" y="2902" width="140" height="40" rx="20" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
-<text x="330" y="2922" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:500;fill:#444441">End / re-enter</text>
-
+<line x1="450" y1="3136" x2="450" y2="3160" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/>
+<rect x="340" y="3160" width="220" height="44" rx="22" fill="#2c2c2a" stroke="none"/>
+<text x="450" y="3182" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:600;fill:#f5f4f0">End / Re-enter</text>
 </svg>
 
 <!-- Detail panels -->
+<div id="std1" class="panel"><button class="close-btn" onclick="closePanel('std1')">✕</button><h4>Standard PW Contractor</h4><div class="owner-row"><span class="badge b-client">Client type</span></div><div class="panel-body">Contractor managing their own prevailing wage compliance. Needs help with: CPR production, DAS 140/142 forms, fringe benefit statements, ECPR uploads, and monthly CAC invoices. Most common client type. Full-service compliance partner relationship.</div><div class="note-area"><label>Notes</label><textarea id="note-std1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('std1')">Save note</button></div></div>
+
+<div id="sub1" class="panel"><button class="close-btn" onclick="closePanel('sub1')">✕</button><h4>Sub Oversight Client</h4><div class="owner-row"><span class="badge b-client">Client type</span></div><div class="panel-body">Prime contractor who wants compliance monitoring over their subcontractors. Key risk: prime contractors are jointly liable for sub noncompliance penalties. Services: Sub Oversight package — document collection, quality review, sub correspondence, compliance monitoring. See Sub Oversight price sheet for pricing. Subcontractor Start Up Fee: $200/sub.</div><div class="note-area"><label>Notes</label><textarea id="note-sub1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('sub1')">Save note</button></div></div>
+
+<div id="pq1" class="panel"><button class="close-btn" onclick="closePanel('pq1')">✕</button><h4>Price Flyer + Project Questionnaire</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">Cold outreach touch</span></div><div class="panel-body">Sent as a hook to non-responders in cold outreach sequences. Includes: price flyer PDF + link to Project Oversight Questionnaire. When filled out, the questionnaire feeds the AI estimator which produces an instant compliance cost estimate. Goal: give them something valuable enough to engage with even if they won't book a call yet. Build the questionnaire + estimator in a separate project.</div><div class="note-area"><label>Notes</label><textarea id="note-pq1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('pq1')">Save note</button></div></div>
+
+<div id="est1" class="panel"><button class="close-btn" onclick="closePanel('est1')">✕</button><h4>Build Compliance Estimate</h4><div class="owner-row"><span class="badge b-ai">AI estimator tool</span><span class="badge b-human">Brock / team reviews</span></div><div class="panel-body">AI-powered estimator built in a separate Claude project. Inputs: classifications, estimated weeks on site, CPR platform, project requirements (Section 3, PLA, etc). Output: itemized estimate of total compliance cost. Used during consultation call as a closing tool, and earlier in the funnel via the questionnaire hook for non-responders.</div><div class="note-area"><label>Notes</label><textarea id="note-est1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('est1')">Save note</button></div></div>
+
 <div id="s1-dir1" class="panel"><button class="close-btn" onclick="closePanel('s1-dir1')">✕</button><h4>DIR PWCR Scrape</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">Automated</span></div><div class="panel-body">~40k active contractors scraped and loaded into Zoho. Raw DIR database has ~120k records but clean working set is ~40k. Re-scrape on new PWCR signup fires auto-email within 24 hours. Segments by county, classification, and registration age.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-dir1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-dir1')">Save note</button></div></div>
 
 <div id="s1-dir2" class="panel"><button class="close-btn" onclick="closePanel('s1-dir2')">✕</button><h4>Decision: Has DIR #?</h4><div class="owner-row"><span class="badge b-ai">AI agent</span></div><div class="panel-body">Check scraped record for active PWCR registration. Yes (registered) → 3-touch cold email sequence. No → route to pending registration nurture. New reg detected → fire immediate trigger email.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-dir2" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-dir2')">Save note</button></div></div>
@@ -605,7 +641,7 @@
 
 <div id="s1-b2b3" class="panel"><button class="close-btn" onclick="closePanel('s1-b2b3')">✕</button><h4>Sequence Audit + Rebuild</h4><div class="owner-row"><span class="badge b-human">Brock</span></div><div class="panel-body">Current sequences need audit. Review: subject lines, open rates, reply rates, targeting accuracy, reply handling. Rebuild sequences around compliance pain points: missed CPR deadlines, DIR notices, DAS form errors. Each touch = different angle.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-b2b3" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-b2b3')">Save note</button></div></div>
 
-<div id="s1-b2b4" class="panel"><button class="close-btn" onclick="closePanel('s1-b2b4')">✕</button><h4>Reply Handling → Triage</h4><div class="owner-row"><span class="badge b-ai">AI triages</span><span class="badge b-human">Anthy / Brock</span></div><div class="panel-body">Positive reply → AI categorizes intent, prepares context, routes to Anthy or Brock to book consultation. Objection reply → AI handles with FAQ response + re-invite. No reply after full sequence → tag as cold in Zoho for re-engagement sequence.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-b2b4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-b2b4')">Save note</button></div></div>
+<div id="s1-b2b4" class="panel"><button class="close-btn" onclick="closePanel('s1-b2b4')">✕</button><h4>Reply Handling → Triage</h4><div class="owner-row"><span class="badge b-ai">AI triages</span><span class="badge b-human">Brock / team</span></div><div class="panel-body">Positive reply → AI categorizes intent, prepares context, routes to Anthy or Brock to book consultation. Objection reply → AI handles with FAQ response + re-invite. No reply after full sequence → tag as cold in Zoho for re-engagement sequence.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-b2b4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-b2b4')">Save note</button></div></div>
 
 <div id="s1-soc1" class="panel"><button class="close-btn" onclick="closePanel('s1-soc1')">✕</button><h4>Social Media Strategy</h4><div class="owner-row"><span class="badge b-human">Brock</span></div><div class="panel-body">Channels: LinkedIn (GCs and PMs), YouTube (searchable evergreen), Instagram Reels. Hook: AI tidbits + prevailing wage compliance = shareable niche content. Brock as on-camera spokesperson. Content pillars: compliance tips, DAS form walkthroughs, rate change alerts.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-soc1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-soc1')">Save note</button></div></div>
 
@@ -613,7 +649,7 @@
 
 <div id="s1-soc3" class="panel"><button class="close-btn" onclick="closePanel('s1-soc3')">✕</button><h4>AI Clone + Scaled Content</h4><div class="owner-row"><span class="badge b-ai">AI agent</span></div><div class="panel-body">AI clone of Brock for scaled content production. Repurpose long-form video → shorts → LinkedIn posts → blog. Schedule and publish at optimal times. Track which topics drive the most DM and form inquiries. Feed data back into content calendar.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-soc3" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-soc3')">Save note</button></div></div>
 
-<div id="s1-soc4" class="panel"><button class="close-btn" onclick="closePanel('s1-soc4')">✕</button><h4>DM / Comment Lead</h4><div class="owner-row"><span class="badge b-human">Anthy / Brock</span></div><div class="panel-body">Inbound DMs or comments from interested contractors. Anthy monitors and routes. High-intent signal — they sought us out after seeing content. Priority: respond within 2 hours. Move to consultation booking immediately. Log source in Zoho as "social inbound."</div><div class="note-area"><label>Notes</label><textarea id="note-s1-soc4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-soc4')">Save note</button></div></div>
+<div id="s1-soc4" class="panel"><button class="close-btn" onclick="closePanel('s1-soc4')">✕</button><h4>DM / Comment Lead</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Inbound DMs or comments from interested contractors. Anthy monitors and routes. High-intent signal — they sought us out after seeing content. Priority: respond within 2 hours. Move to consultation booking immediately. Log source in Zoho as "social inbound."</div><div class="note-area"><label>Notes</label><textarea id="note-s1-soc4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-soc4')">Save note</button></div></div>
 
 <div id="s1-gads1" class="panel"><button class="close-btn" onclick="closePanel('s1-gads1')">✕</button><h4>Google Ads (PPC)</h4><div class="owner-row"><span class="badge b-human">Brock / Francis</span></div><div class="panel-body">Paid search targeting CA contractors searching for prevailing wage compliance help. Keywords: "prevailing wage California," "certified payroll service CA," "DAS 140 filing," "CPR compliance help." Negative keywords: Davis-Bacon federal (out of scope). Track cost per lead.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-gads1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-gads1')">Save note</button></div></div>
 
@@ -623,13 +659,13 @@
 
 <div id="s1-gads4" class="panel"><button class="close-btn" onclick="closePanel('s1-gads4')">✕</button><h4>Form Lead → AI Triage</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">Instant</span></div><div class="panel-body">Web form submission → AI triage: categorize lead type, check if DIR # exists, identify compliance risk, prep context for consultation call. Auto-route to Anthy or Brock within 15 min. Log in Zoho with source = "Google Ads." Trigger consultation booking sequence.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-gads4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-gads4')">Save note</button></div></div>
 
-<div id="s1-ref1" class="panel"><button class="close-btn" onclick="closePanel('s1-ref1')">✕</button><h4>Referral Program</h4><div class="owner-row"><span class="badge b-human">Anthy / Brock</span></div><div class="panel-body">Current clients refer a new contractor → $100–$200 bill credit or cash reward once new client signs and pays retainer. Mention in monthly summaries and post-project closeout emails. Best ask timing: right after a smooth project completion. Track referral source in Zoho.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-ref1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-ref1')">Save note</button></div></div>
+<div id="s1-ref1" class="panel"><button class="close-btn" onclick="closePanel('s1-ref1')">✕</button><h4>Referral Program</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Current clients refer a new contractor → $100–$200 bill credit or cash reward once new client signs and pays retainer. Mention in monthly summaries and post-project closeout emails. Best ask timing: right after a smooth project completion. Track referral source in Zoho.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-ref1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-ref1')">Save note</button></div></div>
 
 <div id="s1-ref2" class="panel"><button class="close-btn" onclick="closePanel('s1-ref2')">✕</button><h4>Who Refers</h4><div class="owner-row"><span class="badge b-client">Existing clients</span></div><div class="panel-body">Primary referrers: existing clients after a smooth project or closeout. Secondary: GCs referring their subs, subs referring peer contractors. Mention the referral credit in every monthly project summary and in the post-closeout follow-up email. Make it easy — no friction.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-ref2" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-ref2')">Save note</button></div></div>
 
 <div id="s1-ref3" class="panel"><button class="close-btn" onclick="closePanel('s1-ref3')">✕</button><h4>Best Ask Timing</h4><div class="owner-row"><span class="badge b-auto">Post-closeout trigger</span></div><div class="panel-body">Best referral ask timing: immediately after a smooth project closeout when client satisfaction is highest. Also ask at: 1-year anniversary email, monthly project summary. Keep the ask simple and low-pressure. Include the credit amount directly in the email copy.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-ref3" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-ref3')">Save note</button></div></div>
 
-<div id="s1-ref4" class="panel"><button class="close-btn" onclick="closePanel('s1-ref4')">✕</button><h4>Warm Intro → Inbound</h4><div class="owner-row"><span class="badge b-human">Anthy / Brock</span></div><div class="panel-body">Referral arrives as a warm intro — phone call, email forward, or text introduction. Highest conversion rate of all lead sources. Priority treatment: Anthy responds same day. Skip the cold sequence — go straight to consultation booking. Note referrer in Zoho for reward processing.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-ref4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-ref4')">Save note</button></div></div>
+<div id="s1-ref4" class="panel"><button class="close-btn" onclick="closePanel('s1-ref4')">✕</button><h4>Warm Intro → Inbound</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Referral arrives as a warm intro — phone call, email forward, or text introduction. Highest conversion rate of all lead sources. Priority treatment: Anthy responds same day. Skip the cold sequence — go straight to consultation booking. Note referrer in Zoho for reward processing.</div><div class="note-area"><label>Notes</label><textarea id="note-s1-ref4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s1-ref4')">Save note</button></div></div>
 
 <!-- Detail panels -->
 <div id="p3" class="panel"><button class="close-btn" onclick="closePanel('p3')">✕</button><h4>Inbound Inquiry</h4><div class="owner-row"><span class="badge b-client">Client</span></div><div class="panel-body">Entry point from all 5 lead sources: DIR website leads, B2B Rocket cold email, social media DMs, Google Ads form submissions, and referrals. AI agent triages: categorizes lead type, checks DIR #, prepares context for consultation call. Human takes the call.</div><div class="note-area"><label>Notes</label><textarea id="note-p3" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p3')">Save note</button></div></div>
@@ -638,9 +674,9 @@
 
 <div id="p3a" class="panel"><button class="close-btn" onclick="closePanel('p3a')">✕</button><h4>Guide to PWCR registration</h4><div class="owner-row"><span class="badge b-human">Human</span></div><div class="panel-body">Walk client through DIR PWCR registration. Explain annual renewal, costs, and what it unlocks. Once registered, re-enter at consultation call. Can offer this as a consulting service ($80/hr).</div><div class="note-area"><label>Notes</label><textarea id="note-p3a" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p3a')">Save note</button></div></div>
 
-<div id="p3c" class="panel"><button class="close-btn" onclick="closePanel('p3c')">✕</button><h4>Compliance audit + restitution</h4><div class="owner-row"><span class="badge b-human">Anthy / Rachel</span></div><div class="panel-body">Client is mid-project and behind or received a DIR notice. Audit all past payrolls. Calculate restitution owed per employee per week. High urgency, high loyalty after resolution. Price: $35/employee/week restitution calc.</div><div class="note-area"><label>Notes</label><textarea id="note-p3c" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p3c')">Save note</button></div></div>
+<div id="p3c" class="panel"><button class="close-btn" onclick="closePanel('p3c')">✕</button><h4>Compliance audit + restitution</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Client is mid-project and behind or received a DIR notice. Audit all past payrolls. Calculate restitution owed per employee per week. High urgency, high loyalty after resolution. Price: $35/employee/week restitution calc.</div><div class="note-area"><label>Notes</label><textarea id="note-p3c" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p3c')">Save note</button></div></div>
 
-<div id="p4" class="panel"><button class="close-btn" onclick="closePanel('p4')">✕</button><h4>Consultation call</h4><div class="owner-row"><span class="badge b-human">Anthy / Brock</span></div><div class="panel-body">Identify: project type, DIR #, classifications, CPR platform, funding type, project requirements. Explain process using Standard Process doc. Send price flyer + contract same day. Follow up T+2 if no response.</div><div class="note-area"><label>Notes</label><textarea id="note-p4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p4')">Save note</button></div></div>
+<div id="p4" class="panel"><button class="close-btn" onclick="closePanel('p4')">✕</button><h4>Consultation call</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Identify: project type, DIR #, classifications, CPR platform, funding type, project requirements. Explain process using Standard Process doc. Send price flyer + contract same day. Follow up T+2 if no response.</div><div class="note-area"><label>Notes</label><textarea id="note-p4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p4')">Save note</button></div></div>
 
 <div id="p5" class="panel"><button class="close-btn" onclick="closePanel('p5')">✕</button><h4>Send price flyer + contract</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">Same day</span></div><div class="panel-body">AI drafts personalized cover email with price flyer, Standard Process PDF, and contract link. Human reviews before send. Follow-up sequence fires if no signature: T+2, T+5, T+14.</div><div class="note-area"><label>Notes</label><textarea id="note-p5" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p5')">Save note</button></div></div>
 
@@ -650,7 +686,7 @@
 
 <div id="p6" class="panel"><button class="close-btn" onclick="closePanel('p6')">✕</button><h4>Collect project info form</h4><div class="owner-row"><span class="badge b-client">Client fills</span><span class="badge b-ai">AI processes</span></div><div class="panel-body">Fields: client name, legal project name, DIR # (6 digits), site address, contracted-with entity, contract amount, funding type, CPR platform, project requirements (Section 3, PLA, S&T, OCIP), classifications, estimated start date.</div><div class="note-area"><label>Notes</label><textarea id="note-p6" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p6')">Save note</button></div></div>
 
-<div id="p7" class="panel"><button class="close-btn" onclick="closePanel('p7')">✕</button><h4>Scope review + rate calculation</h4><div class="owner-row"><span class="badge b-human">Anthy / Rachel</span></div><div class="panel-body">Confirm all classifications. Flag dual-classification work. Pull prevailing wage rates from DIR. Check for predetermined rate increases — add to Zoho with effective date. Produce Prime Contractor Rate Packet PDF ($50). Set up full Zoho project record.</div><div class="note-area"><label>Notes</label><textarea id="note-p7" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p7')">Save note</button></div></div>
+<div id="p7" class="panel"><button class="close-btn" onclick="closePanel('p7')">✕</button><h4>Scope review + rate calculation</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Confirm all classifications. Flag dual-classification work. Pull prevailing wage rates from DIR. Check for predetermined rate increases — add to Zoho with effective date. Produce Prime Contractor Rate Packet PDF ($50). Set up full Zoho project record.</div><div class="note-area"><label>Notes</label><textarea id="note-p7" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p7')">Save note</button></div></div>
 
 <div id="p8" class="panel"><button class="close-btn" onclick="closePanel('p8')">✕</button><h4>DAS 140</h4><div class="owner-row"><span class="badge b-ai">AI drafts</span><span class="badge b-human">Human sends</span><span class="badge b-auto">T+8 trigger</span></div><div class="panel-body">Alerts apprentice halls in project county. Due within 10 days of contract signing OR before first day on site, whichever comes first. All classifications need a DAS 140. Zoho fires reminder at T+8 if not yet sent.</div><div class="note-area"><label>Notes</label><textarea id="note-p8" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p8')">Save note</button></div></div>
 
@@ -690,7 +726,7 @@
 
 <div id="pd8" class="panel"><button class="close-btn" onclick="closePanel('pd8')">✕</button><h4>Decision: Project ending?</h4><div class="owner-row"><span class="badge b-human">Anthy confirms</span></div><div class="panel-body">Client signals project wrapping up, or final payroll produced with no new payroll in 6 weeks. Anthy confirms: finished or paused? Status unknown → outreach to confirm. Prevents zombie open projects in Zoho.</div><div class="note-area"><label>Notes</label><textarea id="note-pd8" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('pd8')">Save note</button></div></div>
 
-<div id="p18" class="panel"><button class="close-btn" onclick="closePanel('p18')">✕</button><h4>Final CPR + affidavit</h4><div class="owner-row"><span class="badge b-human">Anthy / Rachel</span></div><div class="panel-body">Produce final CPR. Submit Final Affidavit if required. Confirm all ECPR uploads complete and confirmed on file. Archive project in Zoho. Check: are outstanding invoices preventing archive? Document Zoho archive behavior (Anthy to investigate).</div><div class="note-area"><label>Notes</label><textarea id="note-p18" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p18')">Save note</button></div></div>
+<div id="p18" class="panel"><button class="close-btn" onclick="closePanel('p18')">✕</button><h4>Final CPR + affidavit</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Produce final CPR. Submit Final Affidavit if required. Confirm all ECPR uploads complete and confirmed on file. Archive project in Zoho. Check: are outstanding invoices preventing archive? Document Zoho archive behavior (Anthy to investigate).</div><div class="note-area"><label>Notes</label><textarea id="note-p18" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p18')">Save note</button></div></div>
 
 <div id="p19" class="panel"><button class="close-btn" onclick="closePanel('p19')">✕</button><h4>Post-closeout follow-up</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">T+14</span></div><div class="panel-body">"Great working with you on [Project]. Do you have any upcoming prevailing wage work? We'd love to stay ahead of the next one." + referral ask. Re-enters client into onboarding if new project exists.</div><div class="note-area"><label>Notes</label><textarea id="note-p19" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('p19')">Save note</button></div></div>
 
