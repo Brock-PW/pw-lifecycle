@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>PW — Construction Orgs Playbook</title><style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #2c2c2a; min-height: 100vh; }
+
+  header { background: #2c2c2a; color: #f5f4f0; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 15px; font-weight: 500; letter-spacing: .02em; }
+  header .meta { font-size: 12px; color: #888780; }
+  .version-badge { background: #3C3489; color: #EEEDFE; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-left: 12px; }
+
+  .toolbar { background: #fff; border-bottom: 0.5px solid #d3d1c7; padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .toolbar-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #5F5E5A; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .search-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .search-wrap input { border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 5px 10px; font-size: 12px; background: #f5f4f0; color: #2c2c2a; outline: none; width: 180px; }
+  .search-wrap input:focus { border-color: #7F77DD; }
+
+  .canvas { padding: 24px 32px; display: flex; justify-content: center; }
+  .fc-wrap { position: relative; width: 100%; max-width: 1400px; }
+
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; }
+  .node-box { cursor: pointer; }
+  .node-box:hover rect, .node-box:hover polygon { filter: brightness(0.94); }
+
+  .panel {
+    display: none; position: fixed; z-index: 200;
+    background: #fff; border: 0.5px solid #b4b2a9;
+    border-radius: 10px; padding: 16px 18px; width: 280px;
+    font-size: 13px; line-height: 1.6; color: #5F5E5A;
+    box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  }
+  .panel.open { display: block; }
+  .panel h4 { font-size: 14px; font-weight: 500; color: #2c2c2a; margin-bottom: 8px; padding-right: 20px; }
+  .panel .close-btn { position: absolute; top: 12px; right: 14px; cursor: pointer; color: #888780; font-size: 16px; line-height: 1; background: none; border: none; }
+  .panel .owner-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 0.5px solid; font-weight: 500; }
+  .b-ai { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
+  .b-human { background: #E1F5EE; border-color: #5DCAA5; color: #085041; }
+  .b-client { background: #FAECE7; border-color: #F0997B; color: #712B13; }
+  .b-auto { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
+  .panel-body { font-size: 12px; color: #5F5E5A; line-height: 1.6; }
+  .panel .note-area { margin-top: 10px; border-top: 0.5px solid #d3d1c7; padding-top: 10px; }
+  .panel .note-area textarea { width: 100%; border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 7px 9px; font-size: 11px; font-family: inherit; color: #2c2c2a; background: #f5f4f0; resize: vertical; min-height: 56px; outline: none; }
+  .panel .note-area textarea:focus { border-color: #7F77DD; }
+  .panel .note-area label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; display: block; margin-bottom: 4px; }
+  .panel .save-note { margin-top: 6px; font-size: 11px; padding: 4px 10px; border: 0.5px solid #d3d1c7; border-radius: 6px; background: #f5f4f0; cursor: pointer; color: #5F5E5A; }
+  .panel .save-note:hover { background: #e1f5ee; border-color: #5DCAA5; color: #085041; }
+  .has-note rect, .has-note polygon { stroke-width: 1.5 !important; }
+
+  .highlight-match rect, .highlight-match polygon { stroke: #7F77DD !important; stroke-width: 2 !important; }
+
+  @media print {
+    header, .toolbar { display: none; }
+    .canvas { padding: 0; }
+    .panel { display: none !important; }
+  }
+</style><style>.fc-wrap{position:relative;width:100%;max-width:1400px}.breadcrumb{font-size:12px;color:#888780;display:flex;align-items:center;gap:6px}.breadcrumb a{color:#7F77DD;text-decoration:none}</style></head><body>
+<header><div style="display:flex;align-items:center;gap:10px;flex:1"><div class="breadcrumb"><a href="/">← Lifecycle Overview</a><span style="color:#444">›</span><span style="color:#f5f4f0">Construction Orgs</span></div><span class="version-badge">v1.0</span></div><span class="meta" style="font-size:11px;color:#888780;font-style:italic;margin-left:12px">Thought leadership · AGC · Brock speaks · Megan connections</span><span class="meta" id="last-updated" style="margin-left:16px">Last updated: May 26, 2026</span></header>
+<div class="toolbar"><span class="toolbar-label">Owner key</span><div class="legend"><div class="leg"><div class="leg-dot" style="background:#EEEDFE;border:1px solid #AFA9EC"></div>AI agent</div><div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1px solid #5DCAA5"></div>Brock / team</div><div class="leg"><div class="leg-dot" style="background:#FAECE7;border:1px solid #F0997B"></div>Client action</div><div class="leg"><div class="leg-dot" style="background:#FAEEDA;border:1px solid #EF9F27"></div>Automated trigger</div></div><div class="search-wrap"><input type="text" id="search" placeholder="Search nodes..." oninput="searchNodes(this.value)"></div></div>
+<div class="canvas"><div class="fc-wrap" id="fcwrap"><svg id="fcsvg" viewBox="0 0 900 1016" style="width:100%;display:block;overflow:visible"><defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text x="450" y="20" text-anchor="middle" style="font-size:12px;font-weight:600;letter-spacing:.08em;fill:#888780">CONSTRUCTION ORGS — LEAD GENERATION PLAYBOOK</text><g class="node-box" id="n-org1" data-search="" onclick="showPanel('org1',this)"><rect x="170" y="44" width="560" height="56" rx="10" fill="#F0F8FF" stroke="#7BAFD4" stroke-width="0.5"/><text x="450" y="65" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#1A4A6B">Construction Organizations</text><text x="450" y="85" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#2A6A9B">AGC anchor · thought leadership · credibility + presence · Megan's connections as entry point</text></g><line x1="450" y1="100" x2="450" y2="116" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-org2" data-search="" onclick="showPanel('org2',this)"><rect x="170" y="116" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/><text x="450" y="137" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Workshops &amp; Seminars</text><text x="450" y="157" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Virtual preferred · Brock speaks · 45-min + Q&amp;A · DAS · CPR · DIR audit · collect attendee list</text></g><line x1="450" y1="172" x2="450" y2="188" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-org3" data-search="" onclick="showPanel('org3',this)"><rect x="170" y="188" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/><text x="450" y="209" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Trade Show Presence</text><text x="450" y="229" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Select events with strong CA PW attendance · face-to-face credibility · badge scans feed sequence</text></g><line x1="450" y1="244" x2="450" y2="260" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-org4" data-search="" onclick="showPanel('org4',this)"><rect x="170" y="260" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/><text x="450" y="281" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Attendee List → 14-Day Sequence</text><text x="450" y="301" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">Post-event: Zoho import · tag with event name · Touch 1: recap · Touch 2: questionnaire · Touch 3: Brock</text></g><line x1="450" y1="316" x2="450" y2="332" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-org5" data-search="" onclick="showPanel('org5',this)"><rect x="170" y="332" width="560" height="56" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/><text x="450" y="353" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#5F5E5A">Partnership Ops → Notion</text><text x="450" y="373" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#888780">Speaking calendar · trade show schedule · AGC relationship · ops live in Notion — not this flowchart</text></g><line x1="450" y1="388" x2="450" y2="404" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-org-pq" data-search="" onclick="showPanel('org-pq',this)"><rect x="170" y="404" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/><text x="450" y="425" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Price Flyer + Project Questionnaire</text><text x="450" y="445" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">Touch 2 of attendee sequence · converts curious attendees into consultation bookings</text></g><line x1="450" y1="460" x2="450" y2="476" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><text x="450" y="476" text-anchor="middle" style="font-size:11px;font-weight:600;letter-spacing:.08em;fill:#888780">STAGE 2 — CONSULTATION &amp; CLOSE</text><g class="node-box" id="n-s2-book" data-search="" onclick="showPanel('s2-book',this)"><rect x="170" y="494" width="560" height="56" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/><text x="450" y="515" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Goal: Book the Consultation Call</text><text x="450" y="535" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#854F0B">Every touch aims here · AI triages · Brock / team books</text></g><line x1="450" y1="550" x2="450" y2="566" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-s2-consult" data-search="" onclick="showPanel('s2-consult',this)"><rect x="170" y="566" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/><text x="450" y="587" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Consultation Call</text><text x="450" y="607" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Brock / team · scope · classify · Standard PW or Sub Oversight</text></g><line x1="450" y1="622" x2="450" y2="638" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-s2-estimate" data-search="" onclick="showPanel('s2-estimate',this)"><rect x="170" y="638" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/><text x="450" y="659" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Build Compliance Estimate</text><text x="450" y="679" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">AI estimator · classifications × weeks × services = total cost</text></g><line x1="450" y1="694" x2="450" y2="710" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-s2-send" data-search="" onclick="showPanel('s2-send',this)"><rect x="170" y="710" width="560" height="56" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/><text x="450" y="731" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Send Full Package</text><text x="450" y="751" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#534AB7">Price flyer · estimate · contract · SOP · same day</text></g><line x1="450" y1="766" x2="450" y2="782" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-s2-signed" data-search="" onclick="showPanel('s2-signed',this)"><polygon points="450,782 498,814 450,846 402,814" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/><text x="450" y="814" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Contract signed?</text></g><line x1="498" y1="814" x2="610" y2="814" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><text x="553" y="806" text-anchor="middle" style="font-size:10px;fill:#888780">No response</text><g class="node-box" id="n-s2-followup" data-search="" onclick="showPanel('s2-followup',this)"><rect x="610" y="792" width="140" height="44" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/><text x="680" y="806" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:500;fill:#633806">Auto follow-up</text><text x="680" y="822" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:#633806">T+2 · T+5 · T+14</text></g><text x="450" y="882" text-anchor="middle" style="font-size:10px;fill:#888780">Yes</text><line x1="450" y1="896" x2="450" y2="908" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr)"/><g class="node-box" id="n-s2-onboard" data-search="" onclick="showPanel('s2-onboard',this)"><rect x="170" y="908" width="560" height="56" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/><text x="450" y="929" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">→ Onboarding (Stage 3)</text><text x="450" y="949" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:#0F6E56">Contract signed · Zoho triggers onboarding</text></g>
+</svg><!-- Detail panels --><div id="org1" class="panel"><button class="close-btn" onclick="closePanel('org1')">✕</button><h4>Construction Organizations</h4><div class="owner-row"><span class="badge b-human">Brock / Megan</span></div><div class="panel-body">Thought leadership. AGC anchor. Megan's industry connections are the entry point. Goal: PW as the recognized PW compliance experts in the construction org community.</div><div class="note-area"><label>Notes</label><textarea id="note-org1" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('org1')">Save note</button></div></div><div id="org2" class="panel"><button class="close-btn" onclick="closePanel('org2')">✕</button><h4>Workshops &amp; Seminars</h4><div class="owner-row"><span class="badge b-human">Brock (speaker)</span></div><div class="panel-body">Virtual preferred. 45-min + Q&A. Collect attendee list every time — this is the lead list.</div><div class="note-area"><label>Notes</label><textarea id="note-org2" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('org2')">Save note</button></div></div><div id="org3" class="panel"><button class="close-btn" onclick="closePanel('org3')">✕</button><h4>Trade Show Presence</h4><div class="owner-row"><span class="badge b-human">Brock / Megan</span></div><div class="panel-body">Select shows with strong CA PW attendance. Badge scans + cards enter the same 14-day sequence.</div><div class="note-area"><label>Notes</label><textarea id="note-org3" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('org3')">Save note</button></div></div><div id="org4" class="panel"><button class="close-btn" onclick="closePanel('org4')">✕</button><h4>Attendee List → Sequence</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">Post-event</span></div><div class="panel-body">Import to Zoho, tag with event name. Touch 1: recap + resource. Touch 2: questionnaire. Touch 3: Brock personal.</div><div class="note-area"><label>Notes</label><textarea id="note-org4" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('org4')">Save note</button></div></div><div id="org5" class="panel"><button class="close-btn" onclick="closePanel('org5')">✕</button><h4>Partnership Ops → Notion</h4><div class="owner-row"><span class="badge b-human">Brock / Megan</span></div><div class="panel-body">Speaking bookings, trade show calendar, AGC relationship — all in the Notion project page. Not in this flowchart.</div><div class="note-area"><label>Notes</label><textarea id="note-org5" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('org5')">Save note</button></div></div><div id="org-pq" class="panel"><button class="close-btn" onclick="closePanel('org-pq')">✕</button><h4>Price Flyer + Questionnaire</h4><div class="owner-row"><span class="badge b-ai">AI agent</span></div><div class="panel-body">Touch 2 of attendee sequence. Converts curious attendees into consultation bookings.</div><div class="note-area"><label>Notes</label><textarea id="note-org-pq" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('org-pq')">Save note</button></div></div><div id="s2-book" class="panel"><button class="close-btn" onclick="closePanel('s2-book')">✕</button><h4>Goal: Book the Consultation Call</h4><div class="owner-row"><span class="badge b-auto">Primary goal</span></div><div class="panel-body">Every touch in this channel aims at one outcome: a consultation call.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-book" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-book')">Save note</button></div></div><div id="s2-consult" class="panel"><button class="close-btn" onclick="closePanel('s2-consult')">✕</button><h4>Consultation Call</h4><div class="owner-row"><span class="badge b-human">Brock / team</span></div><div class="panel-body">Identify project type, DIR #, classifications, CPR platform, funding, requirements. Determine Standard PW or Sub Oversight.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-consult" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-consult')">Save note</button></div></div><div id="s2-estimate" class="panel"><button class="close-btn" onclick="closePanel('s2-estimate')">✕</button><h4>Build Compliance Estimate</h4><div class="owner-row"><span class="badge b-ai">AI estimator</span></div><div class="panel-body">Post-call. Classifications × weeks × services = itemized total.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-estimate" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-estimate')">Save note</button></div></div><div id="s2-send" class="panel"><button class="close-btn" onclick="closePanel('s2-send')">✕</button><h4>Send Full Package</h4><div class="owner-row"><span class="badge b-ai">AI agent</span><span class="badge b-auto">Same day</span></div><div class="panel-body">Price flyer, estimate, contract, SOP. Same day after call.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-send" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-send')">Save note</button></div></div><div id="s2-signed" class="panel"><button class="close-btn" onclick="closePanel('s2-signed')">✕</button><h4>Contract Signed?</h4><div class="owner-row"><span class="badge b-auto">Zoho</span></div><div class="panel-body">Signed → Stage 3. No response → T+2/T+5/T+14.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-signed" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-signed')">Save note</button></div></div><div id="s2-followup" class="panel"><button class="close-btn" onclick="closePanel('s2-followup')">✕</button><h4>Auto Follow-Up</h4><div class="owner-row"><span class="badge b-ai">AI agent</span></div><div class="panel-body">T+2 nudge, T+5 urgency, T+14 Brock personal.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-followup" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-followup')">Save note</button></div></div><div id="s2-onboard" class="panel"><button class="close-btn" onclick="closePanel('s2-onboard')">✕</button><h4>→ Onboarding (Stage 3)</h4><div class="owner-row"><span class="badge b-auto">Zoho</span></div><div class="panel-body">Returns to main lifecycle Stage 3. Welcome kit task auto-assigned to Bobby.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-onboard" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-onboard')">Save note</button></div></div></div></div><script>
+const STORAGE_KEY = 'pw_flowchart_notes_v1';
+
+function getNotes() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function saveNote(id) {
+  const ta = document.getElementById('note-' + id);
+  if (!ta) return;
+  const notes = getNotes();
+  notes[id] = ta.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  const btn = ta.nextElementSibling;
+  btn.textContent = 'Saved ✓';
+  setTimeout(() => btn.textContent = 'Save note', 1400);
+  const node = document.getElementById('n-' + id);
+  if (node && ta.value.trim()) node.classList.add('has-note');
+  else if (node) node.classList.remove('has-note');
+}
+
+function loadNotes() {
+  const notes = getNotes();
+  Object.entries(notes).forEach(([id, val]) => {
+    const ta = document.getElementById('note-' + id);
+    if (ta && val) {
+      ta.value = val;
+      const node = document.getElementById('n-' + id);
+      if (node) node.classList.add('has-note');
+    }
+  });
+}
+
+function showPanel(id, triggerEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const wrap = document.getElementById('fcwrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const trigRect = triggerEl.getBoundingClientRect();
+  let left = trigRect.left - wrapRect.left + trigRect.width / 2 - 140;
+  let top = trigRect.top - wrapRect.top + trigRect.height + 8;
+  left = Math.max(4, Math.min(left, wrapRect.width - 292));
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.classList.add('open');
+}
+
+function closePanel(id) {
+  const p = document.getElementById(id);
+  if (p) p.classList.remove('open');
+}
+
+function searchNodes(q) {
+  document.querySelectorAll('.node-box').forEach(n => n.classList.remove('highlight-match'));
+  if (!q.trim()) return;
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.node-box').forEach(n => {
+    const s = (n.getAttribute('data-search') || '') + ' ' + (n.textContent || '');
+    if (s.toLowerCase().includes(lq)) n.classList.add('highlight-match');
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.node-box') && !e.target.closest('.panel')) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  }
+});
+
+loadNotes();
+document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+</script></body></html>

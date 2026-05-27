@@ -1,33 +1,42 @@
-# Watches index.html and auto-commits + pushes to main on change
-$repoPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-$targetFile = "index.html"
+# watch.ps1 — Prevailing Wisdom lifecycle auto-pusher
+# Watches the repo root AND channels/ subfolder for any .html changes
+# Drop any file in either location → auto git add, commit, push → Netlify deploys
+
+$repoPath = "C:\Users\brock\pw-lifecycle"
 
 $watcher = New-Object System.IO.FileSystemWatcher
 $watcher.Path = $repoPath
-$watcher.Filter = $targetFile
-$watcher.NotifyFilter = [System.IO.NotifyFilters]::LastWrite
+$watcher.Filter = "*.html"
+$watcher.IncludeSubdirectories = $true   # ← watches channels/ and any future subfolders
 $watcher.EnableRaisingEvents = $true
 
-Write-Host "Watching $targetFile for changes. Press Ctrl+C to stop."
+$action = {
+    $path = $Event.SourceEventArgs.FullPath
+    $name = $Event.SourceEventArgs.Name
+    $changeType = $Event.SourceEventArgs.ChangeType
 
-while ($true) {
-    $change = $watcher.WaitForChanged([System.IO.WatcherChangeTypes]::Changed, 500)
+    Write-Host ""
+    Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Detected $changeType`: $name" -ForegroundColor Cyan
 
-    if (-not $change.TimedOut) {
-        Start-Sleep -Milliseconds 800
-        $ts = [datetime]::Now.ToString('HH:mm:ss')
-        Write-Host ""
-        Write-Host "[$ts] Change detected in $targetFile - committing..."
+    Start-Sleep -Seconds 1   # brief pause to let the file finish writing
 
-        Set-Location $repoPath
-        git add $targetFile
-        git commit -m "index.html updated via Claude.ai (auto-push)"
-        git push origin main
+    Set-Location $repoPath
 
-        if ($?) {
-            Write-Host "Pushed to main successfully."
-        } else {
-            Write-Host "Push failed - check credentials or network."
-        }
-    }
+    git add -A
+    $msg = "auto: update $name"
+    git commit -m $msg
+    git push origin main
+
+    Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Pushed → Netlify deploying..." -ForegroundColor Green
 }
+
+Register-ObjectEvent $watcher "Created" -Action $action | Out-Null
+Register-ObjectEvent $watcher "Changed" -Action $action | Out-Null
+
+Write-Host ""
+Write-Host "PW Lifecycle Watcher running" -ForegroundColor Yellow
+Write-Host "Watching: $repoPath (including channels/ subfolder)" -ForegroundColor Yellow
+Write-Host "Drop any .html file to auto-push. Press Ctrl+C to stop." -ForegroundColor Yellow
+Write-Host ""
+
+while ($true) { Start-Sleep -Seconds 1 }
