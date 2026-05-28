@@ -6,7 +6,7 @@ $repoPath = "C:\Users\brock\pw-lifecycle"
 
 $watcher = New-Object System.IO.FileSystemWatcher
 $watcher.Path = $repoPath
-$watcher.Filter = "*.html"
+$watcher.Filter = "*.*"
 $watcher.IncludeSubdirectories = $true   # ← watches channels/ and any future subfolders
 $watcher.EnableRaisingEvents = $true
 
@@ -36,7 +36,7 @@ Register-ObjectEvent $watcher "Changed" -Action $action | Out-Null
 Write-Host ""
 Write-Host "PW Lifecycle Watcher running" -ForegroundColor Yellow
 Write-Host "Watching: $repoPath (including channels/ subfolder)" -ForegroundColor Yellow
-Write-Host "Drop any .html file to auto-push. Press Ctrl+C to stop." -ForegroundColor Yellow
+Write-Host "Drop any file to auto-push. Press Ctrl+C to stop." -ForegroundColor Yellow
 Write-Host ""
 
 while ($true) { Start-Sleep -Seconds 1 }
