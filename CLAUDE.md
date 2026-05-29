@@ -11,7 +11,7 @@ This is not just a flowchart. It is the operating system for Prevailing Wisdom �
 **Company:** Prevailing Wisdom
 **Tagline:** Labor Compliance Simplified
 **Services:** Certified payroll (CPR) production, DAS 140/142 filing, ECPR uploads to CA DIR, fringe benefit statements, training contribution invoices, project closeout
-**Live site:** spectacular-lamington-e7c676.netlify.app
+**Live site:** pwcustomerlifecycle.netlify.app
 **GitHub:** github.com/Brock-PW/pw-lifecycle
 
 **Team:**
@@ -39,7 +39,7 @@ All document production and platform submission automation. CPR production, DAS 
 ## The Full Architecture (4 Layers)
 
 ### Layer 1 — The Process Map (this repo)
-Visual HTML flowcharts showing every lifecycle stage, touchpoint, decision, and automation. Lives on Netlify. Auto-deploys from GitHub main branch via Netlify. Staged at: spectacular-lamington-e7c676.netlify.app
+Visual HTML flowcharts showing every lifecycle stage, touchpoint, decision, and automation. Lives on Netlify. Auto-deploys from GitHub main branch via Netlify. Staged at: pwcustomerlifecycle.netlify.app
 
 ### Layer 2 — The Automation Engine (Zoho)
 Every task, reminder, trigger, and notification. Contract sent → follow-up fires. Project starts → CPR due date created. Closeout confirmed → referral sequence triggers.
@@ -127,6 +127,10 @@ Sub-pages:
 - Stage 6 — Project Closeout: 35e2e7f3-5b1f-8121-b3b8-f18c8415b130
 
 **Notion update rule:** Every time an HTML page is updated, the corresponding Notion sub-page must be updated in the same session. Never push an HTML change without updating Notion.
+
+**Notion confirmation rule:** At the end of every session, confirm Notion was updated with a one-line summary:
+✅ Notion updated: [sub-page name] — [what changed]
+If multiple sub-pages were updated, list each one. This allows Brock to spot-check by opening the relevant page.
 
 ---
 
