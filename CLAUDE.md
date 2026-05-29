@@ -70,11 +70,11 @@ Everything operational — document production, task tracking, follow-up timing,
 **2. The system is the memory, not the person.**
 If knowledge about a client lives only in a consultant's head, it will be lost. Every client interaction, every preference, every nuance goes into the Notion client brain automatically. The goal is 100 clients per consultant, not 30-40.
 
-**3. Zoho is a database, not a UI.**
-No human should be forced to navigate Zoho to do their job. Zoho stores the record of truth. The dashboard and Claude interact with Zoho via API. Humans interact with the dashboard.
+**3. Bidirectional sync — source of action does not matter.**
+Actions can originate anywhere: the dashboard, Zoho directly, an inbound email, a phone call, an Otter transcript. The sync layer intercepts every action and propagates consequences to every applicable system. Zoho = real-time client status. Notion = real-time client knowledge. Dashboard = real-time action surface. All three stay in sync automatically, regardless of where the action originated. Never use "always" or "never" about any specific system — design for sync, not for restriction.
 
 **4. Automation triggers on events, not on human action.**
-Follow-ups fire because a contract was sent, not because someone remembered to set a reminder. CPR due dates are created because a project started, not because a consultant added a task. Design every trigger around an event that already happens automatically.
+Follow-ups fire because a contract was sent, not because someone remembered to set a reminder. CPR due dates are created because a project started, not because a consultant added a task. Design every trigger around an event that already happens — but any system can be the source of that event.
 
 **5. Every open hook is a Francis task.**
 When a soft-side workflow requires document production or platform submission, mark it clearly: ⚠ HOOK: [description of what Francis needs to build]. Do not try to build it. Do not approximate it. Leave the hook clearly labeled and move on.
@@ -178,6 +178,62 @@ Color system:
 - Email → Notion auto-extraction pipeline
 - Dashboard (Layer 4 — built after Stages 2-6 are fully mapped)
 - Zoho → Dashboard API connection
+
+---
+
+
+---
+
+## Hook Taxonomy
+
+Not all hooks are the same. Use the correct type when marking a hook:
+
+- ⚠ HOOK/AGENT — a Claude-callable MCP endpoint Francis exposes when ready
+- ⚠ HOOK/API — an API call that triggers a Francis-built workflow
+- ⚠ HOOK/SYNC — requires the Zoho ↔ Notion ↔ Gmail ↔ Otter sync layer to be built first
+
+Format for all hooks:
+⚠ HOOK/[TYPE]: `name_or_description` — what it does · what inputs it needs · what it returns
+
+Never approximate what a hook does. Leave it named, typed, and described. Move on.
+
+---
+
+## Build Phases (agreed May 27, 2026 — Brock + Francis)
+
+**Phase 1 — Complete the map (current)**
+Finish Stages 2-6 on the flowchart. Every stage fully documented: all touchpoints, hooks named and typed, Zoho fields identified, Notion client brain structure defined. This is the blueprint. Nothing gets built yet. Everything gets named and placed correctly.
+
+**Phase 2 — Solve the sync layer**
+Before any document automation or agent calls matter, the core sync must work:
+Zoho ↔ Otter.ai ↔ Gmail ↔ Notion ↔ Claude
+Email arrives → parsed → Notion updated, Zoho updated if status change.
+Otter transcript available → parsed → key points + action items → Notion updated.
+Zoho stage changes → downstream tasks cascade → Notion updated.
+This is the nervous system. Everything else depends on it. Solve it thoroughly before moving on.
+
+**Phase 3 — Hook up Francis's workflows one at a time**
+Starting with highest-volume, highest-value:
+1. CPR production (core weekly loop)
+2. DAS forms (DAS 140 + DAS 142)
+3. CAC monthly invoices
+4. Fringe benefit statements
+5. Additional workflows in priority order
+Each solved thoroughly before moving to the next.
+
+**Phase 4 — Build the dashboard**
+Once sync layer is working and core document workflows are hooked in, build the Claude conversation interface — one window per client, connected to everything.
+
+Francis's principle: step-by-step · bite off small chunks · solve thoroughly before moving on.
+
+---
+
+## Francis Integration Notes (from May 27, 2026 alignment)
+
+- Not all hooks are "agents" — Francis builds a mix of MCP endpoints and API calls that trigger workflows. Call them hooks, not agents, until Francis names them.
+- Francis will not expose existing workflows yet — hooks remain typed and named but uncalled until Francis opens them.
+- General architecture alignment confirmed. Edge cases will surface and be solved as encountered.
+- The sync layer (Phase 2) is identified as the hardest single piece and must be solved before anything else is built on top of it.
 
 ---
 
