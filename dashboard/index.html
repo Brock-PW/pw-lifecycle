@@ -191,6 +191,86 @@ a{color:inherit;text-decoration:none}
 .brock-banner{padding:11px 14px;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.18);border-radius:7px;margin-bottom:18px}
 .brock-banner-t{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:3px}
 .brock-banner-s{font-size:11px;color:var(--muted)}
+
+/* ── NEXT MOVE CARD */
+.next-move{
+  background:linear-gradient(135deg,rgba(245,166,35,.10) 0%,rgba(245,166,35,.04) 100%);
+  border:1px solid rgba(245,166,35,.35);
+  border-radius:10px;padding:20px 22px;margin-bottom:20px;
+  display:flex;align-items:center;gap:20px;
+}
+.nm-left{flex:1;min-width:0}
+.nm-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:var(--accent);letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.nm-task{font-size:16px;font-weight:700;letter-spacing:-.02em;line-height:1.25;margin-bottom:6px}
+.nm-why{font-size:12px;color:var(--muted);line-height:1.5}
+.nm-btn{flex-shrink:0;background:var(--accent);color:#0F1C2E;border:none;padding:10px 20px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.12s;white-space:nowrap}
+.nm-btn:hover{background:#f0b84a;transform:translateY(-1px)}
+
+/* ── SECONDARY MOVES */
+.secondary-moves{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.sm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:13px;cursor:pointer;transition:.15s}
+.sm-card:hover{border-color:rgba(245,166,35,.4);background:var(--hover)}
+.sm-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.sm-name{font-size:12px;font-weight:600;line-height:1.35;margin-bottom:6px}
+.sm-foot{display:flex;align-items:center;gap:6px}
+
+/* ── BUILD PATH */
+.build-path{margin-bottom:22px}
+.bp-label{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.bp-track{display:flex;align-items:center;gap:0}
+.bp-phase{flex:1;position:relative}
+.bp-phase-inner{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:7px;padding:11px 13px;
+  transition:.15s;cursor:default;
+}
+.bp-phase.current .bp-phase-inner{
+  border-color:var(--accent);
+  background:rgba(245,166,35,.07);
+}
+.bp-phase.done .bp-phase-inner{
+  border-color:rgba(61,170,110,.3);
+  background:rgba(61,170,110,.05);
+}
+.bp-phase.locked .bp-phase-inner{opacity:.45}
+.bp-num{font-family:'JetBrains Mono',monospace;font-size:9px;margin-bottom:3px}
+.bp-phase.done .bp-num{color:var(--green)}
+.bp-phase.current .bp-num{color:var(--accent)}
+.bp-phase.locked .bp-num{color:var(--muted)}
+.bp-name{font-size:11px;font-weight:600;margin-bottom:3px}
+.bp-sub{font-size:10px;color:var(--muted);line-height:1.4}
+.bp-arrow{width:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:14px;padding-top:4px}
+.bp-you{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--accent);font-weight:600;letter-spacing:.08em;margin-top:4px}
+
+/* ── TODAY'S WORK COLUMNS */
+.work-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.wc{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.wc-head{padding:11px 13px 9px;border-bottom:1px solid var(--border)}
+.wc-title{font-size:12px;font-weight:700;margin-bottom:2px}
+.wc-sub{font-size:10px;color:var(--muted)}
+.wc-body{padding:4px 0}
+.wc-item{display:flex;align-items:flex-start;gap:9px;padding:8px 13px;cursor:pointer;transition:.12s;border-bottom:1px solid rgba(37,58,88,.35)}
+.wc-item:last-child{border-bottom:none}
+.wc-item:hover{background:var(--hover)}
+.wc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.wc-text{font-size:11px;font-weight:500;line-height:1.4;flex:1}
+.wc-empty{padding:16px 13px;font-size:11px;color:var(--muted);font-style:italic}
+
+/* ── WAITING SECTION */
+.waiting-section{margin-bottom:22px}
+.waiting-row{display:flex;align-items:center;gap:10px;padding:8px 13px;border-bottom:1px solid rgba(37,58,88,.4);font-size:11px;color:var(--muted)}
+.waiting-row:last-child{border-bottom:none}
+.waiting-name{flex:1}
+.waiting-owner{font-family:'JetBrains Mono',monospace;font-size:10px}
+
+/* ── PROGRESS SENTENCE */
+.progress-sentence{
+  font-size:12px;color:var(--muted);
+  background:var(--card);border:1px solid var(--border);
+  border-radius:7px;padding:11px 14px;
+  margin-bottom:20px;line-height:1.6;
+}
+.progress-sentence strong{color:var(--text)}
 </style>
 </head>
 <body>
@@ -454,107 +534,208 @@ function showTab(tab){
 // ═══════════════════════════════════════════════════════════
 // OVERVIEW
 // ═══════════════════════════════════════════════════════════
+// ── NEXT MOVE LOGIC
+// Priority order: quick wins owned by Brock → buildable now → other Phase 1 Brock tasks → any open Phase 1
+function pickNextMove(){
+  const open = t => effectiveStatus(t) !== "complete" && effectiveStatus(t) !== "blocked";
+  const candidates = [
+    TASKS.filter(t=>open(t)&&t.qw&&t.owner==="Brock"),
+    TASKS.filter(t=>open(t)&&t.bn&&t.owner==="Brock"),
+    TASKS.filter(t=>open(t)&&t.owner==="Brock"&&t.phase===1&&!t.qw&&!t.bn),
+    TASKS.filter(t=>open(t)&&t.phase===1&&t.hook!=="COMPEX"&&t.hook!=="SYNC"),
+  ];
+  for(const bucket of candidates){ if(bucket.length) return bucket[0]; }
+  return null;
+}
+
+function nextMoveWhy(t){
+  if(t.qw) return "Quick win — no dependencies, no Francis needed. Completing this now keeps Phase 1 momentum moving.";
+  if(t.bn) return "Buildable today via HOOK/CLAUDE — MCP connected, no hard-side work required. Every Claude task completed now is one less blocker before Phase 2.";
+  if(t.hook==="ZOHO") return "A Zoho configuration task that only Brock can action. Clearing this unblocks downstream automations that depend on it.";
+  if(t.hook==="decision") return "A decision that only you can make. Other tasks are waiting on this call before they can be specced or built.";
+  return "Phase 1 priority — completing the lifecycle map is the prerequisite for everything else. Every stage specced is one step closer to the sync layer.";
+}
+
+function pickSecondaryMoves(excludeId){
+  const open = t => effectiveStatus(t)!=="complete" && effectiveStatus(t)!=="blocked" && t.id!==excludeId;
+  const pool = [
+    ...TASKS.filter(t=>open(t)&&t.qw&&t.owner==="Brock"),
+    ...TASKS.filter(t=>open(t)&&t.bn),
+    ...TASKS.filter(t=>open(t)&&t.hook==="decision"&&t.owner==="Brock"),
+    ...TASKS.filter(t=>open(t)&&t.owner==="Brock"&&t.phase===1),
+  ];
+  // dedupe
+  const seen=new Set(); const out=[];
+  for(const t of pool){ if(!seen.has(t.id)){seen.add(t.id);out.push(t);} if(out.length===3) break; }
+  return out;
+}
+
+function smLabel(t){
+  if(t.qw) return {text:"Quick win",color:"var(--green)"};
+  if(t.bn) return {text:"Buildable now",color:"var(--purple)"};
+  if(t.hook==="decision") return {text:"Decision needed",color:"var(--accent)"};
+  return {text:"Phase "+t.phase,color:"var(--muted)"};
+}
+
+// ── BUILD PHASES CONFIG
+const BUILD_PHASES = [
+  {num:1, name:"Complete the map",    sub:"All 6 stages fully documented, every hook named",   unlocks:"Lets Phase 2 begin"},
+  {num:2, name:"Build the sync layer",sub:"Zoho ↔ Gmail ↔ Otter ↔ Notion ↔ Claude",          unlocks:"Unlocks all automation"},
+  {num:3, name:"Knowledge base",      sub:"Drive → Notion, FAQ bank, Wizard of PW",            unlocks:"Unlocks the Wizard"},
+  {num:4, name:"Hook up Francis",     sub:"CPR → DAS → CAC → fringe statements",               unlocks:"Unlocks full compliance loop"},
+  {num:5, name:"Build the dashboard", sub:"Live ops interface, one window per client",          unlocks:"Business runs itself"},
+];
+
+function currentBuildPhase(){
+  const p1tasks = TASKS.filter(t=>t.phase===1);
+  const p1done  = p1tasks.filter(t=>effectiveStatus(t)==="complete").length;
+  if(p1done < p1tasks.length) return 1;
+  return 2; // extend as phases complete
+}
+
 function renderOverview(){
-  const total = TASKS.length;
-  const done  = TASKS.filter(t=>effectiveStatus(t)==="complete").length;
-  const open  = TASKS.filter(t=>effectiveStatus(t)==="open").length;
-  const qws   = TASKS.filter(t=>t.qw&&effectiveStatus(t)!=="complete");
-  const bns   = TASKS.filter(t=>t.bn&&effectiveStatus(t)!=="complete");
-  const syncB = TASKS.filter(t=>t.hook==="SYNC"&&effectiveStatus(t)!=="complete").length;
-  const pct   = total?Math.round(done/total*100):0;
+  const total   = TASKS.length;
+  const done    = TASKS.filter(t=>effectiveStatus(t)==="complete").length;
+  const p1tasks = TASKS.filter(t=>t.phase===1);
+  const p1done  = p1tasks.filter(t=>effectiveStatus(t)==="complete").length;
+  const p1pct   = p1tasks.length ? Math.round(p1done/p1tasks.length*100) : 0;
+  const qws     = TASKS.filter(t=>t.qw&&effectiveStatus(t)!=="complete");
+  const bns     = TASKS.filter(t=>t.bn&&effectiveStatus(t)!=="complete");
+  const decisions = TASKS.filter(t=>t.hook==="decision"&&effectiveStatus(t)!=="complete");
+  const waiting = TASKS.filter(t=>(effectiveStatus(t)==="blocked"||t.hook==="SYNC"||t.owner==="Francis")&&effectiveStatus(t)!=="complete");
+  const curPhase = currentBuildPhase();
 
-  // owner counts
-  const oc={};
-  TASKS.filter(t=>effectiveStatus(t)!=="complete").forEach(t=>{oc[t.owner]=(oc[t.owner]||0)+1;});
-  const maxO = Math.max(...Object.values(oc),1);
+  const nextMove = pickNextMove();
+  const secondary = pickSecondaryMoves(nextMove?.id);
 
-  // hook counts
-  const hc={};
-  TASKS.filter(t=>effectiveStatus(t)!=="complete").forEach(t=>{hc[t.hook]=(hc[t.hook]||0)+1;});
-  const maxH = Math.max(...Object.values(hc),1);
+  // progress sentence
+  const remaining = p1tasks.length - p1done;
+  const progressMsg = p1pct===0
+    ? `Phase 1 hasn't started yet. <strong>${p1tasks.length} tasks</strong> stand between here and the sync layer.`
+    : p1pct===100
+    ? `Phase 1 complete. <strong>Ready to begin Phase 2</strong> — the sync layer.`
+    : `Phase 1 is <strong>${p1pct}% complete</strong>. <strong>${remaining} tasks</strong> remain before the sync layer can begin. The sync layer is the nervous system — everything else depends on it.`;
 
   document.getElementById("content").innerHTML = `
-    <div class="grid4">
-      <div class="card">
-        <div class="stat-val">${total}</div>
-        <div class="stat-lbl">Total Tasks</div>
-        <div class="bar"><div class="bar-fill" style="width:${pct}%;background:var(--green)"></div></div>
-        <div class="stat-sub">${done} complete · ${open} open</div>
-      </div>
-      <div class="card">
-        <div class="stat-val" style="color:var(--green)">${qws.length}</div>
-        <div class="stat-lbl">Quick Wins</div>
-        <div class="stat-sub">Can be done today</div>
-      </div>
-      <div class="card">
-        <div class="stat-val" style="color:var(--purple)">${bns.length}</div>
-        <div class="stat-lbl">Buildable Now</div>
-        <div class="stat-sub">HOOK/CLAUDE — no Francis needed</div>
-      </div>
-      <div class="card">
-        <div class="stat-val" style="color:var(--red)">${syncB}</div>
-        <div class="stat-lbl">Sync Blockers</div>
-        <div class="stat-sub">Waiting on Phase 2</div>
-      </div>
-    </div>
 
-    <div class="sh"><div class="sh-t">Lifecycle Stages</div></div>
-    <div class="grid3">
-      ${STAGES.map(sg=>{
-        const st=TASKS.filter(t=>t.s===sg.n);
-        const d=st.filter(t=>effectiveStatus(t)==="complete").length;
-        const p=st.length?Math.round(d/st.length*100):0;
-        const op=st.filter(t=>effectiveStatus(t)!=="complete").length;
-        const pillCls=p===100?"pill-done":p>0?"pill-prog":"pill-none";
-        const pillTxt=p===100?"Complete":p>0?"In Progress":"Not Started";
-        return `<div class="stage-card s${sg.n}" onclick="window.open('${LCU}/#stage${sg.n}','_blank')">
-          <div class="s-num">STAGE 0${sg.n}</div>
-          <div class="s-name">${sg.name}</div>
-          <div class="bar"><div class="bar-fill" style="width:${p}%;background:${sg.color}"></div></div>
-          <div class="s-meta">
-            <div class="s-open">${op} open · ${d}/${st.length}</div>
-            <span class="s-pill ${pillCls}">${pillTxt}</span>
-          </div>
+    ${nextMove ? `
+    <div class="next-move" data-id="${nextMove.id}">
+      <div class="nm-left">
+        <div class="nm-eyebrow">Your next move</div>
+        <div class="nm-task">${nextMove.name}</div>
+        <div class="nm-why">${nextMoveWhy(nextMove)}</div>
+      </div>
+      <button class="nm-btn" onclick="openTask('${nextMove.id}')">Start this now →</button>
+    </div>` : `
+    <div class="next-move">
+      <div class="nm-left">
+        <div class="nm-eyebrow">Phase 1 complete</div>
+        <div class="nm-task">Ready to begin Phase 2 — the sync layer</div>
+        <div class="nm-why">All lifecycle stages are documented and all Phase 1 hooks are named. Francis can now begin building the Zoho webhook infrastructure.</div>
+      </div>
+    </div>`}
+
+    ${secondary.length ? `
+    <div class="secondary-moves">
+      ${secondary.map(t=>{
+        const lbl=smLabel(t);
+        return `<div class="sm-card" data-id="${t.id}" onclick="openTask('${t.id}')">
+          <div class="sm-eyebrow" style="color:${lbl.color}">${lbl.text}</div>
+          <div class="sm-name">${t.name}</div>
+          <div class="sm-foot">${hbadge(t.hook)}<span class="oc" style="margin-left:4px">${t.owner}</span></div>
         </div>`;
       }).join("")}
+    </div>` : ""}
+
+    <div class="build-path">
+      <div class="bp-label">Build path — the critical sequence</div>
+      <div class="bp-track">
+        ${BUILD_PHASES.map((ph,i)=>{
+          const state = ph.num < curPhase ? "done" : ph.num===curPhase ? "current" : "locked";
+          const phtasks = TASKS.filter(t=>t.phase===ph.num);
+          const phdone  = phtasks.filter(t=>effectiveStatus(t)==="complete").length;
+          const phpct   = phtasks.length ? Math.round(phdone/phtasks.length*100) : 0;
+          return `
+            ${i>0?`<div class="bp-arrow">${state==="done"||ph.num<=curPhase?"→":"→"}</div>`:""}
+            <div class="bp-phase ${state}">
+              <div class="bp-phase-inner">
+                <div class="bp-num">PHASE ${ph.num} ${state==="done"?"✓":state==="current"?"← YOU ARE HERE":""}</div>
+                <div class="bp-name">${ph.name}</div>
+                <div class="bp-sub">${state==="current"?`${phpct}% complete · ${ph.sub}`:ph.sub}</div>
+                ${state==="current"?`<div class="bar" style="margin-top:7px"><div class="bar-fill" style="width:${phpct}%;background:var(--accent)"></div></div>`:""}
+                ${state==="locked"?`<div class="bp-sub" style="margin-top:4px;color:rgba(91,112,144,.6)">${ph.unlocks}</div>`:""}
+              </div>
+            </div>`;
+        }).join("")}
+      </div>
     </div>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="sh" style="margin-bottom:8px"><div class="sh-t">Open Tasks by Owner</div></div>
-        ${Object.entries(oc).sort((a,b)=>b[1]-a[1]).map(([o,c])=>`
-          <div class="orow">
-            <div class="oname">${o}</div>
-            <div class="obar"><div class="obar-f" style="width:${c/maxO*100}%"></div></div>
-            <div class="ocount">${c}</div>
-          </div>`).join("")}
+    <div class="progress-sentence">${progressMsg}</div>
+
+    <div class="work-cols">
+      <div class="wc">
+        <div class="wc-head">
+          <div class="wc-title" style="color:var(--green)">Do these today</div>
+          <div class="wc-sub">Quick wins · under 10 min each · no dependencies</div>
+        </div>
+        <div class="wc-body">
+          ${qws.slice(0,5).map(t=>`
+            <div class="wc-item" data-id="${t.id}">
+              <div class="wc-dot" style="background:var(--green)"></div>
+              <div class="wc-text">${t.name}</div>
+            </div>`).join("")}
+          ${qws.length===0?`<div class="wc-empty">No quick wins remaining</div>`:""}
+          ${qws.length>5?`<div class="wc-item" style="color:var(--muted);font-size:11px;padding:8px 13px">+${qws.length-5} more in All Tasks</div>`:""}
+        </div>
       </div>
-      <div class="card">
-        <div class="sh" style="margin-bottom:8px"><div class="sh-t">Open Tasks by Hook Type</div></div>
-        ${Object.entries(hc).sort((a,b)=>b[1]-a[1]).map(([h,c])=>`
-          <div class="orow">
-            <div style="width:110px">${hbadge(h)}</div>
-            <div class="obar"><div class="obar-f" style="width:${c/maxH*100}%"></div></div>
-            <div class="ocount">${c}</div>
-          </div>`).join("")}
+
+      <div class="wc">
+        <div class="wc-head">
+          <div class="wc-title" style="color:var(--purple)">Build without Francis</div>
+          <div class="wc-sub">HOOK/CLAUDE · MCP connected · ready now</div>
+        </div>
+        <div class="wc-body">
+          ${bns.slice(0,5).map(t=>`
+            <div class="wc-item" data-id="${t.id}">
+              <div class="wc-dot" style="background:var(--purple)"></div>
+              <div class="wc-text">${t.name}</div>
+            </div>`).join("")}
+          ${bns.length===0?`<div class="wc-empty">All HOOK/CLAUDE tasks complete</div>`:""}
+          ${bns.length>5?`<div class="wc-item" style="color:var(--muted);font-size:11px;padding:8px 13px">+${bns.length-5} more in All Tasks</div>`:""}
+        </div>
+      </div>
+
+      <div class="wc">
+        <div class="wc-head">
+          <div class="wc-title" style="color:var(--accent)">Decisions only you can make</div>
+          <div class="wc-sub">Other tasks are waiting on these calls</div>
+        </div>
+        <div class="wc-body">
+          ${decisions.slice(0,5).map(t=>`
+            <div class="wc-item" data-id="${t.id}">
+              <div class="wc-dot" style="background:var(--accent)"></div>
+              <div class="wc-text">${t.name}</div>
+            </div>`).join("")}
+          ${decisions.length===0?`<div class="wc-empty">No open decisions</div>`:""}
+        </div>
       </div>
     </div>
 
-    ${qws.length?`
-    <div class="sh"><div class="sh-t">⚡ Quick Wins</div><div class="sh-c">${qws.length} available</div></div>
-    <div class="card" style="padding:0;margin-bottom:20px">
-      <table class="tbl">
-        <tbody>${qws.map(t=>taskRow(t)).join("")}</tbody>
-      </table>
-    </div>`:""}
+    <div class="waiting-section">
+      <div class="sh"><div class="sh-t" style="color:var(--muted)">Waiting on others</div><div class="sh-c">${waiting.length} tasks parked</div></div>
+      <div class="card" style="padding:0">
+        ${waiting.slice(0,8).map(t=>`
+          <div class="waiting-row">
+            <div class="wc-dot" style="background:var(--muted);width:6px;height:6px;border-radius:50%;flex-shrink:0"></div>
+            <div class="waiting-name">${t.name}</div>
+            <span class="waiting-owner">${t.owner}</span>
+            ${hbadge(t.hook)}
+          </div>`).join("")}
+        ${waiting.length===0?`<div class="wc-empty">Nothing waiting — all tasks are actionable</div>`:""}
+        ${waiting.length>8?`<div class="waiting-row" style="color:var(--muted)">+${waiting.length-8} more — see All Tasks</div>`:""}
+      </div>
+    </div>
 
-    ${bns.length?`
-    <div class="sh"><div class="sh-t">🔧 Buildable Now</div><div class="sh-c">HOOK/CLAUDE · no Francis needed</div></div>
-    <div class="card" style="padding:0">
-      <table class="tbl">
-        <tbody>${bns.map(t=>taskRow(t)).join("")}</tbody>
-      </table>
-    </div>`:""}
   `;
   attachRowClicks();
 }
@@ -896,7 +1077,7 @@ function markdownToHtml(text){
 // API
 // ═══════════════════════════════════════════════════════════
 async function callAPI(system, messages){
-  const res = await fetch("https://api.anthropic.com/v1/messages",{
+  const res = await fetch("/.netlify/functions/claude",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
