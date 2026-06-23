@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PW Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-deep:    #0F1C2E;
+    --bg-panel:   #1E3148;
+    --bg-card:    #243752;
+    --bg-hover:   #2D4566;
+    --accent:     #F5A623;
+    --accent-dim: #B8791A;
+    --text-primary:   #E8EDF2;
+    --text-secondary: #6B7FA3;
+    --text-muted:     #3A4A5C;
+    --red:    #E05252;
+    --green:  #3DAA6E;
+    --amber:  #F5A623;
+    --grey:   #3A4A5C;
+    --blue:   #4A7FBF;
+    --purple: #7B6FC4;
+    --border: #2D4566;
+  }
+  html, body, #root { height: 100%; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    overflow: hidden;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+  /* Layout */
+  .app { display: flex; height: 100vh; }
+  .sidebar {
+    width: 220px; min-width: 220px;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+  .main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* Sidebar */
+  .sidebar-logo {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .logo-name {
+    font-size: 15px; font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+  .logo-sub {
+    font-size: 10px; color: var(--text-secondary);
+    margin-top: 2px; letter-spacing: 0.05em;
+  }
+  .sidebar-section { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .sidebar-label {
+    font-size: 9px; font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0 16px 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 16px; cursor: pointer;
+    font-size: 13px; color: var(--text-secondary);
+    transition: all 0.15s; border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .nav-item.active {
+    background: var(--bg-hover);
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .nav-badge {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    background: var(--bg-deep);
+    color: var(--text-secondary);
+    padding: 1px 6px; border-radius: 10px;
+  }
+  .nav-badge.urgent { background: rgba(224,82,82,0.15); color: var(--red); }
+
+  /* Top bar */
+  .topbar {
+    height: 52px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 16px;
+  }
+  .topbar-title { font-size: 14px; font-weight: 600; }
+  .topbar-sub { font-size: 12px; color: var(--text-secondary); }
+  .topbar-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    border: none; transition: all 0.15s; font-family: 'Inter', sans-serif;
+  }
+  .btn-primary { background: var(--accent); color: #0F1C2E; }
+  .btn-primary:hover { background: #f0b84a; }
+  .btn-ghost {
+    background: transparent; color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .btn-sm { padding: 4px 8px; font-size: 11px; }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .card-sm { padding: 12px; }
+
+  /* Grid */
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+
+  /* Stat cards */
+  .stat-value { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-sub { font-size: 11px; color: var(--text-secondary); margin-top: 6px; }
+
+  /* Progress */
+  .progress-bar { height: 4px; background: var(--bg-deep); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+
+  /* Stage cards */
+  .stage-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .stage-card:hover { border-color: var(--accent); background: var(--bg-hover); }
+  .stage-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .stage-card.s1::before { background: #4A7FBF; }
+  .stage-card.s2::before { background: #7B6FC4; }
+  .stage-card.s3::before { background: #3DAA6E; }
+  .stage-card.s4::before { background: #F5A623; }
+  .stage-card.s5::before { background: #E05252; }
+  .stage-card.s6::before { background: #6B7FA3; }
+  .stage-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .stage-name { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .stage-meta { display: flex; gap: 8px; align-items: center; }
+  .stage-open { font-size: 12px; color: var(--text-secondary); }
+  .stage-status {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    padding: 2px 7px; border-radius: 10px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .status-progress { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .status-complete { background: rgba(61,170,110,0.15); color: var(--green); }
+  .status-notstarted { background: rgba(58,74,92,0.3); color: var(--text-secondary); }
+
+  /* Task table */
+  .task-table { width: 100%; border-collapse: collapse; }
+  .task-table th {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 8px 12px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .task-row {
+    border-bottom: 1px solid rgba(45,69,102,0.5);
+    cursor: pointer; transition: background 0.12s;
+  }
+  .task-row:hover { background: var(--bg-hover); }
+  .task-row.complete { opacity: 0.45; }
+  .task-row td { padding: 9px 12px; font-size: 12px; vertical-align: middle; }
+  .task-name { font-weight: 500; color: var(--text-primary); max-width: 320px; }
+  .task-name-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .hook-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    padding: 2px 6px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .hook-compex  { background: rgba(224,82,82,0.12); color: #E05252; }
+  .hook-sync    { background: rgba(107,127,163,0.15); color: #8BA4C8; }
+  .hook-zoho    { background: rgba(61,170,110,0.12); color: #3DAA6E; }
+  .hook-claude  { background: rgba(123,111,196,0.15); color: #A89FDD; }
+  .hook-decision { background: rgba(245,166,35,0.12); color: #F5A623; }
+  .hook-none    { background: rgba(58,74,92,0.3); color: var(--text-secondary); }
+  .owner-chip {
+    font-size: 11px; color: var(--text-secondary);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .task-status-dot {
+    width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 4px;
+  }
+  .dot-open     { background: var(--amber); }
+  .dot-complete { background: var(--green); }
+  .dot-blocked  { background: var(--red); }
+  .dot-progress { background: var(--blue); }
+  .quick-win-flag {
+    font-size: 9px; font-weight: 600;
+    background: rgba(61,170,110,0.12); color: var(--green);
+    padding: 1px 5px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* Filters */
+  .filter-bar {
+    display: flex; gap: 8px; align-items: center;
+    padding: 12px 0; flex-wrap: wrap;
+  }
+  .filter-select {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-primary); font-family: 'Inter', sans-serif;
+    font-size: 12px; padding: 5px 10px; border-radius: 6px;
+    cursor: pointer; outline: none;
+  }
+  .filter-select:focus { border-color: var(--accent); }
+  .filter-label { font-size: 11px; color: var(--text-secondary); }
+  .search-input {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-primary); font-family: 'Inter', sans-serif;
+    font-size: 12px; padding: 5px 10px 5px 30px; border-radius: 6px;
+    outline: none; width: 220px;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-wrap { position: relative; }
+  .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+  /* Section headers */
+  .section-header {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .section-title { font-size: 14px; font-weight: 600; }
+  .section-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-secondary);
+  }
+  .section-action { margin-left: auto; }
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* Owner breakdown */
+  .owner-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0; border-bottom: 1px solid rgba(45,69,102,0.4);
+  }
+  .owner-row:last-child { border-bottom: none; }
+  .owner-name { font-size: 13px; font-weight: 500; width: 70px; }
+  .owner-bar-wrap { flex: 1; height: 4px; background: var(--bg-deep); border-radius: 2px; overflow: hidden; }
+  .owner-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .owner-count { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-secondary); width: 24px; text-align: right; }
+
+  /* Work panel (slide-in) */
+  .work-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,28,46,0.7);
+    z-index: 100;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .work-panel {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 680px; max-width: 90vw;
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    z-index: 101;
+    animation: slideIn 0.22s ease;
+  }
+  @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .work-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .work-header-top { display: flex; align-items: center; gap: 10px; }
+  .work-title { font-size: 14px; font-weight: 600; flex: 1; }
+  .work-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .work-messages {
+    flex: 1; overflow-y: auto;
+    padding: 16px 20px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .msg {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px; line-height: 1.55;
+  }
+  .msg-system {
+    background: rgba(245,166,35,0.08);
+    border: 1px solid rgba(245,166,35,0.2);
+    color: var(--text-secondary);
+    font-size: 12px;
+    max-width: 100%;
+    border-radius: 6px;
+  }
+  .msg-system-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .msg-user {
+    align-self: flex-end;
+    background: var(--accent);
+    color: #0F1C2E;
+    font-weight: 500;
+  }
+  .msg-assistant {
+    align-self: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  .msg-assistant p { margin-bottom: 8px; }
+  .msg-assistant p:last-child { margin-bottom: 0; }
+  .msg-assistant ul { padding-left: 16px; margin: 4px 0; }
+  .msg-assistant li { margin-bottom: 4px; }
+  .msg-assistant strong { color: var(--accent); }
+  .msg-loading {
+    align-self: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 8px;
+  }
+  .typing-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    margin: 0 2px;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+  .work-input-area {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: flex-end;
+  }
+  .work-textarea {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    resize: none;
+    outline: none;
+    line-height: 1.45;
+    min-height: 40px; max-height: 120px;
+  }
+  .work-textarea:focus { border-color: var(--accent); }
+  .work-textarea::placeholder { color: var(--text-muted); }
+  .work-footer {
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .work-footer-note { font-size: 11px; color: var(--text-muted); flex: 1; }
+
+  /* Notion badge */
+  .notion-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--text-muted);
+    background: var(--bg-deep); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .notion-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted); }
+  .notion-dot.live { background: var(--green); }
+
+  /* Hook type legend */
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab {
+    padding: 8px 16px; font-size: 13px; cursor: pointer;
+    color: var(--text-secondary); border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text-primary); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+
+  /* Brock personal list highlight */
+  .brock-task-row { background: rgba(245,166,35,0.04); }
+  .brock-task-row:hover { background: rgba(245,166,35,0.08); }
+
+  /* Phase badges */
+  .phase-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; padding: 2px 6px; border-radius: 3px;
+    font-weight: 500; letter-spacing: 0.05em;
+  }
+  .phase-1 { background: rgba(74,127,191,0.15); color: #4A7FBF; }
+  .phase-2 { background: rgba(107,127,163,0.15); color: #8BA4C8; }
+  .phase-3 { background: rgba(123,111,196,0.15); color: #A89FDD; }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 40px; color: var(--text-secondary); }
+  .empty-state svg { margin: 0 auto 12px; opacity: 0.3; display: block; }
+
+  /* Notion write success */
+  .notion-write-banner {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(61,170,110,0.1); border: 1px solid rgba(61,170,110,0.3);
+    border-radius: 6px; padding: 8px 12px;
+    font-size: 12px; color: var(--green);
+    margin: 8px 0;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+const Icons = lucide;
+
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const NOTION_PAGES = {
+  main:   "35e2e7f35b1f812d8e7cec432f027512",
+  stage1: "35e2e7f3-5b1f-8146-9208-cb4c1865995b",
+  stage2: "35e2e7f3-5b1f-81a8-b680-caf9216c7e13",
+  stage3: "35e2e7f3-5b1f-81cb-83fc-cd6a411e957b",
+  stage4: "35e2e7f3-5b1f-81f1-9fee-f1e359a303ab",
+  stage5: "35e2e7f3-5b1f-8187-af04-c114cb6339fd",
+  stage6: "35e2e7f3-5b1f-8121-b3b8-f18c8415b130",
+  integrations: "3742e7f35b1f81e0acb5f10de32cca8a",
+};
+
+const LIFECYCLE_URL = "https://pwcustomerlifecycle.netlify.app";
+
+const TASKS = [
+  // ── STAGE 1
+  { id:"s1-01", stage:1, name:"B2B Rocket sequence rebuild in Brock's voice", owner:"Brock", hook:"COMPEX", status:"open", phase:1, notionPage:"stage1", context:"Rebuild all B2B Rocket cold email sequences for CA contractor leads in Brock's voice. We need to audit the current sequences, rewrite each touch in Brock's authentic tone (direct, compliance-expert, non-salesy), and produce the final copy ready for upload into B2B Rocket. Output goes to Notion Stage 1 page." },
+  { id:"s1-02", stage:1, name:"Gmail inbox consolidation: 5 B2B Rocket accounts → single inbox", owner:"Brock", hook:"SYNC", status:"open", phase:2, notionPage:"stage1", context:"Define the architecture for consolidating 5 B2B Rocket Gmail sending accounts into a single monitored inbox. Document the forwarding rules, labeling convention, and monitoring protocol. Output the spec to Notion Stage 1." },
+  { id:"s1-03", stage:1, name:"Zoho referral credit tracking fields", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage1", quickWin:true, context:"Add two fields to Zoho CRM client records: 'Referred By' and 'Credit Applied Date'. Document the field specs, data types, and automation logic. This is a quick win — spec it out and it can be configured in Zoho directly." },
+  { id:"s1-04", stage:1, name:"Zoho automation: referred client pays first invoice → flag Rachel for $250 credit", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage1", context:"Design the Zoho automation rule: when a referred client's first invoice is paid, auto-create a task for Rachel to apply the $250 referral credit. Write the trigger conditions, action steps, and notification copy." },
+  { id:"s1-05", stage:1, name:"Zoho partner module for payroll firm referral tracking", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage1", context:"Spec out a Zoho partner module to track payroll firm referral relationships. Define fields, relationship to client records, and reporting views needed." },
+  { id:"s1-06", stage:1, name:"Google review attribution within 14 days of ask", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage1", context:"Design the attribution logic: when a client leaves a Google review within 14 days of a review request, log the attribution against the requesting consultant/event in Zoho. Spec the trigger and field update." },
+  { id:"s1-07", stage:1, name:"Google Ads Customer Match lookalike from DIR email scrape", owner:"Brock", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage1", context:"Spec the workflow: DIR email scrape → clean and format → upload as Customer Match audience to Google Ads → create lookalike campaign. Define the data pipeline steps, file format requirements, and campaign structure." },
+
+  // ── STAGE 2
+  { id:"s2-01", stage:2, name:"Compliance estimate generator tool", owner:"Megan", hook:"COMPEX", status:"progress", phase:1, notionPage:"stage2", context:"The compliance estimate generator is in progress (Megan + Francis). In this session: document what the tool needs to produce, what inputs it requires, and what format the output takes. Build out the Stage 2 estimate node spec in Notion." },
+  { id:"s2-02", stage:2, name:"Pre-call brief automation (Zoho + Gmail + web search)", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage2", buildableNow:true, context:"Build the pre-call brief system: before every consultation call, Claude pulls the prospect's Zoho record, recent Gmail threads, and a web search for their company/project → compiles a 1-page brief for Brock or Anthy. Design the brief format and automate the assembly. This is buildable today via MCP." },
+  { id:"s2-03", stage:2, name:"T+2 / T+5 auto follow-up sequence after consultation", owner:"Brock", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage2", context:"Write the T+2 and T+5 follow-up email templates for post-consultation leads who haven't signed. Two versions: one for Brock's hot leads, one for Anthy's assigned leads. Tone: helpful, specific, not pushy. Include variable slots for project type and compliance risk level." },
+  { id:"s2-04", stage:2, name:"T+14 Brock personal follow-up draft system", owner:"Brock", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage2", context:"At T+14 post-consultation with no contract signed, Claude drafts a personalized follow-up for Brock to review and send. Design the draft system: what data it pulls, how it personalizes, and what the template structure looks like." },
+
+  // ── STAGE 3
+  { id:"s3-01", stage:3, name:"Onboarding email template in AM voice", owner:"Anthy", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage3", context:"Write the onboarding welcome email template in Anthy's voice. Sent when a new client signs. Warm, professional, sets expectations for the first week. Include variable slots for project name, consultant name, and first due dates." },
+  { id:"s3-02", stage:3, name:"'Working With PW' document template", owner:"Brock", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage3", context:"Create the 'Working With PW' client-facing document. Covers: what PW does, what the client needs to provide, weekly CPR rhythm, how to send timesheets, who to contact for what. Professional, plain-language, designed to reduce onboarding friction." },
+  { id:"s3-03", stage:3, name:"Welcome kit contents + budget defined", owner:"Brock", hook:"decision", status:"open", phase:1, notionPage:"stage3", context:"Decision needed: what goes in the PW physical welcome kit? What is the per-client budget? Bobby handles fulfillment. Possible items: branded folder, pen, card, compliance reference guide, USB with templates? Make the call and document it." },
+  { id:"s3-04", stage:3, name:"Bobby welcome kit auto-task creation in Zoho", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage3", context:"When a new client signs (Stage 3 trigger), Zoho should auto-create a task assigned to Bobby: 'Ship welcome kit to [Client Name]' with address from CRM record and due date of T+3. Spec the automation rule." },
+  { id:"s3-05", stage:3, name:"Notion client brain page auto-creation at Stage 3", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage3", buildableNow:true, context:"When a client moves to Stage 3 in Zoho, Claude auto-creates a structured Notion client brain page. Define the template structure: contact info, project details, communication preferences, profile questions, history log. This is buildable now via Notion MCP." },
+
+  // ── STAGE 4
+  { id:"s4-01", stage:4, name:"Lead Consultant Client Profile — 20 questions in dashboard", owner:"Brock", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"Implement the 20-question Lead Consultant Client Profile in the dashboard. When a lead consultant is assigned to a new client, Claude walks them through the 20 questions and saves answers to the Notion client brain. Design the conversation flow and the Notion save format." },
+  { id:"s4-02", stage:4, name:"Project Information Form auto-send on project start", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"When a new project is created in Zoho Projects, Claude auto-sends a Project Information Form to the client contact. Design the form fields, email wrapper, and response capture flow." },
+  { id:"s4-03", stage:4, name:"Zoho Projects task list auto-creation via MCP", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", buildableNow:true, context:"When a new project starts, Claude auto-creates the standard task list in Zoho Projects (portal 829542738): CPR weekly tasks, eCPR tasks, DAS 140/142, prevailing wages, fringe benefit statement, digital file setup, training contributions. Build this via Zoho Projects MCP." },
+  { id:"s4-04", stage:4, name:"Signature nudge at 7 days unsigned CPR", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"If a CPR has been sent but not signed after 7 days, Claude sends a nudge email to the client contact. Write the nudge template and spec the Zoho trigger logic." },
+  { id:"s4-05", stage:4, name:"Client confirmation after eCPR upload", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"After an eCPR is uploaded to the DIR, Claude sends a confirmation email to the client with the project name, week period, and confirmation number. Write the template and spec the trigger." },
+  { id:"s4-06", stage:4, name:"PWCR renewal alert at 45 days before expiration", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"45 days before a client's PWCR expires, Claude surfaces an alert in the dashboard and drafts a renewal reminder email to the client. Spec the alert logic and write the email template." },
+  { id:"s4-07", stage:4, name:"Rate increase alert at 30 days before effective date", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"30 days before a prevailing wage rate increase takes effect on an active project, Claude surfaces an alert and notifies the client. Spec the alert logic and write the notification template." },
+  { id:"s4-08", stage:4, name:"CAC invoice reminder on 1st of month", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"On the 1st of each month, Claude sends a CAC training contribution invoice reminder to clients with active apprentices. Write the reminder template and spec the Zoho trigger." },
+  { id:"s4-09", stage:4, name:"Sub Oversight 3-touch drip sequence", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"Build the Sub Oversight drip sequence for non-responsive subs. Three emails: Touch 1 (initial document request), Touch 2 (follow-up, 5 days), Touch 3 (final notice, 10 days). If no response after Touch 3: dashboard alert to lead consultant to call directly. Write all three emails. Tone: professional, firm, compliance-focused." },
+  { id:"s4-10", stage:4, name:"90-day profile refresh prompt", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage4", context:"90 days into an active client relationship, Claude surfaces a profile refresh prompt in the dashboard. Design the prompt: what it shows (current profile data), what it asks (anything to update?), and how updates are saved back to Notion." },
+  { id:"s4-11", stage:4, name:"CPR production", owner:"Francis", hook:"COMPEX", status:"open", phase:4, notionPage:"stage4", context:"⚠ HOOK/COMPEX: CPR production. Francis builds the Compex workflow. Claude's role: detect CPR due date → surface in dashboard → AM approves → HOOK/COMPEX fires → completion signal → mark complete in Zoho Projects → sync to Notion." },
+  { id:"s4-12", stage:4, name:"DAS 140 production", owner:"Francis", hook:"COMPEX", status:"open", phase:4, notionPage:"stage4", context:"⚠ HOOK/COMPEX: DAS 140 production. Within 10 days of contract execution, trigger DAS 140 generation." },
+  { id:"s4-13", stage:4, name:"DAS 142 production", owner:"Francis", hook:"COMPEX", status:"open", phase:4, notionPage:"stage4", context:"⚠ HOOK/COMPEX: DAS 142 production. 72 hours before requested apprentice date." },
+  { id:"s4-14", stage:4, name:"eCPR upload", owner:"Francis", hook:"COMPEX", status:"progress", phase:4, notionPage:"stage4", context:"⚠ HOOK/COMPEX: eCPR upload to CA DIR. Partial — some platforms live. Track which platforms are active and which remain." },
+  { id:"s4-15", stage:4, name:"CAC invoice production", owner:"Francis", hook:"COMPEX", status:"open", phase:4, notionPage:"stage4", context:"⚠ HOOK/COMPEX: Monthly CAC training contribution invoice production." },
+  { id:"s4-16", stage:4, name:"Fringe benefit statement production", owner:"Francis", hook:"COMPEX", status:"open", phase:4, notionPage:"stage4", context:"⚠ HOOK/COMPEX: Fringe benefit statement production per project." },
+
+  // ── STAGE 5
+  { id:"s5-01", stage:5, name:"Job Pending status auto-detection from client history", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage5", context:"Detect when a client's project history suggests a new bid is pending: no active project, but past projects, and recent communication mentioning a bid or upcoming job. Design the detection logic and dashboard alert." },
+  { id:"s5-02", stage:5, name:"Day 30 warm check-in draft", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage5", context:"30 days after project closeout with no new project started, Claude drafts a warm check-in email for the lead consultant to review. Personal, non-salesy, relationship-focused. Write the template." },
+  { id:"s5-03", stage:5, name:"Day 60 recovery sequence", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage5", context:"60 days post-closeout with no new engagement, Claude triggers a recovery sequence. Design the 2-touch sequence: Day 60 (check-in + value offer) and Day 75 (last touch before moving to Terminated-Follow-Up)." },
+  { id:"s5-04", stage:5, name:"12-month follow-up timer for Terminated — Follow-Up accounts", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage5", context:"For accounts marked Terminated-Follow-Up, Claude sets a 12-month timer. At month 12, surfaces a re-engagement prompt in the dashboard with the client's history and a draft outreach email." },
+  { id:"s5-05", stage:5, name:"DNC flag preventing all outreach for Terminated — No Contact", owner:"Claude", hook:"CLAUDE", status:"open", phase:1, notionPage:"stage5", context:"Accounts marked Terminated-No-Contact must be fully suppressed from all outreach sequences. Design the DNC flag logic across all channels." },
+
+  // ── STAGE 6
+  { id:"s6-01", stage:6, name:"Add 'Terminated — Follow-Up' status to Zoho", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage6", quickWin:true, context:"Quick win: add 'Terminated — Follow-Up' as a pipeline status in Zoho CRM. Log in to Zoho and add the status, then confirm here." },
+  { id:"s6-02", stage:6, name:"Add 'Terminated — No Contact' status to Zoho", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"stage6", quickWin:true, context:"Quick win: add 'Terminated — No Contact' as a pipeline status in Zoho CRM." },
+
+  // ── PHASE 2 SYNC
+  { id:"p2-01", stage:0, name:"Zoho webhook infrastructure", owner:"Francis", hook:"SYNC", status:"blocked", phase:2, notionPage:"main", context:"⚠ HOOK/SYNC BLOCKER: Zoho webhook infrastructure must be built before any sync items can proceed. Francis owns this." },
+  { id:"p2-02", stage:0, name:"Anthy Gmail → Notion auto-extraction", owner:"Francis", hook:"SYNC", status:"blocked", phase:2, notionPage:"main", context:"⚠ HOOK/SYNC: Highest priority sync item. Anthy's Gmail threads → Claude extracts key points, signals, action items → appended to client Notion brain pages automatically." },
+  { id:"p2-03", stage:0, name:"Otter transcript → Notion auto-extraction", owner:"Francis", hook:"SYNC", status:"blocked", phase:2, notionPage:"main", context:"⚠ HOOK/SYNC: Otter call transcripts → Claude extracts key points, decisions, action items, personal mentions → appended to client Notion brain pages." },
+  { id:"p2-04", stage:0, name:"Zoho stage change → Notion sync", owner:"Francis", hook:"SYNC", status:"blocked", phase:2, notionPage:"main", context:"⚠ HOOK/SYNC: When Zoho pipeline stage changes, downstream consequences cascade and Notion client brain is updated automatically." },
+
+  // ── NAMING / PROCESS
+  { id:"nm-01", stage:0, name:"Communicate Otter naming convention to team", owner:"Brock", hook:"none", status:"open", phase:1, notionPage:"main", quickWin:true, context:"Quick win: communicate the Otter naming convention to all team members: [Client Name] — [Topic] — [YYYY-MM-DD]. Draft the message and send to the team." },
+  { id:"nm-02", stage:0, name:"Audit Zoho account names for consistency", owner:"Brock", hook:"none", status:"open", phase:1, notionPage:"main", quickWin:true, context:"Quick win: audit all Zoho CRM account names to ensure they follow the standard naming convention. Identify any inconsistencies and create a cleanup list." },
+  { id:"nm-03", stage:0, name:"Audit Google Drive client folder names", owner:"Brock", hook:"none", status:"open", phase:1, notionPage:"main", quickWin:true, context:"Quick win: audit Google Drive client folders to ensure names match Zoho Account_Name exactly. Identify mismatches." },
+
+  // ── KNOWLEDGE BASE
+  { id:"kb-01", stage:0, name:"Review 'Ask Prevailing Wisdom' Claude project with Megan", owner:"Brock", hook:"none", status:"open", phase:3, notionPage:"main", context:"Schedule and conduct a review session with Megan on the Ask Prevailing Wisdom Claude project. Assess current state, identify gaps, and define the knowledge base build plan." },
+  { id:"kb-02", stage:0, name:"Build Tone & Voice Guide", owner:"Megan", hook:"none", status:"open", phase:3, notionPage:"main", context:"Megan and Brock build the PW Tone & Voice Guide: how PW speaks, what PW's stances are, sample language for compliance questions. Foundational for the Wizard of PW." },
+
+  // ── ZOHO SETUP
+  { id:"zo-01", stage:0, name:"Add 'Job Pending' status to Zoho", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"main", quickWin:true, context:"Quick win: add 'Job Pending' as a Zoho CRM pipeline status (may already exist — confirm or add)." },
+  { id:"zo-02", stage:0, name:"Add 'Warm' status to Zoho", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"main", quickWin:true, context:"Quick win: add 'Warm' as a Zoho CRM pipeline status (may already exist — confirm or add)." },
+  { id:"zo-03", stage:0, name:"Add 'Recovery' status to Zoho", owner:"Brock", hook:"ZOHO", status:"open", phase:1, notionPage:"main", quickWin:true, context:"Quick win: add 'Recovery' as a Zoho CRM pipeline status." },
+  { id:"zo-04", stage:0, name:"Connect Anthy Gmail via MCP", owner:"Brock", hook:"SYNC", status:"open", phase:2, notionPage:"main", context:"Highest value Phase 2 action: connect Anthy's Gmail account via MCP so her client email threads can flow into the sync layer. Identify the steps required and execute." },
+];
+
+const STAGES = [
+  { num:1, name:"Lead Generation",       color:"#4A7FBF", url:`${LIFECYCLE_URL}/#stage1` },
+  { num:2, name:"Consultation & Close",  color:"#7B6FC4", url:`${LIFECYCLE_URL}/#stage2` },
+  { num:3, name:"Onboarding",            color:"#3DAA6E", url:`${LIFECYCLE_URL}/#stage3` },
+  { num:4, name:"Active Project Loop",   color:"#F5A623", url:`${LIFECYCLE_URL}/#stage4` },
+  { num:5, name:"Retention & Recovery",  color:"#E05252", url:`${LIFECYCLE_URL}/#stage5` },
+  { num:6, name:"Project Closeout",      color:"#6B7FA3", url:`${LIFECYCLE_URL}/#stage6` },
+];
+
+const HOOK_LABELS = {
+  COMPEX:   "HOOK/COMPEX",
+  SYNC:     "HOOK/SYNC",
+  ZOHO:     "HOOK/ZOHO",
+  CLAUDE:   "HOOK/CLAUDE",
+  decision: "DECISION",
+  none:     "PROCESS",
+};
+
+// ─── STORAGE HELPERS ────────────────────────────────────────────────────────
+
+function getTaskConversation(taskId) {
+  try { return JSON.parse(localStorage.getItem(`pw_conv_${taskId}`) || "null"); } catch { return null; }
+}
+function setTaskConversation(taskId, messages) {
+  localStorage.setItem(`pw_conv_${taskId}`, JSON.stringify(messages));
+}
+function getTaskStatus(taskId) {
+  try { return localStorage.getItem(`pw_status_${taskId}`) || null; } catch { return null; }
+}
+function setTaskStatus(taskId, status) {
+  localStorage.setItem(`pw_status_${taskId}`, status);
+}
+function getAllTaskStatuses() {
+  const out = {};
+  TASKS.forEach(t => { const s = getTaskStatus(t.id); if (s) out[t.id] = s; });
+  return out;
+}
+
+// ─── SYSTEM PROMPT ──────────────────────────────────────────────────────────
+
+function buildSystemPrompt(task) {
+  const stage = STAGES.find(s => s.num === task.stage);
+  const stageName = stage ? stage.name : "Cross-cutting";
+  const notionUrl = `https://notion.so/${NOTION_PAGES[task.notionPage] || NOTION_PAGES.main}`;
+
+  return `You are the Wizard of PW — the AI operating system for Prevailing Wisdom, a California labor compliance company. You are embedded in the PW Command Center dashboard.
+
+COMPANY: Prevailing Wisdom — Labor Compliance Simplified
+SERVICES: Certified payroll (CPR) production, DAS 140/142 filing, ECPR uploads to CA DIR, fringe benefit statements, training contribution invoices, project closeout.
+TEAM: Brock (Owner/strategy), Rachel (Owner/billing/compliance), Francis (Owner/technical — builds all document automation), Megan (Owner/industry expert), Anthy (Account manager), Bobby (EA/fulfillment).
+
+CURRENT TASK: ${task.name}
+STAGE: ${stageName}
+HOOK TYPE: ${task.hook}
+OWNER: ${task.owner}
+NOTION DESTINATION: ${notionUrl}
+PHASE: Phase ${task.phase}
+
+TASK CONTEXT:
+${task.context}
+
+YOUR ROLE IN THIS SESSION:
+You and Brock are working on this task together until it is complete. You have deep knowledge of PW's systems, voice, and operational context.
+
+ARCHITECTURE RULES:
+- Soft side (Claude/Brock): all customer-facing, relational, lifecycle-driven work
+- Hard side (Francis/Compex): all document production and platform submission — NEVER approximate or build this
+- Hooks marked HOOK/COMPEX are Francis's domain — spec them, don't build them
+- Hooks marked HOOK/CLAUDE are buildable now via connected MCPs
+- Zoho is updated by automation only — humans never log in to manually complete tasks
+- Every task completion must update Notion (the brain) and mark the task complete
+
+NOTION PAGES:
+- Stage 1: 35e2e7f3-5b1f-8146-9208-cb4c1865995b
+- Stage 2: 35e2e7f3-5b1f-81a8-b680-caf9216c7e13
+- Stage 3: 35e2e7f3-5b1f-81cb-83fc-cd6a411e957b
+- Stage 4: 35e2e7f3-5b1f-81f1-9fee-f1e359a303ab
+- Stage 5: 35e2e7f3-5b1f-8187-af04-c114cb6339fd
+- Stage 6: 35e2e7f3-5b1f-8121-b3b8-f18c8415b130
+
+TONE: Direct, expert, efficient. You know this business. Don't over-explain basics. Ask sharp questions when you need a decision. When something is ready to save to Notion, say so explicitly and confirm before writing.
+
+When the work is complete and ready to be marked done, say: TASK_COMPLETE`;
+}
+
+// ─── COMPONENTS ─────────────────────────────────────────────────────────────
+
+function HookBadge({ type }) {
+  const cls = {
+    COMPEX:"hook-compex", SYNC:"hook-sync", ZOHO:"hook-zoho",
+    CLAUDE:"hook-claude", decision:"hook-decision", none:"hook-none"
+  }[type] || "hook-none";
+  return <span className={`hook-badge ${cls}`}>{HOOK_LABELS[type] || type}</span>;
+}
+
+function StatusDot({ status }) {
+  const cls = { open:"dot-open", complete:"dot-complete", blocked:"dot-blocked", progress:"dot-progress" }[status] || "dot-open";
+  return <span className={`task-status-dot ${cls}`} />;
+}
+
+function PhaseBadge({ phase }) {
+  if (!phase) return null;
+  return <span className={`phase-badge phase-${Math.min(phase,3)}`}>P{phase}</span>;
+}
+
+// ─── WORK PANEL ─────────────────────────────────────────────────────────────
+
+function WorkPanel({ task, onClose, onTaskComplete }) {
+  const [messages, setMessages] = useState(() => getTaskConversation(task.id) || []);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [notionWriting, setNotionWriting] = useState(false);
+  const [notionWritten, setNotionWritten] = useState(false);
+  const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior:"smooth" });
+  }, [messages, loading]);
+
+  // Auto-open with context brief if no prior conversation
+  useEffect(() => {
+    if (messages.length === 0) {
+      setLoading(true);
+      const systemPrompt = buildSystemPrompt(task);
+      const initMsg = `I'm opening the work session for: "${task.name}". Give me a sharp 3-4 sentence brief on what we're building, what decision or output is needed to complete this task, and your first question or proposed first step.`;
+
+      callClaude(systemPrompt, [{ role:"user", content: initMsg }]).then(reply => {
+        const initMsgs = [{ role:"user", content: initMsg }, { role:"assistant", content: reply }];
+        setMessages(initMsgs);
+        setTaskConversation(task.id, initMsgs);
+        setLoading(false);
+      }).catch(() => setLoading(false));
+    }
+  }, []);
+
+  async function callClaude(systemPrompt, msgs) {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: msgs,
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.content.find(b => b.type === "text")?.text || "";
+  }
+
+  async function sendMessage() {
+    if (!input.trim() || loading) return;
+    const userMsg = input.trim();
+    setInput("");
+
+    const newMsgs = [...messages, { role:"user", content: userMsg }];
+    setMessages(newMsgs);
+    setLoading(true);
+
+    try {
+      const systemPrompt = buildSystemPrompt(task);
+      const reply = await callClaude(systemPrompt, newMsgs);
+      const finalMsgs = [...newMsgs, { role:"assistant", content: reply }];
+      setMessages(finalMsgs);
+      setTaskConversation(task.id, finalMsgs);
+
+      if (reply.includes("TASK_COMPLETE")) {
+        onTaskComplete(task.id);
+      }
+    } catch (e) {
+      const errMsgs = [...newMsgs, { role:"assistant", content: `Error: ${e.message}` }];
+      setMessages(errMsgs);
+    }
+    setLoading(false);
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function autoResize(e) {
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+  }
+
+  const stage = STAGES.find(s => s.num === task.stage);
+  const notionUrl = `https://notion.so/${NOTION_PAGES[task.notionPage] || NOTION_PAGES.main}`;
+
+  function renderMessage(text) {
+    // Simple markdown-ish render
+    const lines = text.split('\n');
+    return lines.map((line, i) => {
+      if (line.startsWith('**') && line.endsWith('**')) return <p key={i}><strong>{line.slice(2,-2)}</strong></p>;
+      if (line.startsWith('- ') || line.startsWith('• ')) return <li key={i}>{line.slice(2)}</li>;
+      if (line.trim() === '') return <br key={i}/>;
+      return <p key={i}>{line}</p>;
+    });
+  }
+
+  return (
+    <>
+      <div className="work-overlay" onClick={onClose} />
+      <div className="work-panel">
+        <div className="work-header">
+          <div className="work-header-top">
+            <button className="btn btn-ghost btn-sm" onClick={onClose}>
+              <Icons.X size={12} /> Close
+            </button>
+            <div className="work-title">{task.name}</div>
+          </div>
+          <div className="work-meta">
+            {stage && <span style={{fontSize:11,color:stage.color,fontWeight:600}}>Stage {task.stage} — {stage.name}</span>}
+            <HookBadge type={task.hook} />
+            <PhaseBadge phase={task.phase} />
+            <span className="owner-chip"><Icons.User size={10}/>{task.owner}</span>
+            <a href={notionUrl} target="_blank" style={{marginLeft:'auto'}}>
+              <span className="notion-badge">
+                <span className={`notion-dot ${notionWritten ? 'live' : ''}`}/>
+                Notion {notionWritten ? '✓ Updated' : '→ Destination'}
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div className="work-messages">
+          {notionWritten && (
+            <div className="notion-write-banner">
+              <Icons.CheckCircle size={14}/>
+              Output saved to Notion — <a href={notionUrl} target="_blank" style={{color:'inherit',textDecoration:'underline'}}>view page</a>
+            </div>
+          )}
+          {messages.map((msg, i) => {
+            if (msg.role === "user" && i === 0) return null; // hide init prompt
+            if (msg.role === "user") return (
+              <div key={i} className="msg msg-user">{msg.content}</div>
+            );
+            return (
+              <div key={i} className="msg msg-assistant">
+                {renderMessage(msg.content)}
+              </div>
+            );
+          })}
+          {loading && (
+            <div className="msg-loading">
+              <span className="typing-dot"/><span className="typing-dot"/><span className="typing-dot"/>
+            </div>
+          )}
+          <div ref={messagesEndRef}/>
+        </div>
+
+        <div className="work-input-area">
+          <textarea
+            ref={textareaRef}
+            className="work-textarea"
+            placeholder="Reply, add context, or ask a question…"
+            value={input}
+            onChange={e => { setInput(e.target.value); autoResize(e); }}
+            onKeyDown={handleKeyDown}
+            rows={1}
+          />
+          <button className="btn btn-primary" onClick={sendMessage} disabled={loading}>
+            <Icons.Send size={13}/>
+          </button>
+        </div>
+
+        <div className="work-footer">
+          <span className="work-footer-note">
+            Shift+Enter for new line · Enter to send · Conversation saved per task
+          </span>
+          <button className="btn btn-ghost btn-sm" onClick={() => {
+            if (confirm("Clear this conversation and start fresh?")) {
+              setMessages([]); setTaskConversation(task.id, null);
+            }
+          }}>
+            <Icons.RotateCcw size={11}/> Reset
+          </button>
+          <button className="btn btn-primary btn-sm" onClick={() => {
+            setTaskStatus(task.id, "complete");
+            onTaskComplete(task.id);
+          }}>
+            <Icons.Check size={11}/> Mark Complete
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ─── OVERVIEW TAB ───────────────────────────────────────────────────────────
+
+function Overview({ tasks, statuses, onOpenTask }) {
+  const total = tasks.length;
+  const complete = tasks.filter(t => (statuses[t.id] || t.status) === "complete").length;
+  const open = tasks.filter(t => (statuses[t.id] || t.status) === "open").length;
+  const quickWins = tasks.filter(t => t.quickWin && (statuses[t.id] || t.status) !== "complete");
+  const buildableNow = tasks.filter(t => t.buildableNow && (statuses[t.id] || t.status) !== "complete");
+
+  const ownerCounts = {};
+  tasks.forEach(t => {
+    if ((statuses[t.id] || t.status) !== "complete") {
+      ownerCounts[t.owner] = (ownerCounts[t.owner] || 0) + 1;
+    }
+  });
+  const maxOwner = Math.max(...Object.values(ownerCounts));
+
+  const hookCounts = {};
+  tasks.forEach(t => {
+    if ((statuses[t.id] || t.status) !== "complete") {
+      hookCounts[t.hook] = (hookCounts[t.hook] || 0) + 1;
+    }
+  });
+
+  return (
+    <div>
+      {/* Top stats */}
+      <div className="grid-4" style={{marginBottom:20}}>
+        <div className="card">
+          <div className="stat-value" style={{color:"var(--text-primary)"}}>{total}</div>
+          <div className="stat-label">Total Tasks</div>
+          <div className="progress-bar">
+            <div className="progress-fill" style={{width:`${(complete/total*100).toFixed(0)}%`, background:"var(--green)"}}/>
+          </div>
+          <div className="stat-sub">{complete} complete · {open} open</div>
+        </div>
+        <div className="card">
+          <div className="stat-value" style={{color:"var(--amber)"}}>{quickWins.length}</div>
+          <div className="stat-label">Quick Wins</div>
+          <div className="stat-sub">Can be done today</div>
+        </div>
+        <div className="card">
+          <div className="stat-value" style={{color:"var(--purple)"}}>{buildableNow.length}</div>
+          <div className="stat-label">Buildable Now</div>
+          <div className="stat-sub">HOOK/CLAUDE — no Francis needed</div>
+        </div>
+        <div className="card">
+          <div className="stat-value" style={{color:"var(--red)"}}>{hookCounts.SYNC || 0}</div>
+          <div className="stat-label">Sync Blockers</div>
+          <div className="stat-sub">Waiting on Phase 2</div>
+        </div>
+      </div>
+
+      {/* Stage progress */}
+      <div className="section-header">
+        <div className="section-title">Lifecycle Stages</div>
+        <div className="section-count">{STAGES.length} stages</div>
+      </div>
+      <div className="grid-3" style={{marginBottom:24}}>
+        {STAGES.map(stage => {
+          const stageTasks = tasks.filter(t => t.stage === stage.num);
+          const done = stageTasks.filter(t => (statuses[t.id] || t.status) === "complete").length;
+          const pct = stageTasks.length ? Math.round(done/stageTasks.length*100) : 0;
+          const open = stageTasks.filter(t => (statuses[t.id]||t.status) !== "complete").length;
+          return (
+            <div key={stage.num} className={`stage-card s${stage.num}`}
+              onClick={() => window.open(stage.url,'_blank')}>
+              <div className="stage-num">STAGE 0{stage.num}</div>
+              <div className="stage-name">{stage.name}</div>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{width:`${pct}%`, background:stage.color}}/>
+              </div>
+              <div className="stage-meta" style={{marginTop:8}}>
+                <div className="stage-open">{open} open · {done}/{stageTasks.length}</div>
+                <span className={`stage-status ${pct===100?'status-complete':pct>0?'status-progress':'status-notstarted'}`}>
+                  {pct===100?"Complete":pct>0?"In Progress":"Not Started"}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Owner breakdown */}
+      <div className="grid-2" style={{marginBottom:24}}>
+        <div className="card">
+          <div className="section-header" style={{marginBottom:10}}>
+            <div className="section-title">Open Tasks by Owner</div>
+          </div>
+          {Object.entries(ownerCounts).sort((a,b)=>b[1]-a[1]).map(([owner, count]) => (
+            <div key={owner} className="owner-row">
+              <div className="owner-name">{owner}</div>
+              <div className="owner-bar-wrap">
+                <div className="owner-bar-fill" style={{width:`${count/maxOwner*100}%`}}/>
+              </div>
+              <div className="owner-count">{count}</div>
+            </div>
+          ))}
+        </div>
+        <div className="card">
+          <div className="section-header" style={{marginBottom:10}}>
+            <div className="section-title">Open Tasks by Hook Type</div>
+          </div>
+          {Object.entries(hookCounts).sort((a,b)=>b[1]-a[1]).map(([hook, count]) => (
+            <div key={hook} className="owner-row">
+              <div style={{width:110}}><HookBadge type={hook}/></div>
+              <div className="owner-bar-wrap">
+                <div className="owner-bar-fill" style={{width:`${count/Math.max(...Object.values(hookCounts))*100}%`}}/>
+              </div>
+              <div className="owner-count">{count}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick wins */}
+      {quickWins.length > 0 && (
+        <>
+          <div className="section-header">
+            <div className="section-title">⚡ Quick Wins</div>
+            <div className="section-count">{quickWins.length} available</div>
+          </div>
+          <div className="card" style={{marginBottom:24}}>
+            <table className="task-table">
+              <tbody>
+                {quickWins.map(task => (
+                  <tr key={task.id} className="task-row" onClick={() => onOpenTask(task)}>
+                    <td style={{width:20}}><StatusDot status="open"/></td>
+                    <td className="task-name">{task.name}</td>
+                    <td><HookBadge type={task.hook}/></td>
+                    <td><span className="owner-chip"><Icons.User size={10}/>{task.owner}</span></td>
+                    <td><span className="quick-win-flag">QUICK WIN</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {/* Buildable now */}
+      {buildableNow.length > 0 && (
+        <>
+          <div className="section-header">
+            <div className="section-title">🔧 Buildable Now (HOOK/CLAUDE)</div>
+            <div className="section-count">No Francis needed</div>
+          </div>
+          <div className="card">
+            <table className="task-table">
+              <tbody>
+                {buildableNow.map(task => (
+                  <tr key={task.id} className="task-row" onClick={() => onOpenTask(task)}>
+                    <td style={{width:20}}><StatusDot status="open"/></td>
+                    <td className="task-name">{task.name}</td>
+                    <td><HookBadge type={task.hook}/></td>
+                    <td><span className="owner-chip"><Icons.User size={10}/>{task.owner}</span></td>
+                    <td><PhaseBadge phase={task.phase}/></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── TASKS TAB ──────────────────────────────────────────────────────────────
+
+function TasksTab({ tasks, statuses, onOpenTask }) {
+  const [filterOwner, setFilterOwner] = useState("All");
+  const [filterStage, setFilterStage] = useState("All");
+  const [filterHook, setFilterHook] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [search, setSearch] = useState("");
+
+  const owners = ["All", ...new Set(tasks.map(t=>t.owner))];
+  const hooks = ["All", ...new Set(tasks.map(t=>t.hook))];
+
+  const filtered = tasks.filter(t => {
+    const effectiveStatus = statuses[t.id] || t.status;
+    if (filterOwner !== "All" && t.owner !== filterOwner) return false;
+    if (filterStage !== "All") {
+      if (filterStage === "Cross" && t.stage !== 0) return false;
+      if (filterStage !== "Cross" && t.stage !== parseInt(filterStage)) return false;
+    }
+    if (filterHook !== "All" && t.hook !== filterHook) return false;
+    if (filterStatus !== "All" && effectiveStatus !== filterStatus) return false;
+    if (search && !t.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  return (
+    <div>
+      <div className="filter-bar">
+        <div className="search-wrap">
+          <Icons.Search size={13} className="search-icon" style={{position:'absolute',left:9,top:'50%',transform:'translateY(-50%)',color:'var(--text-muted)'}}/>
+          <input className="search-input" placeholder="Search tasks…" value={search} onChange={e=>setSearch(e.target.value)}/>
+        </div>
+        <select className="filter-select" value={filterOwner} onChange={e=>setFilterOwner(e.target.value)}>
+          {owners.map(o=><option key={o}>{o}</option>)}
+        </select>
+        <select className="filter-select" value={filterStage} onChange={e=>setFilterStage(e.target.value)}>
+          <option value="All">All Stages</option>
+          {STAGES.map(s=><option key={s.num} value={s.num}>Stage {s.num}</option>)}
+          <option value="Cross">Cross-cutting</option>
+        </select>
+        <select className="filter-select" value={filterHook} onChange={e=>setFilterHook(e.target.value)}>
+          <option value="All">All Types</option>
+          {hooks.filter(h=>h!=="All").map(h=><option key={h} value={h}>{HOOK_LABELS[h]||h}</option>)}
+        </select>
+        <select className="filter-select" value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}>
+          <option value="All">All Statuses</option>
+          <option value="open">Open</option>
+          <option value="progress">In Progress</option>
+          <option value="blocked">Blocked</option>
+          <option value="complete">Complete</option>
+        </select>
+        <span className="filter-label" style={{marginLeft:'auto'}}>{filtered.length} tasks</span>
+      </div>
+
+      <div className="card" style={{padding:0}}>
+        <table className="task-table">
+          <thead>
+            <tr>
+              <th style={{width:20}}></th>
+              <th>Task</th>
+              <th>Stage</th>
+              <th>Hook</th>
+              <th>Owner</th>
+              <th>Phase</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(task => {
+              const effectiveStatus = statuses[task.id] || task.status;
+              const stage = STAGES.find(s => s.num === task.stage);
+              return (
+                <tr key={task.id}
+                  className={`task-row ${effectiveStatus==="complete"?"complete":""} ${task.owner==="Brock"?"brock-task-row":""}`}
+                  onClick={() => onOpenTask(task)}>
+                  <td><StatusDot status={effectiveStatus}/></td>
+                  <td className="task-name">
+                    {task.name}
+                    <div style={{display:'flex',gap:4,marginTop:3}}>
+                      {task.quickWin && <span className="quick-win-flag">QUICK WIN</span>}
+                      {task.buildableNow && <span className="quick-win-flag" style={{background:'rgba(123,111,196,0.12)',color:'#A89FDD'}}>BUILDABLE NOW</span>}
+                    </div>
+                  </td>
+                  <td style={{fontSize:11,color:'var(--text-secondary)'}}>
+                    {stage ? <span style={{color:stage.color}}>S{task.stage}</span> : <span style={{color:'var(--text-muted)'}}>—</span>}
+                  </td>
+                  <td><HookBadge type={task.hook}/></td>
+                  <td><span className="owner-chip"><Icons.User size={10}/>{task.owner}</span></td>
+                  <td><PhaseBadge phase={task.phase}/></td>
+                </tr>
+              );
+            })}
+            {filtered.length === 0 && (
+              <tr><td colSpan={6} className="empty-state">No tasks match your filters</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ─── BROCK'S LIST ────────────────────────────────────────────────────────────
+
+function BrockList({ tasks, statuses, onOpenTask }) {
+  const brockTasks = tasks.filter(t => t.owner === "Brock" && (statuses[t.id]||t.status) !== "complete");
+  const quickWins = brockTasks.filter(t => t.quickWin);
+  const phase1 = brockTasks.filter(t => !t.quickWin && t.phase === 1);
+  const other = brockTasks.filter(t => !t.quickWin && t.phase !== 1);
+
+  const Section = ({title, items, color}) => items.length === 0 ? null : (
+    <div style={{marginBottom:20}}>
+      <div className="section-header">
+        <div className="section-title" style={{color}}>{title}</div>
+        <div className="section-count">{items.length} tasks</div>
+      </div>
+      <div className="card" style={{padding:0}}>
+        <table className="task-table">
+          <tbody>
+            {items.map(task => (
+              <tr key={task.id} className="task-row brock-task-row" onClick={() => onOpenTask(task)}>
+                <td style={{width:20}}><StatusDot status={statuses[task.id]||task.status}/></td>
+                <td className="task-name">
+                  {task.name}
+                  {task.quickWin && <><br/><span className="quick-win-flag">QUICK WIN</span></>}
+                </td>
+                <td>
+                  {STAGES.find(s=>s.num===task.stage) ?
+                    <span style={{fontSize:11,color:STAGES.find(s=>s.num===task.stage).color}}>
+                      Stage {task.stage}
+                    </span> : <span style={{fontSize:11,color:'var(--text-muted)'}}>—</span>}
+                </td>
+                <td><HookBadge type={task.hook}/></td>
+                <td><PhaseBadge phase={task.phase}/></td>
+                <td><button className="btn btn-ghost btn-sm" onClick={e=>{e.stopPropagation();onOpenTask(task);}}>
+                  <Icons.Zap size={11}/> Work on it
+                </button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      <div style={{marginBottom:20,padding:'12px 16px',background:'rgba(245,166,35,0.06)',border:'1px solid rgba(245,166,35,0.2)',borderRadius:8}}>
+        <div style={{fontSize:13,fontWeight:600,color:'var(--accent)',marginBottom:4}}>Brock's Personal Task List</div>
+        <div style={{fontSize:12,color:'var(--text-secondary)'}}>
+          {brockTasks.length} open tasks across all stages · Click any task to work on it with the Wizard
+        </div>
+      </div>
+      <Section title="⚡ Quick Wins" items={quickWins} color="var(--green)"/>
+      <Section title="Phase 1 — Active Build" items={phase1} color="var(--accent)"/>
+      <Section title="Later Phases" items={other} color="var(--text-secondary)"/>
+      {brockTasks.length === 0 && (
+        <div className="empty-state" style={{padding:60}}>
+          <Icons.CheckCircle size={32} style={{margin:'0 auto 12px',opacity:.3,display:'block'}}/>
+          <div style={{fontSize:14,fontWeight:600}}>All clear</div>
+          <div style={{fontSize:12,marginTop:4}}>No open tasks assigned to Brock</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── MAIN APP ────────────────────────────────────────────────────────────────
+
+function App() {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [activeNav, setActiveNav] = useState("build");
+  const [openTask, setOpenTask] = useState(null);
+  const [statuses, setStatuses] = useState(() => getAllTaskStatuses());
+
+  function handleTaskComplete(taskId) {
+    setTaskStatus(taskId, "complete");
+    setStatuses(prev => ({...prev, [taskId]: "complete"}));
+  }
+
+  function handleOpenTask(task) {
+    setOpenTask(task);
+  }
+
+  const brocktaskCount = TASKS.filter(t => t.owner==="Brock" && (statuses[t.id]||t.status)!=="complete").length;
+  const quickWinCount = TASKS.filter(t => t.quickWin && (statuses[t.id]||t.status)!=="complete").length;
+
+  return (
+    <div className="app">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="sidebar-logo">
+          <div className="logo-mark">PW</div>
+          <div className="logo-name">Command Center</div>
+          <div className="logo-sub">Prevailing Wisdom · Phase 1</div>
+        </div>
+
+        <div className="sidebar-section">
+          <div className="sidebar-label">Build Tracker</div>
+          <div className={`nav-item ${activeNav==="build" && activeTab==="overview" ? "active":""}`}
+            onClick={()=>{setActiveNav("build");setActiveTab("overview");}}>
+            <Icons.LayoutDashboard size={14}/> Overview
+          </div>
+          <div className={`nav-item ${activeNav==="build" && activeTab==="tasks" ? "active":""}`}
+            onClick={()=>{setActiveNav("build");setActiveTab("tasks");}}>
+            <Icons.ListTodo size={14}/> All Tasks
+            <span className="nav-badge">{TASKS.filter(t=>(statuses[t.id]||t.status)!=="complete").length}</span>
+          </div>
+          <div className={`nav-item ${activeNav==="build" && activeTab==="brock" ? "active":""}`}
+            onClick={()=>{setActiveNav("build");setActiveTab("brock");}}>
+            <Icons.User size={14}/> Brock's List
+            {brocktaskCount > 0 && <span className="nav-badge urgent">{brocktaskCount}</span>}
+          </div>
+        </div>
+
+        <div className="sidebar-section">
+          <div className="sidebar-label">Lifecycle Stages</div>
+          {STAGES.map(s => {
+            const stageTasks = TASKS.filter(t=>t.stage===s.num);
+            const open = stageTasks.filter(t=>(statuses[t.id]||t.status)!=="complete").length;
+            return (
+              <div key={s.num} className="nav-item"
+                onClick={()=>window.open(s.url,'_blank')}>
+                <span style={{width:6,height:6,borderRadius:'50%',background:s.color,flexShrink:0,display:'inline-block'}}/>
+                <span style={{fontSize:12}}>S{s.num} {s.name}</span>
+                {open>0 && <span className="nav-badge">{open}</span>}
+                <Icons.ExternalLink size={10} style={{marginLeft:2,opacity:.4}}/>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="sidebar-section">
+          <div className="sidebar-label">Quick Links</div>
+          <div className="nav-item" onClick={()=>window.open('https://notion.so/35e2e7f35b1f812d8e7cec432f027512','_blank')}>
+            <Icons.BookOpen size={14}/> Notion Brain
+            <Icons.ExternalLink size={10} style={{marginLeft:'auto',opacity:.4}}/>
+          </div>
+          <div className="nav-item" onClick={()=>window.open('https://pwcustomerlifecycle.netlify.app','_blank')}>
+            <Icons.Map size={14}/> Lifecycle Map
+            <Icons.ExternalLink size={10} style={{marginLeft:'auto',opacity:.4}}/>
+          </div>
+        </div>
+
+        <div style={{marginTop:'auto',padding:'12px 16px',borderTop:'1px solid var(--border)'}}>
+          <div style={{fontSize:10,color:'var(--text-muted)',fontFamily:'JetBrains Mono',letterSpacing:'0.05em'}}>
+            Phase 1 — Implementation
+          </div>
+          <div style={{fontSize:10,color:'var(--text-muted)',marginTop:2}}>
+            {TASKS.filter(t=>(statuses[t.id]||t.status)==="complete").length}/{TASKS.length} tasks complete
+          </div>
+        </div>
+      </div>
+
+      {/* Main */}
+      <div className="main">
+        <div className="topbar">
+          <div>
+            <div className="topbar-title">
+              {activeTab==="overview" && "Build Overview"}
+              {activeTab==="tasks" && "All Tasks"}
+              {activeTab==="brock" && "Brock's Task List"}
+            </div>
+            <div className="topbar-sub">
+              {activeTab==="overview" && "Implementation tracker · Phase 1"}
+              {activeTab==="tasks" && `${TASKS.filter(t=>(statuses[t.id]||t.status)!=="complete").length} open across all stages`}
+              {activeTab==="brock" && `${brocktaskCount} open · ${quickWinCount} quick wins available`}
+            </div>
+          </div>
+          <div className="topbar-actions">
+            <button className="btn btn-ghost btn-sm" onClick={()=>window.open('https://notion.so/3742e7f35b1f81e0acb5f10de32cca8a','_blank')}>
+              <Icons.BookOpen size={12}/> Integration Roadmap
+            </button>
+            <button className="btn btn-primary btn-sm" onClick={()=>{setActiveTab("brock");setActiveNav("build");}}>
+              <Icons.Zap size={12}/> My Tasks
+            </button>
+          </div>
+        </div>
+
+        <div className="content">
+          {activeTab === "overview" && <Overview tasks={TASKS} statuses={statuses} onOpenTask={handleOpenTask}/>}
+          {activeTab === "tasks"    && <TasksTab  tasks={TASKS} statuses={statuses} onOpenTask={handleOpenTask}/>}
+          {activeTab === "brock"   && <BrockList  tasks={TASKS} statuses={statuses} onOpenTask={handleOpenTask}/>}
+        </div>
+      </div>
+
+      {/* Work Panel */}
+      {openTask && (
+        <WorkPanel
+          task={openTask}
+          onClose={() => setOpenTask(null)}
+          onTaskComplete={(id) => { handleTaskComplete(id); }}
+        />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
