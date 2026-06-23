@@ -40,13 +40,15 @@ $action = {
     git add -A
     $msg = "auto: update $name"
     git commit -m $msg
-    git push origin main
 
-    if ($?) {
+    git push origin main
+    $pushCode = $LASTEXITCODE
+
+    if ($pushCode -eq 0) {
         Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Pushed → Netlify deploying..." -ForegroundColor Green
         Show-Notification "PW Lifecycle - Pushed" "$name pushed to main. Netlify deploying now."
     } else {
-        Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Push failed." -ForegroundColor Red
+        Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Push failed (exit $pushCode)." -ForegroundColor Red
         Show-Notification "PW Lifecycle - Push Failed" "$name was NOT pushed. Check credentials or network."
     }
 }
