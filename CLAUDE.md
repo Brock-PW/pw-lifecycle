@@ -310,6 +310,65 @@ Do not try to sync the spreadsheet — build on top of Zoho Projects directly.
 
 ---
 
+---
+
+---
+
+## Stage 4 — Lead Consultant Client Profile
+
+### The 20-Question Profile
+Filled out by the lead consultant when assigned to a new client at Stage 3 handoff.
+Stored in Notion client brain. Feeds all dashboard automation from Stage 4 onward.
+
+Questions cover:
+- Weekly rhythm: payroll day, timesheet submission day, signature turnaround expectation
+- Communication: preferred channel, best time, primary vs day-to-day contact, tech-savviness
+- Relationship: how they came to PW, experience level, what they care about most, what would make them leave, personal notes
+- The work: typical classifications, CPR platforms, apprentice frequency, project type, single vs multiple simultaneous projects
+- Risk & flags: compliance history, non-standard handling needs, consultation call notes
+
+### Profile Refresh Triggers (Claude surfaces prompt to update)
+- 90 days into active relationship
+- At every project closeout
+- When significant event detected (compliance issue, personnel change, flag in Otter or email)
+- Annually for long-running relationships
+Not a full re-do — Claude surfaces "here's what we have, anything to update?" in dashboard.
+
+### All Communication Auto-Summarized to Notion Client Brain
+Every interaction feeds the client brain automatically:
+- Otter call transcript → Claude extracts key points, decisions, personal mentions, action items → appended to client brain
+- Inbound client emails → Claude extracts signals, questions, concerns, relationship notes → appended
+- Outbound emails by lead consultant → Claude notes what was communicated + when → appended
+- Zoho Projects task completions → Claude notes completion + date → appended to project history
+
+Result: a complete, chronological, auto-built record of the entire client relationship.
+Lead consultant never manually updates it. It builds itself.
+
+All of these are ⚠ HOOK/SYNC items requiring the Phase 2 sync layer.
+See Key Integration Components Notion page for full details.
+
+---
+
+## Sub Oversight — Subcontractor Drip Sequence (to build in Stage 4)
+
+Added June 11, 2026. Prime contractors pay PW to collect compliance documents from subs.
+Subs are not always responsive. No structured follow-up system exists today.
+
+Required build:
+- Automated 3-touch drip sequence per non-responsive sub, per project
+- Touch 1: initial document request
+- Touch 2: follow-up if no response  
+- Touch 3: final notice
+- If no response after Touch 3: dashboard notifies lead consultant to call sub directly
+- Claude drafts all three emails · AM reviews and approves before sequence fires
+- Tracked per sub per project in dashboard
+- Do not build emails yet — placeholder for Stage 4 Sub Oversight workflow
+
+This belongs in the Wizard FAQ Bank (Sub Oversight Gap #6) and Stage 4 Sub Oversight flow.
+Notion update pending — add to Wizard page next session.
+
+---
+
 ## Deploy Workflow
 
 1. HTML files updated in this chat (Claude.ai)
