@@ -395,59 +395,75 @@ const STAGES = [
 const HLABELS = {COMPEX:"HOOK/COMPEX",SYNC:"HOOK/SYNC",ZOHO:"HOOK/ZOHO",CLAUDE:"HOOK/CLAUDE",decision:"DECISION",none:"PROCESS"};
 const HCLASS  = {COMPEX:"hc",SYNC:"hs",ZOHO:"hz",CLAUDE:"hcl",decision:"hd",none:"hn"};
 
+// tier: "leverage" | "revenue" | "completeness" | "francis"
+// revOrder: 1=DIR · 2=Google Ads · 3=Social · 4=B2B Rocket · 5=Consultation (revenue tasks only)
 const TASKS = [
-  {id:"s1-01",s:1,name:"B2B Rocket sequence rebuild in Brock's voice",owner:"Brock",hook:"COMPEX",status:"open",phase:1,np:"stage1",ctx:"Rebuild all B2B Rocket cold email sequences for CA contractor leads in Brock's voice. Audit the current sequences, rewrite each touch in Brock's authentic tone — direct, compliance-expert, non-salesy. Produce final copy ready for upload into B2B Rocket. Output goes to Notion Stage 1 page."},
-  {id:"s1-02",s:1,name:"Gmail inbox consolidation: 5 B2B Rocket accounts → single inbox",owner:"Brock",hook:"SYNC",status:"open",phase:2,np:"stage1",ctx:"Define the architecture for consolidating 5 B2B Rocket Gmail sending accounts into a single monitored inbox. Document the forwarding rules, labeling convention, and monitoring protocol. Output the spec to Notion Stage 1."},
-  {id:"s1-03",s:1,name:"Zoho referral credit tracking fields",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",qw:true,ctx:"Add two fields to Zoho CRM client records: 'Referred By' and 'Credit Applied Date'. Document field specs, data types, and automation logic. Quick win — spec it and configure in Zoho directly."},
-  {id:"s1-04",s:1,name:"Zoho automation: referred client pays → flag Rachel for $250 credit",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",ctx:"Design the Zoho automation: when a referred client's first invoice is paid, auto-create a task for Rachel to apply the $250 referral credit. Write trigger conditions, action steps, and notification copy."},
-  {id:"s1-05",s:1,name:"Zoho partner module for payroll firm referral tracking",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",ctx:"Spec a Zoho partner module to track payroll firm referral relationships. Define fields, relationship to client records, and reporting views needed."},
-  {id:"s1-06",s:1,name:"Google review attribution within 14 days of ask",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",ctx:"Design the attribution logic: client leaves Google review within 14 days of request → log attribution against the requesting consultant/event in Zoho. Spec the trigger and field update."},
-  {id:"s1-07",s:1,name:"Google Ads Customer Match lookalike from DIR email scrape",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",ctx:"Spec the workflow: DIR email scrape → clean and format → upload as Customer Match audience to Google Ads → create lookalike campaign. Define the data pipeline steps, file format requirements, and campaign structure."},
-  {id:"s2-01",s:2,name:"Compliance estimate generator tool",owner:"Megan",hook:"COMPEX",status:"progress",phase:1,np:"stage2",ctx:"In progress (Megan + Francis). This session: document what the tool needs to produce, what inputs it requires, what format the output takes. Build out the Stage 2 estimate node spec in Notion."},
-  {id:"s2-02",s:2,name:"Pre-call brief automation (Zoho + Gmail + web search)",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage2",bn:true,ctx:"Before every consultation call, Claude pulls the prospect's Zoho record, recent Gmail threads, and a web search for their company/project → compiles a 1-page brief for Brock or Anthy. Design the brief format and automate the assembly. Buildable today via MCP."},
-  {id:"s2-03",s:2,name:"T+2 / T+5 auto follow-up sequence after consultation",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage2",ctx:"Write T+2 and T+5 follow-up email templates for post-consultation leads who haven't signed. Two versions: Brock's hot leads and Anthy's assigned leads. Tone: helpful, specific, not pushy. Include variable slots for project type and compliance risk level."},
-  {id:"s2-04",s:2,name:"T+14 Brock personal follow-up draft system",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage2",ctx:"At T+14 post-consultation with no contract signed, Claude drafts a personalized follow-up for Brock to review and send. Design the draft system: what data it pulls, how it personalizes, and what the template structure looks like."},
-  {id:"s3-01",s:3,name:"Onboarding email template in AM voice",owner:"Anthy",hook:"CLAUDE",status:"open",phase:1,np:"stage3",ctx:"Write the onboarding welcome email template in Anthy's voice. Sent when a new client signs. Warm, professional, sets expectations for the first week. Variable slots for project name, consultant name, first due dates."},
-  {id:"s3-02",s:3,name:"'Working With PW' document template",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage3",ctx:"Create the 'Working With PW' client-facing document. Covers: what PW does, what the client provides, weekly CPR rhythm, how to send timesheets, who to contact for what. Professional, plain-language, reduces onboarding friction."},
-  {id:"s3-03",s:3,name:"Welcome kit contents + budget defined",owner:"Brock",hook:"decision",status:"open",phase:1,np:"stage3",ctx:"Decision needed: what goes in the PW physical welcome kit? What is the per-client budget? Bobby handles fulfillment. Make the call and document it."},
-  {id:"s3-04",s:3,name:"Bobby welcome kit auto-task creation in Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage3",ctx:"When a new client signs (Stage 3 trigger), Zoho auto-creates a task for Bobby: 'Ship welcome kit to [Client Name]' with address from CRM and due date T+3. Spec the automation rule."},
-  {id:"s3-05",s:3,name:"Notion client brain page auto-creation at Stage 3",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage3",bn:true,ctx:"When a client moves to Stage 3 in Zoho, Claude auto-creates a structured Notion client brain page. Define the template structure: contact info, project details, communication preferences, profile questions, history log. Buildable now via Notion MCP."},
-  {id:"s4-01",s:4,name:"Lead Consultant Client Profile — 20 questions in dashboard",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"Implement the 20-question Lead Consultant Client Profile in the dashboard. Claude walks the consultant through all 20 questions and saves answers to the Notion client brain. Design the conversation flow and Notion save format."},
-  {id:"s4-02",s:4,name:"Project Information Form auto-send on project start",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"When a new project is created in Zoho Projects, Claude auto-sends a Project Information Form to the client contact. Design the form fields, email wrapper, and response capture flow."},
-  {id:"s4-03",s:4,name:"Zoho Projects task list auto-creation via MCP",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",bn:true,ctx:"When a new project starts, Claude auto-creates the standard task list in Zoho Projects (portal 829542738): CPR weekly tasks, eCPR, DAS 140/142, prevailing wages, fringe benefit statement, digital file setup, training contributions. Build via Zoho Projects MCP."},
-  {id:"s4-04",s:4,name:"Signature nudge at 7 days unsigned CPR",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"If a CPR has been sent but not signed after 7 days, Claude sends a nudge email. Write the nudge template and spec the Zoho trigger logic."},
-  {id:"s4-05",s:4,name:"Client confirmation after eCPR upload",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"After eCPR upload to DIR, Claude sends a confirmation email to the client with project name, week period, and confirmation number. Write the template and spec the trigger."},
-  {id:"s4-06",s:4,name:"PWCR renewal alert at 45 days before expiration",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"45 days before a client's PWCR expires, Claude surfaces an alert in the dashboard and drafts a renewal reminder. Spec the alert logic and write the email template."},
-  {id:"s4-07",s:4,name:"Rate increase alert at 30 days before effective date",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"30 days before a prevailing wage rate increase takes effect, Claude surfaces an alert and notifies the client. Spec the alert logic and write the notification template."},
-  {id:"s4-08",s:4,name:"CAC invoice reminder on 1st of month",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"On the 1st of each month, Claude sends a CAC training contribution invoice reminder to clients with active apprentices. Write the reminder template and spec the Zoho trigger."},
-  {id:"s4-09",s:4,name:"Sub Oversight 3-touch drip sequence",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"Build the Sub Oversight drip sequence for non-responsive subs. Three emails: Touch 1 (initial document request), Touch 2 (follow-up, 5 days), Touch 3 (final notice, 10 days). No response after Touch 3: dashboard alert to lead consultant to call directly. Write all three emails. Tone: professional, firm, compliance-focused."},
-  {id:"s4-10",s:4,name:"90-day profile refresh prompt",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",ctx:"90 days into an active client relationship, Claude surfaces a profile refresh prompt. Design the prompt: what it shows (current profile), what it asks (anything to update?), how updates save back to Notion."},
-  {id:"s4-11",s:4,name:"CPR production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",ctx:"⚠ HOOK/COMPEX: CPR production. Francis builds the Compex workflow. Claude's role: detect CPR due date → surface in dashboard → AM approves → HOOK/COMPEX fires → completion signal → mark complete in Zoho → sync to Notion."},
-  {id:"s4-12",s:4,name:"DAS 140 production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",ctx:"⚠ HOOK/COMPEX: DAS 140 production. Within 10 days of contract execution."},
-  {id:"s4-13",s:4,name:"DAS 142 production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",ctx:"⚠ HOOK/COMPEX: DAS 142 production. 72 hours before requested apprentice date."},
-  {id:"s4-14",s:4,name:"eCPR upload",owner:"Francis",hook:"COMPEX",status:"progress",phase:4,np:"stage4",ctx:"⚠ HOOK/COMPEX: eCPR upload to CA DIR. Partial — some platforms live. Track which are active."},
-  {id:"s4-15",s:4,name:"CAC invoice production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",ctx:"⚠ HOOK/COMPEX: Monthly CAC training contribution invoice production."},
-  {id:"s4-16",s:4,name:"Fringe benefit statement production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",ctx:"⚠ HOOK/COMPEX: Fringe benefit statement production per project."},
-  {id:"s5-01",s:5,name:"Job Pending status auto-detection",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",ctx:"Detect when a client's project history suggests a new bid is pending: no active project, past projects exist, recent communication mentions a bid. Design the detection logic and dashboard alert."},
-  {id:"s5-02",s:5,name:"Day 30 warm check-in draft",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",ctx:"30 days after project closeout with no new project started, Claude drafts a warm check-in email for the lead consultant to review. Personal, non-salesy, relationship-focused."},
-  {id:"s5-03",s:5,name:"Day 60 recovery sequence",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",ctx:"60 days post-closeout with no new engagement, Claude triggers a recovery sequence. Design the 2-touch sequence: Day 60 (check-in + value offer) and Day 75 (last touch before Terminated-Follow-Up)."},
-  {id:"s5-04",s:5,name:"12-month follow-up timer for Terminated — Follow-Up",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",ctx:"Accounts marked Terminated-Follow-Up get a 12-month timer. At month 12, surface a re-engagement prompt with the client's history and a draft outreach email."},
-  {id:"s5-05",s:5,name:"DNC flag for Terminated — No Contact",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",ctx:"Accounts marked Terminated-No-Contact must be fully suppressed from all outreach sequences. Design the DNC flag logic across all channels."},
-  {id:"s6-01",s:6,name:"Add 'Terminated — Follow-Up' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage6",qw:true,ctx:"Quick win: add 'Terminated — Follow-Up' as a pipeline status in Zoho CRM."},
-  {id:"s6-02",s:6,name:"Add 'Terminated — No Contact' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage6",qw:true,ctx:"Quick win: add 'Terminated — No Contact' as a pipeline status in Zoho CRM."},
-  {id:"p2-01",s:0,name:"Zoho webhook infrastructure",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",ctx:"⚠ HOOK/SYNC BLOCKER: Zoho webhook infrastructure must be built before any sync items proceed. Francis owns this."},
-  {id:"p2-02",s:0,name:"Anthy Gmail → Notion auto-extraction",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",ctx:"⚠ HOOK/SYNC: Highest priority sync item. Anthy's Gmail → Claude extracts key points, signals, action items → appended to client Notion brain pages automatically."},
-  {id:"p2-03",s:0,name:"Otter transcript → Notion auto-extraction",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",ctx:"⚠ HOOK/SYNC: Otter call transcripts → Claude extracts key points, decisions, action items, personal mentions → appended to client Notion brain pages."},
-  {id:"p2-04",s:0,name:"Zoho stage change → Notion sync",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",ctx:"⚠ HOOK/SYNC: When Zoho pipeline stage changes, downstream consequences cascade and Notion client brain is updated automatically."},
-  {id:"nm-01",s:0,name:"Communicate Otter naming convention to team",owner:"Brock",hook:"none",status:"open",phase:1,np:"main",qw:true,ctx:"Quick win: communicate the Otter naming convention: [Client Name] — [Topic] — [YYYY-MM-DD]. Draft the message and send to the team."},
-  {id:"nm-02",s:0,name:"Audit Zoho account names for consistency",owner:"Brock",hook:"none",status:"open",phase:1,np:"main",qw:true,ctx:"Quick win: audit all Zoho CRM account names for standard naming convention. Identify inconsistencies and create a cleanup list."},
-  {id:"nm-03",s:0,name:"Audit Google Drive client folder names",owner:"Brock",hook:"none",status:"open",phase:1,np:"main",qw:true,ctx:"Quick win: audit Google Drive client folders to ensure names match Zoho Account_Name exactly. Identify mismatches."},
-  {id:"kb-01",s:0,name:"Review 'Ask Prevailing Wisdom' Claude project with Megan",owner:"Brock",hook:"none",status:"open",phase:3,np:"main",ctx:"Schedule and conduct a review session with Megan on the Ask Prevailing Wisdom Claude project. Assess current state, identify gaps, define the knowledge base build plan."},
-  {id:"kb-02",s:0,name:"Build Tone & Voice Guide",owner:"Megan",hook:"none",status:"open",phase:3,np:"main",ctx:"Megan and Brock build the PW Tone & Voice Guide: how PW speaks, what PW's stances are, sample language for compliance questions. Foundational for the Wizard of PW."},
-  {id:"zo-01",s:0,name:"Add 'Job Pending' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"main",qw:true,ctx:"Quick win: add 'Job Pending' as a Zoho CRM pipeline status (may already exist — confirm or add)."},
-  {id:"zo-02",s:0,name:"Add 'Warm' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"main",qw:true,ctx:"Quick win: add 'Warm' as a Zoho CRM pipeline status (may already exist — confirm or add)."},
-  {id:"zo-03",s:0,name:"Add 'Recovery' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"main",qw:true,ctx:"Quick win: add 'Recovery' as a Zoho CRM pipeline status."},
-  {id:"zo-04",s:0,name:"Connect Anthy Gmail via MCP",owner:"Brock",hook:"SYNC",status:"open",phase:2,np:"main",ctx:"Highest value Phase 2 action: connect Anthy's Gmail account via MCP so her client email threads flow into the sync layer. Identify the steps required and execute."},
+  // ── STAGE 1 — Lead Generation
+  // DIR (Revenue tier 1 — seeds everything)
+  {id:"s1-dir-01",s:1,name:"DIR email scrape — execute and clean the list",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:1,ctx:"Execute the DIR email scrape to pull all licensed CA public works contractors. Clean and format the list: remove duplicates, validate emails, segment by county/trade. This list seeds the Customer Match audience, the lookalike campaign, and eventually the B2B Rocket sequences. It is the single highest-priority revenue task. Output the cleaned list and a summary of what was captured to Notion Stage 1."},
+  // Google Ads (Revenue tier 2)
+  {id:"s1-gads-01",s:1,name:"Google Ads Customer Match upload from DIR list",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:2,ctx:"Take the cleaned DIR email list and upload it as a Customer Match audience in Google Ads. Document the upload process, list size, match rate, and next steps. This is the foundation for the lookalike campaign."},
+  {id:"s1-gads-02",s:1,name:"Lookalike campaign build from Customer Match audience",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:2,ctx:"Build the Google Ads Similar Audiences (lookalike) campaign targeting contractors who look like the DIR list. Define campaign structure, ad groups, keyword strategy, bidding approach, and budget. This is paid acquisition running on autopilot once live."},
+  {id:"s1-gads-03",s:1,name:"Google Ads campaign structure and keyword strategy",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:2,ctx:"Define the full Google Ads account structure for PW: campaigns, ad groups, keyword themes (prevailing wage compliance, certified payroll service, DIR compliance CA, etc.), match types, and negative keywords. Write the first set of ads in Brock's voice."},
+  // Social (Revenue tier 3)
+  {id:"s1-soc-01",s:1,name:"Facebook page setup and content cadence",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:3,ctx:"Set up the PW Facebook business page: profile, cover, about section, contact info, services. Then design a weekly content cadence — what types of posts, how often, what topics. Write the first 4 posts. Tone: expert, approachable, construction-industry fluent."},
+  {id:"s1-soc-02",s:1,name:"Instagram profile setup and Reels cadence",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:3,ctx:"Set up the PW Instagram profile. Design a Reels content strategy: what topics, what format, how often. Write scripts for the first 3 Reels. Focus on short compliance tips, common mistakes, and PW credibility."},
+  {id:"s1-soc-03",s:1,name:"LinkedIn company page + Brock personal outreach cadence",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:3,ctx:"Set up the PW LinkedIn company page. Then design Brock's personal LinkedIn outreach cadence: connection request templates, follow-up message sequences, content posting rhythm. Target: GCs, project managers, and owners of CA construction firms."},
+  {id:"s1-soc-04",s:1,name:"Meta Ads lookalike audience from existing client list",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:3,ctx:"Upload PW's existing client list to Meta Ads as a Custom Audience. Build a lookalike audience. Design the first Meta Ads campaign targeting contractors who look like current PW clients. Write ad copy in Brock's voice."},
+  {id:"s1-soc-05",s:1,name:"Social content calendar and voice guide",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:3,ctx:"Build a 30-day social content calendar covering Facebook, Instagram, and LinkedIn. Also write the PW Social Voice Guide: what we say, what we don't, tone examples, compliance topic themes. This feeds the Wizard of PW when it generates social content."},
+  // B2B Rocket (Revenue tier 4)
+  {id:"s1-01",s:1,name:"B2B Rocket sequence rebuild in Brock's voice",owner:"Brock",hook:"COMPEX",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:4,ctx:"Rebuild all B2B Rocket cold email sequences for CA contractor leads in Brock's voice. Audit the current sequences, rewrite each touch in Brock's authentic tone — direct, compliance-expert, non-salesy. Produce final copy ready for upload into B2B Rocket. Output goes to Notion Stage 1 page."},
+  {id:"s1-02",s:1,name:"Gmail inbox consolidation: 5 B2B Rocket accounts → single inbox",owner:"Brock",hook:"SYNC",status:"open",phase:2,np:"stage1",tier:"leverage",ctx:"Define the architecture for consolidating 5 B2B Rocket Gmail sending accounts into a single monitored inbox. Document the forwarding rules, labeling convention, and monitoring protocol. Output the spec to Notion Stage 1."},
+  {id:"s1-03",s:1,name:"Zoho referral credit tracking fields",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",tier:"completeness",qw:true,ctx:"Add two fields to Zoho CRM client records: 'Referred By' and 'Credit Applied Date'. Document field specs, data types, and automation logic. Quick win — spec it and configure in Zoho directly."},
+  {id:"s1-04",s:1,name:"Zoho automation: referred client pays → flag Rachel for $250 credit",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",tier:"completeness",ctx:"Design the Zoho automation: when a referred client's first invoice is paid, auto-create a task for Rachel to apply the $250 referral credit. Write trigger conditions, action steps, and notification copy."},
+  {id:"s1-05",s:1,name:"Zoho partner module for payroll firm referral tracking",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",tier:"completeness",ctx:"Spec a Zoho partner module to track payroll firm referral relationships. Define fields, relationship to client records, and reporting views needed."},
+  {id:"s1-06",s:1,name:"Google review attribution within 14 days of ask",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage1",tier:"completeness",ctx:"Design the attribution logic: client leaves Google review within 14 days of request → log attribution against the requesting consultant/event in Zoho. Spec the trigger and field update."},
+  {id:"s1-07",s:1,name:"Google Ads Customer Match lookalike from DIR email scrape",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage1",tier:"revenue",revOrder:2,ctx:"Spec the workflow: DIR email scrape → clean and format → upload as Customer Match audience to Google Ads → create lookalike campaign. Define the data pipeline steps, file format requirements, and campaign structure."},
+  {id:"s2-01",s:2,name:"Compliance estimate generator tool",owner:"Megan",hook:"COMPEX",status:"progress",phase:1,np:"stage2",tier:"revenue",revOrder:5,ctx:"In progress (Megan + Francis). This session: document what the tool needs to produce, what inputs it requires, what format the output takes. Build out the Stage 2 estimate node spec in Notion."},
+  {id:"s2-02",s:2,name:"Pre-call brief automation (Zoho + Gmail + web search)",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage2",tier:"revenue",revOrder:5,bn:true,ctx:"Before every consultation call, Claude pulls the prospect's Zoho record, recent Gmail threads, and a web search for their company/project → compiles a 1-page brief for Brock or Anthy. Design the brief format and automate the assembly. Buildable today via MCP."},
+  {id:"s2-03",s:2,name:"T+2 / T+5 auto follow-up sequence after consultation",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage2",tier:"revenue",revOrder:5,ctx:"Write T+2 and T+5 follow-up email templates for post-consultation leads who haven't signed. Two versions: Brock's hot leads and Anthy's assigned leads. Tone: helpful, specific, not pushy. Include variable slots for project type and compliance risk level."},
+  {id:"s2-04",s:2,name:"T+14 Brock personal follow-up draft system",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage2",tier:"revenue",revOrder:5,ctx:"At T+14 post-consultation with no contract signed, Claude drafts a personalized follow-up for Brock to review and send. Design the draft system: what data it pulls, how it personalizes, and what the template structure looks like."},
+  {id:"s3-01",s:3,name:"Onboarding email template in AM voice",owner:"Anthy",hook:"CLAUDE",status:"open",phase:1,np:"stage3",tier:"leverage",ctx:"Write the onboarding welcome email template in Anthy's voice. Sent when a new client signs. Warm, professional, sets expectations for the first week. Variable slots for project name, consultant name, first due dates."},
+  {id:"s3-02",s:3,name:"'Working With PW' document template",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage3",tier:"leverage",ctx:"Create the 'Working With PW' client-facing document. Covers: what PW does, what the client provides, weekly CPR rhythm, how to send timesheets, who to contact for what. Professional, plain-language, reduces onboarding friction."},
+  {id:"s3-03",s:3,name:"Welcome kit contents + budget defined",owner:"Brock",hook:"decision",status:"open",phase:1,np:"stage3",tier:"completeness",ctx:"Decision needed: what goes in the PW physical welcome kit? What is the per-client budget? Bobby handles fulfillment. Make the call and document it."},
+  {id:"s3-04",s:3,name:"Bobby welcome kit auto-task creation in Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage3",tier:"completeness",ctx:"When a new client signs (Stage 3 trigger), Zoho auto-creates a task for Bobby: 'Ship welcome kit to [Client Name]' with address from CRM and due date T+3. Spec the automation rule."},
+  {id:"s3-05",s:3,name:"Notion client brain page auto-creation at Stage 3",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage3",tier:"leverage",bn:true,ctx:"When a client moves to Stage 3 in Zoho, Claude auto-creates a structured Notion client brain page. Define the template structure: contact info, project details, communication preferences, profile questions, history log. Buildable now via Notion MCP."},
+  {id:"s4-01",s:4,name:"Lead Consultant Client Profile — 20 questions in dashboard",owner:"Brock",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"Implement the 20-question Lead Consultant Client Profile in the dashboard. Claude walks the consultant through all 20 questions and saves answers to the Notion client brain. Design the conversation flow and Notion save format."},
+  {id:"s4-02",s:4,name:"Project Information Form auto-send on project start",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"When a new project is created in Zoho Projects, Claude auto-sends a Project Information Form to the client contact. Design the form fields, email wrapper, and response capture flow."},
+  {id:"s4-03",s:4,name:"Zoho Projects task list auto-creation via MCP",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",bn:true,ctx:"When a new project starts, Claude auto-creates the standard task list in Zoho Projects (portal 829542738): CPR weekly tasks, eCPR, DAS 140/142, prevailing wages, fringe benefit statement, digital file setup, training contributions. Build via Zoho Projects MCP."},
+  {id:"s4-04",s:4,name:"Signature nudge at 7 days unsigned CPR",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"If a CPR has been sent but not signed after 7 days, Claude sends a nudge email. Write the nudge template and spec the Zoho trigger logic."},
+  {id:"s4-05",s:4,name:"Client confirmation after eCPR upload",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"After eCPR upload to DIR, Claude sends a confirmation email to the client with project name, week period, and confirmation number. Write the template and spec the trigger."},
+  {id:"s4-06",s:4,name:"PWCR renewal alert at 45 days before expiration",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"45 days before a client's PWCR expires, Claude surfaces an alert in the dashboard and drafts a renewal reminder. Spec the alert logic and write the email template."},
+  {id:"s4-07",s:4,name:"Rate increase alert at 30 days before effective date",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"30 days before a prevailing wage rate increase takes effect, Claude surfaces an alert and notifies the client. Spec the alert logic and write the notification template."},
+  {id:"s4-08",s:4,name:"CAC invoice reminder on 1st of month",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"On the 1st of each month, Claude sends a CAC training contribution invoice reminder to clients with active apprentices. Write the reminder template and spec the Zoho trigger."},
+  {id:"s4-09",s:4,name:"Sub Oversight 3-touch drip sequence",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"Build the Sub Oversight drip sequence for non-responsive subs. Three emails: Touch 1 (initial document request), Touch 2 (follow-up, 5 days), Touch 3 (final notice, 10 days). No response after Touch 3: dashboard alert to lead consultant to call directly. Write all three emails. Tone: professional, firm, compliance-focused."},
+  {id:"s4-10",s:4,name:"90-day profile refresh prompt",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage4",tier:"leverage",ctx:"90 days into an active client relationship, Claude surfaces a profile refresh prompt. Design the prompt: what it shows (current profile), what it asks (anything to update?), how updates save back to Notion."},
+  {id:"s4-11",s:4,name:"CPR production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",tier:"francis",ctx:"⚠ HOOK/COMPEX: CPR production. Francis builds the Compex workflow. Claude's role: detect CPR due date → surface in dashboard → AM approves → HOOK/COMPEX fires → completion signal → mark complete in Zoho → sync to Notion."},
+  {id:"s4-12",s:4,name:"DAS 140 production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",tier:"francis",ctx:"⚠ HOOK/COMPEX: DAS 140 production. Within 10 days of contract execution."},
+  {id:"s4-13",s:4,name:"DAS 142 production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",tier:"francis",ctx:"⚠ HOOK/COMPEX: DAS 142 production. 72 hours before requested apprentice date."},
+  {id:"s4-14",s:4,name:"eCPR upload",owner:"Francis",hook:"COMPEX",status:"progress",phase:4,np:"stage4",tier:"francis",ctx:"⚠ HOOK/COMPEX: eCPR upload to CA DIR. Partial — some platforms live. Track which are active."},
+  {id:"s4-15",s:4,name:"CAC invoice production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",tier:"francis",ctx:"⚠ HOOK/COMPEX: Monthly CAC training contribution invoice production."},
+  {id:"s4-16",s:4,name:"Fringe benefit statement production",owner:"Francis",hook:"COMPEX",status:"open",phase:4,np:"stage4",tier:"francis",ctx:"⚠ HOOK/COMPEX: Fringe benefit statement production per project."},
+  {id:"s5-01",s:5,name:"Job Pending status auto-detection",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",tier:"leverage",ctx:"Detect when a client's project history suggests a new bid is pending: no active project, past projects exist, recent communication mentions a bid. Design the detection logic and dashboard alert."},
+  {id:"s5-02",s:5,name:"Day 30 warm check-in draft",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",tier:"leverage",ctx:"30 days after project closeout with no new project started, Claude drafts a warm check-in email for the lead consultant to review. Personal, non-salesy, relationship-focused."},
+  {id:"s5-03",s:5,name:"Day 60 recovery sequence",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",tier:"leverage",ctx:"60 days post-closeout with no new engagement, Claude triggers a recovery sequence. Design the 2-touch sequence: Day 60 (check-in + value offer) and Day 75 (last touch before Terminated-Follow-Up)."},
+  {id:"s5-04",s:5,name:"12-month follow-up timer for Terminated — Follow-Up",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",tier:"leverage",ctx:"Accounts marked Terminated-Follow-Up get a 12-month timer. At month 12, surface a re-engagement prompt with the client's history and a draft outreach email."},
+  {id:"s5-05",s:5,name:"DNC flag for Terminated — No Contact",owner:"Claude",hook:"CLAUDE",status:"open",phase:1,np:"stage5",tier:"leverage",ctx:"Accounts marked Terminated-No-Contact must be fully suppressed from all outreach sequences. Design the DNC flag logic across all channels."},
+  {id:"s6-01",s:6,name:"Add 'Terminated — Follow-Up' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage6",tier:"completeness",qw:true,ctx:"Quick win: add 'Terminated — Follow-Up' as a pipeline status in Zoho CRM."},
+  {id:"s6-02",s:6,name:"Add 'Terminated — No Contact' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"stage6",tier:"completeness",qw:true,ctx:"Quick win: add 'Terminated — No Contact' as a pipeline status in Zoho CRM."},
+  {id:"p2-01",s:0,name:"Zoho webhook infrastructure",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",tier:"francis",ctx:"⚠ HOOK/SYNC BLOCKER: Zoho webhook infrastructure must be built before any sync items proceed. Francis owns this."},
+  {id:"p2-02",s:0,name:"Anthy Gmail → Notion auto-extraction",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",tier:"francis",ctx:"⚠ HOOK/SYNC: Highest priority sync item. Anthy's Gmail → Claude extracts key points, signals, action items → appended to client Notion brain pages automatically."},
+  {id:"p2-03",s:0,name:"Otter transcript → Notion auto-extraction",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",tier:"francis",ctx:"⚠ HOOK/SYNC: Otter call transcripts → Claude extracts key points, decisions, action items, personal mentions → appended to client Notion brain pages."},
+  {id:"p2-04",s:0,name:"Zoho stage change → Notion sync",owner:"Francis",hook:"SYNC",status:"blocked",phase:2,np:"main",tier:"francis",ctx:"⚠ HOOK/SYNC: When Zoho pipeline stage changes, downstream consequences cascade and Notion client brain is updated automatically."},
+  {id:"nm-01",s:0,name:"Communicate Otter naming convention to team",owner:"Brock",hook:"none",status:"open",phase:1,np:"main",tier:"completeness",qw:true,ctx:"Quick win: communicate the Otter naming convention: [Client Name] — [Topic] — [YYYY-MM-DD]. Draft the message and send to the team."},
+  {id:"nm-02",s:0,name:"Audit Zoho account names for consistency",owner:"Brock",hook:"none",status:"open",phase:1,np:"main",tier:"completeness",qw:true,ctx:"Quick win: audit all Zoho CRM account names for standard naming convention. Identify inconsistencies and create a cleanup list."},
+  {id:"nm-03",s:0,name:"Audit Google Drive client folder names",owner:"Brock",hook:"none",status:"open",phase:1,np:"main",tier:"completeness",qw:true,ctx:"Quick win: audit Google Drive client folders to ensure names match Zoho Account_Name exactly. Identify mismatches."},
+  {id:"kb-01",s:0,name:"Review 'Ask Prevailing Wisdom' Claude project with Megan",owner:"Brock",hook:"none",status:"open",phase:3,np:"main",tier:"completeness",ctx:"Schedule and conduct a review session with Megan on the Ask Prevailing Wisdom Claude project. Assess current state, identify gaps, define the knowledge base build plan."},
+  {id:"kb-02",s:0,name:"Build Tone & Voice Guide",owner:"Megan",hook:"none",status:"open",phase:3,np:"main",tier:"completeness",ctx:"Megan and Brock build the PW Tone & Voice Guide: how PW speaks, what PW's stances are, sample language for compliance questions. Foundational for the Wizard of PW."},
+  {id:"zo-01",s:0,name:"Add 'Job Pending' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"main",tier:"completeness",qw:true,ctx:"Quick win: add 'Job Pending' as a Zoho CRM pipeline status (may already exist — confirm or add)."},
+  {id:"zo-02",s:0,name:"Add 'Warm' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"main",tier:"completeness",qw:true,ctx:"Quick win: add 'Warm' as a Zoho CRM pipeline status (may already exist — confirm or add)."},
+  {id:"zo-03",s:0,name:"Add 'Recovery' status to Zoho",owner:"Brock",hook:"ZOHO",status:"open",phase:1,np:"main",tier:"completeness",qw:true,ctx:"Quick win: add 'Recovery' as a Zoho CRM pipeline status."},
+  {id:"zo-04",s:0,name:"Connect Anthy Gmail via MCP",owner:"Brock",hook:"SYNC",status:"open",phase:2,np:"main",tier:"leverage",ctx:"Highest value Phase 2 action: connect Anthy's Gmail account via MCP so her client email threads flow into the sync layer. Identify the steps required and execute."},
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -535,46 +551,48 @@ function showTab(tab){
 // OVERVIEW
 // ═══════════════════════════════════════════════════════════
 // ── NEXT MOVE LOGIC
-// Priority order: quick wins owned by Brock → buildable now → other Phase 1 Brock tasks → any open Phase 1
-function pickNextMove(){
-  const open = t => effectiveStatus(t) !== "complete" && effectiveStatus(t) !== "blocked";
-  const candidates = [
-    TASKS.filter(t=>open(t)&&t.qw&&t.owner==="Brock"),
-    TASKS.filter(t=>open(t)&&t.bn&&t.owner==="Brock"),
-    TASKS.filter(t=>open(t)&&t.owner==="Brock"&&t.phase===1&&!t.qw&&!t.bn),
-    TASKS.filter(t=>open(t)&&t.phase===1&&t.hook!=="COMPEX"&&t.hook!=="SYNC"),
-  ];
-  for(const bucket of candidates){ if(bucket.length) return bucket[0]; }
-  return null;
+// Priority: Leverage → Revenue (by revOrder 1-5) → Completeness → never Francis
+function actionable(t){
+  return effectiveStatus(t)!=="complete" && effectiveStatus(t)!=="blocked" && t.tier!=="francis";
 }
+function tierScore(t){
+  if(t.tier==="leverage")     return 0;
+  if(t.tier==="revenue")      return 100 + (t.revOrder||9)*10;
+  if(t.tier==="completeness") return 300;
+  return 400;
+}
+function sortedActionable(){
+  return TASKS.filter(actionable).sort((a,b)=>{
+    const ts=tierScore(a)-tierScore(b);
+    if(ts!==0) return ts;
+    const ao=a.owner==="Brock"?0:1, bo=b.owner==="Brock"?0:1;
+    if(ao!==bo) return ao-bo;
+    return (a.phase||9)-(b.phase||9);
+  });
+}
+function pickNextMove(){ return sortedActionable()[0]||null; }
 
 function nextMoveWhy(t){
-  if(t.qw) return "Quick win — no dependencies, no Francis needed. Completing this now keeps Phase 1 momentum moving.";
-  if(t.bn) return "Buildable today via HOOK/CLAUDE — MCP connected, no hard-side work required. Every Claude task completed now is one less blocker before Phase 2.";
-  if(t.hook==="ZOHO") return "A Zoho configuration task that only Brock can action. Clearing this unblocks downstream automations that depend on it.";
-  if(t.hook==="decision") return "A decision that only you can make. Other tasks are waiting on this call before they can be specced or built.";
-  return "Phase 1 priority — completing the lifecycle map is the prerequisite for everything else. Every stage specced is one step closer to the sync layer.";
+  if(t.tier==="leverage") return "Leverage task — complete once, Claude takes over permanently. Every leverage task done now frees you from a recurring manual job forever.";
+  if(t.tier==="revenue"&&t.revOrder===1) return "DIR data seeds everything — Customer Match, lookalike campaigns, B2B Rocket sequences all flow from this list. Highest-priority revenue task.";
+  if(t.tier==="revenue"&&t.revOrder===2) return "Google Ads runs on autopilot once live. The DIR list is the targeting seed — get paid acquisition flowing before social or outreach.";
+  if(t.tier==="revenue"&&t.revOrder===3) return "Social builds brand and feeds Meta Ads lookalike audiences. Establishing presence now means outreach sequences land in a warmer market.";
+  if(t.tier==="revenue"&&t.revOrder===4) return "B2B Rocket performs better with brand established and DIR audience warm. Now is the right time.";
+  if(t.tier==="revenue"&&t.revOrder===5) return "Consultation conversion optimizes the pipeline now flowing from DIR, ads, and social. Every improvement here compounds across every lead.";
+  if(t.hook==="decision") return "A decision only you can make. Other tasks are waiting on this call.";
+  return "Phase 1 priority — every stage documented gets you one step closer to the sync layer and a business that runs itself.";
 }
 
 function pickSecondaryMoves(excludeId){
-  const open = t => effectiveStatus(t)!=="complete" && effectiveStatus(t)!=="blocked" && t.id!==excludeId;
-  const pool = [
-    ...TASKS.filter(t=>open(t)&&t.qw&&t.owner==="Brock"),
-    ...TASKS.filter(t=>open(t)&&t.bn),
-    ...TASKS.filter(t=>open(t)&&t.hook==="decision"&&t.owner==="Brock"),
-    ...TASKS.filter(t=>open(t)&&t.owner==="Brock"&&t.phase===1),
-  ];
-  // dedupe
-  const seen=new Set(); const out=[];
-  for(const t of pool){ if(!seen.has(t.id)){seen.add(t.id);out.push(t);} if(out.length===3) break; }
-  return out;
+  return sortedActionable().filter(t=>t.id!==excludeId).slice(0,3);
 }
 
 function smLabel(t){
-  if(t.qw) return {text:"Quick win",color:"var(--green)"};
-  if(t.bn) return {text:"Buildable now",color:"var(--purple)"};
-  if(t.hook==="decision") return {text:"Decision needed",color:"var(--accent)"};
-  return {text:"Phase "+t.phase,color:"var(--muted)"};
+  const tierLabels={"leverage":"Leverage","revenue":"Revenue","completeness":"Completeness","francis":"Francis"};
+  const tierColors={"leverage":"var(--blue)","revenue":"var(--green)","completeness":"var(--muted)","francis":"var(--muted)"};
+  const rev=t.revOrder?[,"DIR first","Google Ads","Social","Outreach","Consultation"][t.revOrder]:"";
+  const lbl=tierLabels[t.tier]||(t.tier||"");
+  return {text:rev?`${lbl} · ${rev}`:lbl, color:tierColors[t.tier]||"var(--muted)"};
 }
 
 // ── BUILD PHASES CONFIG
@@ -599,10 +617,13 @@ function renderOverview(){
   const p1tasks = TASKS.filter(t=>t.phase===1);
   const p1done  = p1tasks.filter(t=>effectiveStatus(t)==="complete").length;
   const p1pct   = p1tasks.length ? Math.round(p1done/p1tasks.length*100) : 0;
-  const qws     = TASKS.filter(t=>t.qw&&effectiveStatus(t)!=="complete");
-  const bns     = TASKS.filter(t=>t.bn&&effectiveStatus(t)!=="complete");
-  const decisions = TASKS.filter(t=>t.hook==="decision"&&effectiveStatus(t)!=="complete");
-  const waiting = TASKS.filter(t=>(effectiveStatus(t)==="blocked"||t.hook==="SYNC"||t.owner==="Francis")&&effectiveStatus(t)!=="complete");
+  const leverage   = TASKS.filter(t=>t.tier==="leverage"&&actionable(t));
+  const revenue    = TASKS.filter(t=>t.tier==="revenue"&&actionable(t)).sort((a,b)=>(a.revOrder||9)-(b.revOrder||9));
+  const decisions  = TASKS.filter(t=>t.hook==="decision"&&actionable(t));
+  const waiting    = TASKS.filter(t=>!actionable(t)&&effectiveStatus(t)!=="complete");
+  // keep for backward compat
+  const qws  = leverage.filter(t=>t.qw);
+  const bns  = leverage.filter(t=>t.bn);
   const curPhase = currentBuildPhase();
 
   const nextMove = pickNextMove();
@@ -675,40 +696,40 @@ function renderOverview(){
     <div class="work-cols">
       <div class="wc">
         <div class="wc-head">
-          <div class="wc-title" style="color:var(--green)">Do these today</div>
-          <div class="wc-sub">Quick wins · under 10 min each · no dependencies</div>
+          <div class="wc-title" style="color:var(--blue)">Leverage</div>
+          <div class="wc-sub">Complete once · Claude takes over permanently</div>
         </div>
         <div class="wc-body">
-          ${qws.slice(0,5).map(t=>`
+          ${leverage.slice(0,6).map(t=>`
+            <div class="wc-item" data-id="${t.id}">
+              <div class="wc-dot" style="background:var(--blue)"></div>
+              <div class="wc-text">${t.name}</div>
+            </div>`).join("")}
+          ${leverage.length===0?`<div class="wc-empty">All leverage tasks complete</div>`:""}
+          ${leverage.length>6?`<div class="wc-item" style="color:var(--muted);font-size:11px;padding:8px 13px">+${leverage.length-6} more</div>`:""}
+        </div>
+      </div>
+
+      <div class="wc">
+        <div class="wc-head">
+          <div class="wc-title" style="color:var(--green)">Revenue</div>
+          <div class="wc-sub">DIR → Google Ads → Social → Outreach → Consultation</div>
+        </div>
+        <div class="wc-body">
+          ${revenue.slice(0,6).map(t=>`
             <div class="wc-item" data-id="${t.id}">
               <div class="wc-dot" style="background:var(--green)"></div>
-              <div class="wc-text">${t.name}</div>
+              <div class="wc-text">${t.name}${t.revOrder?`<span style="font-family:monospace;font-size:9px;color:var(--muted);margin-left:5px">R${t.revOrder}</span>`:""}</div>
             </div>`).join("")}
-          ${qws.length===0?`<div class="wc-empty">No quick wins remaining</div>`:""}
-          ${qws.length>5?`<div class="wc-item" style="color:var(--muted);font-size:11px;padding:8px 13px">+${qws.length-5} more in All Tasks</div>`:""}
+          ${revenue.length===0?`<div class="wc-empty">All revenue tasks complete</div>`:""}
+          ${revenue.length>6?`<div class="wc-item" style="color:var(--muted);font-size:11px;padding:8px 13px">+${revenue.length-6} more</div>`:""}
         </div>
       </div>
 
       <div class="wc">
         <div class="wc-head">
-          <div class="wc-title" style="color:var(--purple)">Build without Francis</div>
-          <div class="wc-sub">HOOK/CLAUDE · MCP connected · ready now</div>
-        </div>
-        <div class="wc-body">
-          ${bns.slice(0,5).map(t=>`
-            <div class="wc-item" data-id="${t.id}">
-              <div class="wc-dot" style="background:var(--purple)"></div>
-              <div class="wc-text">${t.name}</div>
-            </div>`).join("")}
-          ${bns.length===0?`<div class="wc-empty">All HOOK/CLAUDE tasks complete</div>`:""}
-          ${bns.length>5?`<div class="wc-item" style="color:var(--muted);font-size:11px;padding:8px 13px">+${bns.length-5} more in All Tasks</div>`:""}
-        </div>
-      </div>
-
-      <div class="wc">
-        <div class="wc-head">
-          <div class="wc-title" style="color:var(--accent)">Decisions only you can make</div>
-          <div class="wc-sub">Other tasks are waiting on these calls</div>
+          <div class="wc-title" style="color:var(--accent)">Decisions needed</div>
+          <div class="wc-sub">Only you can make these calls · others are waiting</div>
         </div>
         <div class="wc-body">
           ${decisions.slice(0,5).map(t=>`
