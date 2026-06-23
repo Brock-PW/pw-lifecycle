@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PW &mdash; Stage 5 — Retention &amp; Recovery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #2c2c2a; min-height: 100vh; }
+
+  header { background: #2c2c2a; color: #f5f4f0; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 15px; font-weight: 500; letter-spacing: .02em; }
+  header .meta { font-size: 12px; color: #888780; }
+  .version-badge { background: #3C3489; color: #EEEDFE; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-left: 12px; }
+
+  .toolbar { background: #fff; border-bottom: 0.5px solid #d3d1c7; padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .toolbar-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #5F5E5A; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .search-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .search-wrap input { border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 5px 10px; font-size: 12px; background: #f5f4f0; color: #2c2c2a; outline: none; width: 180px; }
+  .search-wrap input:focus { border-color: #7F77DD; }
+
+  .canvas { padding: 24px 32px; display: flex; justify-content: center; }
+  .fc-wrap { position: relative; width: 100%; max-width: 1400px; }
+
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; }
+  .node-box { cursor: pointer; }
+  .node-box:hover rect, .node-box:hover polygon { filter: brightness(0.94); }
+
+  .panel {
+    display: none; position: fixed; z-index: 200;
+    background: #fff; border: 0.5px solid #b4b2a9;
+    border-radius: 10px; padding: 16px 18px; width: 280px;
+    font-size: 13px; line-height: 1.6; color: #5F5E5A;
+    box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  }
+  .panel.open { display: block; }
+  .panel h4 { font-size: 14px; font-weight: 500; color: #2c2c2a; margin-bottom: 8px; padding-right: 20px; }
+  .panel .close-btn { position: absolute; top: 12px; right: 14px; cursor: pointer; color: #888780; font-size: 16px; line-height: 1; background: none; border: none; }
+  .panel .owner-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 0.5px solid; font-weight: 500; }
+  .b-ai { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
+  .b-human { background: #E1F5EE; border-color: #5DCAA5; color: #085041; }
+  .b-client { background: #FAECE7; border-color: #F0997B; color: #712B13; }
+  .b-auto { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
+  .panel-body { font-size: 12px; color: #5F5E5A; line-height: 1.6; }
+  .panel .note-area { margin-top: 10px; border-top: 0.5px solid #d3d1c7; padding-top: 10px; }
+  .panel .note-area textarea { width: 100%; border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 7px 9px; font-size: 11px; font-family: inherit; color: #2c2c2a; background: #f5f4f0; resize: vertical; min-height: 56px; outline: none; }
+  .panel .note-area textarea:focus { border-color: #7F77DD; }
+  .panel .note-area label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; display: block; margin-bottom: 4px; }
+  .panel .save-note { margin-top: 6px; font-size: 11px; padding: 4px 10px; border: 0.5px solid #d3d1c7; border-radius: 6px; background: #f5f4f0; cursor: pointer; color: #5F5E5A; }
+  .panel .save-note:hover { background: #e1f5ee; border-color: #5DCAA5; color: #085041; }
+  .has-note rect, .has-note polygon { stroke-width: 1.5 !important; }
+
+  .highlight-match rect, .highlight-match polygon { stroke: #7F77DD !important; stroke-width: 2 !important; }
+
+  @media print {
+    header, .toolbar { display: none; }
+    .canvas { padding: 0; }
+    .panel { display: none !important; }
+  }
+</style>
+<style>
+  .fc-wrap { position: relative; width: 100%; max-width: 1600px; }
+  .breadcrumb { font-size: 12px; color: #888780; display: flex; align-items: center; gap: 6px; }
+  .breadcrumb a { color: #7F77DD; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:10px;flex:1">
+    <div class="breadcrumb">
+      <a href="/">&#8592; Lifecycle Overview</a>
+      <span style="color:#ccc">&#8250;</span>
+      <span style="color:#f5f4f0">Stage 5 — Retention &amp; Recovery</span>
+    </div>
+    <span class="version-badge">v1.0</span>
+  </div>
+  <span class="meta" style="font-size:11px;color:#aaa;font-style:italic;margin-left:12px">No active project → Job Pending · Warm · Recovery · automated layer runs · human moments surfaced</span>
+  <span class="meta" id="last-updated" style="margin-left:16px">Last updated: May 26, 2026</span>
+</header>
+
+<div class="toolbar">
+  <span class="toolbar-label">Owner key</span>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#EEEDFE;border:1px solid #AFA9EC"></div>AI agent</div>
+    <div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1px solid #5DCAA5"></div>Brock / team</div>
+    <div class="leg"><div class="leg-dot" style="background:#FAECE7;border:1px solid #F0997B"></div>Client action</div>
+    <div class="leg"><div class="leg-dot" style="background:#FAEEDA;border:1px solid #EF9F27"></div>Automated trigger</div>
+    <div class="leg"><div class="leg-dot" style="background:#F1EFE8;border:1px solid #B4B2A9;transform:rotate(45deg);border-radius:1px"></div>Decision</div>
+  </div>
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search nodes..." oninput="searchNodes(this.value)">
+  </div>
+</div>
+
+<div class="canvas">
+<div class="fc-wrap" id="fcwrap">
+<svg viewBox="0 0 1200 1500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#B4B2A9"/></marker></defs>
+<text x="550" y="34" text-anchor="middle" style="font-size:14px;font-weight:700;fill:#2c2c2a">STAGE 5 — RETENTION &amp; RECOVERY</text><text x="550" y="60" text-anchor="middle" style="font-size:10px;fill:#888780">No active project · automated layer runs continuously · human moments surfaced when they matter</text><g class="node-box" onclick="showPanel('s5-trigger')" style="cursor:pointer"><rect x="202" y="80" width="700" height="68" rx="10" fill="#F0997B" stroke="#F0997B" stroke-width="1.5"/><rect x="202" y="80" width="700" height="68" rx="10" fill="#F0997B" opacity="0.1"/><rect x="200" y="78" width="700" height="68" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="1.5"/><text x="550" y="96" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:700;fill:#712B13">Trigger: Last Project Closes in Stage 4</text><foreignObject x="208" y="108" width="684" height="32"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#8B4530;text-align:center;line-height:1.4;padding:0 4px">Zoho Projects: last active project marked complete · Claude reads client history · identifies Job Pending vs Warm · sets initial status · ⚠ HOOK/ZOHO + HOOK/CLAUDE</div></foreignObject></g><line x1="550" y1="154" x2="550" y2="170" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-status')" style="cursor:pointer"><polygon points="550,170 610,214 550,258 490,214" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.5"/><text x="550" y="208" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">Upcoming work</text><text x="550" y="224" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">known?</text></g><line x1="240" y1="214" x2="860" y2="214" stroke="#B4B2A9" stroke-width="1.2"/><line x1="240" y1="214" x2="240" y2="260" stroke="#B4B2A9" stroke-width="1.2"/><line x1="240" y1="260" x2="240" y2="276" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="860" y1="214" x2="860" y2="260" stroke="#B4B2A9" stroke-width="1.2"/><line x1="860" y1="260" x2="860" y2="276" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><text x="240" y="254" text-anchor="middle" style="font-size:10px;fill:#085041">Yes — Job Pending</text><text x="860" y="254" text-anchor="middle" style="font-size:10px;fill:#085041">No — Warm</text><g class="node-box" onclick="showPanel('s5-jp1')" style="cursor:pointer"><rect x="90" y="276" width="300" height="78" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.5"/><text x="240" y="294" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#085041">Status: Job Pending</text><foreignObject x="96" y="306" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#2D6B58;text-align:center;line-height:1.4;padding:0 4px">Client has upcoming work · set in Zoho · Claude monitors timeline for signals · ⚠ HOOK/ZOHO</div></foreignObject></g><line x1="240" y1="354" x2="240" y2="364" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-jp2')" style="cursor:pointer"><rect x="90" y="364" width="300" height="78" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/><text x="240" y="382" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#3C3489">Claude Monitors Timeline</text><foreignObject x="96" y="394" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#5F5E8A;text-align:center;line-height:1.4;padding:0 4px">Watches for bid award · DIR new registration · emails · Otter mentions · surfaces signal to dashboard immediately · ⚠ HOOK/CLAUDE</div></foreignObject></g><line x1="240" y1="442" x2="240" y2="452" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-jp3')" style="cursor:pointer"><rect x="90" y="452" width="300" height="78" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.5"/><text x="240" y="470" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#085041">Proactive Touch — Human Sends</text><foreignObject x="96" y="482" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#2D6B58;text-align:center;line-height:1.4;padding:0 4px">Claude drafts: "Did you win the bid?" · "When does that one start?" · "DAS 140 window opens at contract signing" · AM reviews + sends · never generic</div></foreignObject></g><line x1="240" y1="530" x2="240" y2="540" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-jp4')" style="cursor:pointer"><rect x="90" y="540" width="300" height="78" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="1.5"/><text x="240" y="558" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#712B13">Client Confirms → Stage 4 Active</text><foreignObject x="96" y="570" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#8B4530;text-align:center;line-height:1.4;padding:0 4px">Status → Active · Zoho Projects task list created · Stage 4 restarts · all history preserved · ⚠ HOOK/ZOHO</div></foreignObject></g><g class="node-box" onclick="showPanel('s5-w1')" style="cursor:pointer"><rect x="710" y="276" width="300" height="78" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.5"/><text x="860" y="294" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#085041">Status: Warm</text><foreignObject x="716" y="306" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#2D6B58;text-align:center;line-height:1.4;padding:0 4px">No active project · no known upcoming work · within 60 days of last close · Claude monitors for signals · ⚠ HOOK/ZOHO</div></foreignObject></g><line x1="860" y1="354" x2="860" y2="364" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-w2')" style="cursor:pointer"><rect x="710" y="364" width="300" height="78" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.5"/><text x="860" y="382" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#085041">Day 30 — Check-In</text><foreignObject x="716" y="394" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#2D6B58;text-align:center;line-height:1.4;padding:0 4px">Claude drafts warm specific message referencing last project by name · not generic · AM reviews + sends · ⚠ HOOK/CLAUDE</div></foreignObject></g><line x1="860" y1="442" x2="860" y2="452" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-w3')" style="cursor:pointer"><rect x="710" y="452" width="300" height="78" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/><text x="860" y="470" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#3C3489">Claude Watches for Signals</text><foreignObject x="716" y="482" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#5F5E8A;text-align:center;line-height:1.4;padding:0 4px">New DIR registrations · PWCR renewal due · rate changes · inbound email or Otter mention · surfaces to dashboard when detected · ⚠ HOOK/CLAUDE</div></foreignObject></g><line x1="860" y1="530" x2="860" y2="540" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-w4')" style="cursor:pointer"><rect x="710" y="540" width="300" height="78" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="1.5"/><text x="860" y="558" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#712B13">Client Responds → Status Reset</text><foreignObject x="716" y="570" width="288" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#8B4530;text-align:center;line-height:1.4;padding:0 4px">Claude identifies intent · Job Pending / Active / Warm · Zoho updated · Notion client brain updated · ⚠ HOOK/ZOHO</div></foreignObject></g><line x1="240" y1="628" x2="240" y2="640" stroke="#B4B2A9" stroke-width="1.2" stroke-dasharray="6,4"/><line x1="860" y1="628" x2="860" y2="640" stroke="#B4B2A9" stroke-width="1.2" stroke-dasharray="6,4"/><line x1="240" y1="640" x2="860" y2="640" stroke="#B4B2A9" stroke-width="1.2" stroke-dasharray="6,4"/><line x1="550" y1="640" x2="550" y2="656" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><text x="550" y="664" text-anchor="middle" style="font-size:10px;font-weight:600;fill:#888780;letter-spacing:.08em">DAY 60 — AUTOMATED STATUS CHECK</text><line x1="550" y1="676" x2="550" y2="688" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-60day')" style="cursor:pointer"><polygon points="550,688 610,732 550,776 490,732" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.5"/><text x="550" y="726" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">Response or</text><text x="550" y="742" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">engagement?</text></g><line x1="610" y1="732" x2="770" y2="732" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><text x="660" y="722" text-anchor="middle" style="font-size:10px;fill:#888780">No</text><g class="node-box" onclick="showPanel('s5-r1')" style="cursor:pointer"><rect x="770" y="710" width="260" height="68" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="1.5"/><text x="900" y="728" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#712B13">Status: Recovery</text><foreignObject x="776" y="740" width="248" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#8B4530;text-align:center;line-height:1.4;padding:0 4px">60+ days no response · Zoho → Recovery · ⚠ HOOK/ZOHO</div></foreignObject></g><line x1="900" y1="778" x2="900" y2="788" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-r2')" style="cursor:pointer"><rect x="770" y="788" width="260" height="68" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/><text x="900" y="806" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#3C3489">Recovery Sequence — AI Manages</text><foreignObject x="776" y="818" width="248" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#5F5E8A;text-align:center;line-height:1.4;padding:0 4px">Specific compliance-based touches · PWCR expiry · rate changes · real project history · never generic · Claude drafts + sends · ⚠ HOOK/CLAUDE</div></foreignObject></g><line x1="900" y1="856" x2="900" y2="866" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-r3')" style="cursor:pointer"><rect x="770" y="866" width="260" height="68" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.5"/><text x="900" y="884" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#085041">Human Escalation Touch</text><foreignObject x="776" y="896" width="248" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#2D6B58;text-align:center;line-height:1.4;padding:0 4px">After 2 auto touches no response · surfaced to dashboard · Brock or AM sends personal outreach · short · direct · Claude drafts</div></foreignObject></g><line x1="900" y1="934" x2="900" y2="944" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-r4')" style="cursor:pointer"><rect x="770" y="944" width="260" height="68" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.5"/><text x="900" y="962" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:700;fill:#5F5E5A">Long-Term Dormant</text><foreignObject x="776" y="974" width="248" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.5px;color:#888780;text-align:center;line-height:1.4;padding:0 4px">No response to human touch · low-cadence automated presence · PWCR renewal blast · annual rate alert · never fully abandon</div></foreignObject></g><text x="550" y="788" text-anchor="middle" style="font-size:10px;fill:#085041">Yes — engaged</text><line x1="550" y1="802" x2="550" y2="814" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-engaged')" style="cursor:pointer"><rect x="202" y="816" width="700" height="64" rx="10" fill="#5DCAA5" stroke="#5DCAA5" stroke-width="1.5"/><rect x="202" y="816" width="700" height="64" rx="10" fill="#5DCAA5" opacity="0.1"/><rect x="200" y="814" width="700" height="64" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.5"/><text x="550" y="832" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:700;fill:#085041">Client Re-Engaged — Status Reset</text><foreignObject x="208" y="844" width="684" height="28"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#2D6B58;text-align:center;line-height:1.4;padding:0 4px">Claude reads response · identifies intent · Job Pending (new work coming) · Active (project starting) · Warm (reconnecting, no project yet) · Zoho updated · Notion client brain updated</div></foreignObject></g><line x1="550" y1="886" x2="550" y2="898" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" onclick="showPanel('s5-back')" style="cursor:pointer"><rect x="202" y="900" width="700" height="52" rx="10" fill="#B4B2A9" stroke="#B4B2A9" stroke-width="1.5"/><rect x="202" y="900" width="700" height="52" rx="10" fill="#B4B2A9" opacity="0.1"/><rect x="200" y="898" width="700" height="52" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.5"/><text x="550" y="916" text-anchor="middle" dominant-baseline="central" style="font-size:13px;font-weight:700;fill:#5F5E5A">→ Job Pending · Warm · or Stage 4 Active</text><foreignObject x="208" y="928" width="684" height="16"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#888780;text-align:center;line-height:1.4;padding:0 4px">Client re-enters the appropriate state · Stage 4 restarts if project confirmed · all history preserved in Notion client brain</div></foreignObject></g></svg>
+<div id="panels"><div class="panel" id="panel-s5-trigger"><button class="close-btn" onclick="closePanel('s5-trigger')">&#x2715;</button><h4>Trigger: Last Project Closes in Stage 4</h4><div class="owner-row"><span class="badge b-auto">Zoho trigger</span><span class="badge b-ai">Claude</span></div><div class="panel-body">The moment the last active project is marked complete in Zoho Projects, Claude reads the client history — recent Otter transcripts, emails, conversations — and determines whether upcoming work has been mentioned. Sets status to Job Pending or Warm automatically. Nothing manual.</div></div><div class="panel" id="panel-s5-status"><button class="close-btn" onclick="closePanel('s5-status')">&#x2715;</button><h4>Upcoming Work Known?</h4><div class="owner-row"><span class="badge b-ai">Claude</span></div><div class="panel-body">Claude checks: did the client mention a bid they were waiting on? Did they reference a project starting soon in any email or Otter call? Is there a new DIR registration suggesting imminent work? If any signals exist — Job Pending. If not — Warm.</div></div><div class="panel" id="panel-s5-jp1"><button class="close-btn" onclick="closePanel('s5-jp1')">&#x2715;</button><h4>Status: Job Pending</h4><div class="owner-row"><span class="badge b-auto">Zoho</span><span class="badge b-ai">Claude</span></div><div class="panel-body">We know this client has work coming. The relationship is actively warm. The goal is to be the first call they make when it starts — and to be so proactive about the compliance timeline that starting with PW is the obvious choice.</div></div><div class="panel" id="panel-s5-jp2"><button class="close-btn" onclick="closePanel('s5-jp2')">&#x2715;</button><h4>Claude Monitors Timeline</h4><div class="owner-row"><span class="badge b-ai">Claude</span></div><div class="panel-body">Claude watches for signals: new DIR registrations for this contractor, bid award announcements, any inbound email or Otter mention. When a signal fires, Claude surfaces it in the dashboard immediately. ⚠ HOOK/CLAUDE: buildable today via Zoho + Gmail + Otter MCPs.</div></div><div class="panel" id="panel-s5-jp3"><button class="close-btn" onclick="closePanel('s5-jp3')">&#x2715;</button><h4>Proactive Touch — Human Sends</h4><div class="owner-row"><span class="badge b-human">Brock / AM</span><span class="badge b-ai">Claude drafts</span></div><div class="panel-body">The human moment in Job Pending. Claude drafts a specific, contextual message — never a template. "Did you win the bid on the school project?" "When does that framing contract start?" "Heads up — if you start in July your DAS 140 window opens at contract signing." AM reviews and sends. Always in Brock or AM's voice.</div></div><div class="panel" id="panel-s5-jp4"><button class="close-btn" onclick="closePanel('s5-jp4')">&#x2715;</button><h4>Client Confirms → Stage 4 Active</h4><div class="owner-row"><span class="badge b-auto">Zoho trigger</span></div><div class="panel-body">Client confirms a project is starting. Status immediately moves to Active. Zoho Projects task list is created. Stage 4 restarts. All history from Stage 5 is preserved in the Notion client brain and informs the new project setup.</div></div><div class="panel" id="panel-s5-w1"><button class="close-btn" onclick="closePanel('s5-w1')">&#x2715;</button><h4>Status: Warm</h4><div class="owner-row"><span class="badge b-auto">Zoho</span><span class="badge b-ai">Claude</span></div><div class="panel-body">No active project. No known upcoming work. Within 60 days of the last project close. This is a normal state for any active client between projects. The goal is to stay present without being pushy — warm, not salesy.</div></div><div class="panel" id="panel-s5-w2"><button class="close-btn" onclick="closePanel('s5-w2')">&#x2715;</button><h4>Day 30 — Check-In</h4><div class="owner-row"><span class="badge b-ai">Claude drafts</span><span class="badge b-human">AM reviews + sends</span></div><div class="panel-body">Sent 30 days after the last project closes. Claude drafts a warm, specific message that references the last project by name — never a generic "checking in" email. "How did the Ritchen project wrap up for you?" AM reviews and sends. This is a human touch — it needs to feel personal.</div></div><div class="panel" id="panel-s5-w3"><button class="close-btn" onclick="closePanel('s5-w3')">&#x2715;</button><h4>Claude Watches for Signals</h4><div class="owner-row"><span class="badge b-ai">Claude</span></div><div class="panel-body">Between touchpoints Claude continuously watches: new DIR registrations for this contractor, PWCR renewal coming up, rate changes that affect their work, any inbound email or Otter mention. When a signal fires, it surfaces immediately in the dashboard as an action item.</div></div><div class="panel" id="panel-s5-w4"><button class="close-btn" onclick="closePanel('s5-w4')">&#x2715;</button><h4>Client Responds — Status Reset</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Zoho</span></div><div class="panel-body">Client responds at any point. Claude reads the response, identifies intent, and resets status accordingly. New work confirmed: Job Pending. Project starting now: Active. Just checking in: stays Warm. Zoho and Notion updated automatically.</div></div><div class="panel" id="panel-s5-60day"><button class="close-btn" onclick="closePanel('s5-60day')">&#x2715;</button><h4>Day 60 — Status Check</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Automated</span></div><div class="panel-body">60 days with no response or meaningful engagement. Claude checks whether any touch has been acknowledged. If yes — status stays and the right path continues. If no — status moves to Recovery and a different approach begins.</div></div><div class="panel" id="panel-s5-r1"><button class="close-btn" onclick="closePanel('s5-r1')">&#x2715;</button><h4>Status: Recovery</h4><div class="owner-row"><span class="badge b-auto">Zoho</span><span class="badge b-ai">Claude</span></div><div class="panel-body">60 days with no response. Status moves to Recovery. The relationship is not dead — but it needs a different approach. The goal shifts from staying present to giving them a genuine reason to respond. Tone: "we're here when you need us."</div></div><div class="panel" id="panel-s5-r2"><button class="close-btn" onclick="closePanel('s5-r2')">&#x2715;</button><h4>Recovery Sequence — AI Manages</h4><div class="owner-row"><span class="badge b-ai">Claude</span></div><div class="panel-body">Claude manages the recovery sequence automatically. Every touch is specific to this client — not generic marketing. Uses real compliance signals: PWCR expiring, rate changes in their county, DIR activity in their area. "Your PWCR expires June 30 — just a heads up in case you have anything coming up." Claude drafts and sends.</div></div><div class="panel" id="panel-s5-r3"><button class="close-btn" onclick="closePanel('s5-r3')">&#x2715;</button><h4>Human Escalation Touch</h4><div class="owner-row"><span class="badge b-human">Brock / AM</span><span class="badge b-ai">Claude drafts</span></div><div class="panel-body">After 2 automated recovery touches with no response, Claude surfaces the client to the dashboard for personal outreach. Short. Direct. No pressure. "Hey Brian — just wanted to make sure you know we're still here." Claude drafts using the Notion client brain. Brock or AM reviews and sends personally.</div></div><div class="panel" id="panel-s5-r4"><button class="close-btn" onclick="closePanel('s5-r4')">&#x2715;</button><h4>Long-Term Dormant</h4><div class="owner-row"><span class="badge b-ai">Claude</span></div><div class="panel-body">No response to the human escalation touch. Client moves to long-term dormant. Claude maintains a very low-cadence presence — PWCR renewal blast annually, rate change alerts when directly relevant. Never fully abandon. A client who went cold can come back in 18 months. The Notion client brain has everything when they do.</div></div><div class="panel" id="panel-s5-engaged"><button class="close-btn" onclick="closePanel('s5-engaged')">&#x2715;</button><h4>Client Re-Engaged — Status Reset</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Zoho</span></div><div class="panel-body">Client responds. Claude reads the response and determines the right status reset. Job Pending if they have work coming. Active if a project is starting. Warm if they're just reconnecting. Zoho and Notion updated. The right path resumes from where they re-enter.</div></div><div class="panel" id="panel-s5-back"><button class="close-btn" onclick="closePanel('s5-back')">&#x2715;</button><h4>→ Job Pending · Warm · or Stage 4 Active</h4><div class="owner-row"><span class="badge b-auto">System</span></div><div class="panel-body">Client re-enters the appropriate state. If a new project is confirmed, Stage 4 restarts immediately with all prior history intact. The Notion client brain carries forward everything PW knows about this client.</div></div></div><script>
+const STORAGE_KEY = 'pw_flowchart_notes_v1';
+
+function getNotes() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function saveNote(id) {
+  const ta = document.getElementById('note-' + id);
+  if (!ta) return;
+  const notes = getNotes();
+  notes[id] = ta.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  const btn = ta.nextElementSibling;
+  btn.textContent = 'Saved ✓';
+  setTimeout(() => btn.textContent = 'Save note', 1400);
+  const node = document.getElementById('n-' + id);
+  if (node && ta.value.trim()) node.classList.add('has-note');
+  else if (node) node.classList.remove('has-note');
+}
+
+function loadNotes() {
+  const notes = getNotes();
+  Object.entries(notes).forEach(([id, val]) => {
+    const ta = document.getElementById('note-' + id);
+    if (ta && val) {
+      ta.value = val;
+      const node = document.getElementById('n-' + id);
+      if (node) node.classList.add('has-note');
+    }
+  });
+}
+
+function showPanel(id, triggerEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const wrap = document.getElementById('fcwrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const trigRect = triggerEl.getBoundingClientRect();
+  let left = trigRect.left - wrapRect.left + trigRect.width / 2 - 140;
+  let top = trigRect.top - wrapRect.top + trigRect.height + 8;
+  left = Math.max(4, Math.min(left, wrapRect.width - 292));
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.classList.add('open');
+}
+
+function closePanel(id) {
+  const p = document.getElementById(id);
+  if (p) p.classList.remove('open');
+}
+
+function searchNodes(q) {
+  document.querySelectorAll('.node-box').forEach(n => n.classList.remove('highlight-match'));
+  if (!q.trim()) return;
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.node-box').forEach(n => {
+    const s = (n.getAttribute('data-search') || '') + ' ' + (n.textContent || '');
+    if (s.toLowerCase().includes(lq)) n.classList.add('highlight-match');
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.node-box') && !e.target.closest('.panel')) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  }
+});
+
+loadNotes();
+document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+</script>
+<div id="s3-trigger" class="panel"><button class="close-btn" onclick="closePanel('s3-trigger')">&#x2715;</button><h4>Trigger: Contract Signed + Retainer Paid</h4><div class="owner-row"><span class="badge b-auto">Zoho trigger</span></div><div class="panel-body">The moment contract is signed and retainer is paid in Stage 2, Zoho updates the deal stage to Active Client and Stage 3 fires automatically. Nothing manual. The onboarding sequence begins within minutes of the signature.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-trigger" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-trigger')">Save note</button></div></div><div id="s3-assign" class="panel"><button class="close-btn" onclick="closePanel('s3-assign')">&#x2715;</button><h4>Account Manager Assigned</h4><div class="owner-row"><span class="badge b-human">Brock</span><span class="badge b-auto">Zoho notifies AM</span></div><div class="panel-body">Brock assigns the account manager in Zoho. AM is notified immediately. Before making any contact, the AM reads the Stage 2 Otter transcript and pre-call brief so they walk into the relationship already knowing the client's situation. No cold introductions.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-assign" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-assign')">Save note</button></div></div><div id="s3-email" class="panel"><button class="close-btn" onclick="closePanel('s3-email')">&#x2715;</button><h4>Onboarding Email</h4><div class="owner-row"><span class="badge b-ai">Claude drafts</span><span class="badge b-human">AM reviews</span></div><div class="panel-body">Auto-sends within minutes of contract signing. Claude drafts in the AM's voice. AM reviews before it goes out. Warm, personal, confident. Not a template — it references specific things from the consultation call. Sets the tone for the entire relationship.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-email" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-email')">Save note</button></div></div><div id="s3-email-detail" class="panel"><button class="close-btn" onclick="closePanel('s3-email-detail')">&#x2715;</button><h4>Onboarding Email Contents</h4><div class="owner-row"><span class="badge b-ai">Claude drafts</span></div><div class="panel-body">Introduces the AM by name with a brief bio and photo. Provides direct contact details (email + phone). States response time commitment. Explains clearly what happens next. References something specific from the consultation call to show they were listening. Tone: warm, capable, like a trusted expert they're lucky to have.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-email-detail" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-email-detail')">Save note</button></div></div><div id="s3-kit" class="panel"><button class="close-btn" onclick="closePanel('s3-kit')">&#x2715;</button><h4>Welcome Kit — Physical Send</h4><div class="owner-row"><span class="badge b-human">Bobby</span><span class="badge b-auto">Zoho task</span></div><div class="panel-body">Task auto-created in Zoho and assigned to Bobby the moment contract signs. Bobby ships the swag package within 3 business days. Contents TBD — budget to be assigned by Brock. The physical touch matters. Something landing on their desk reinforces that they signed with a real, premium company.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-kit" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-kit')">Save note</button></div></div><div id="s3-kit-detail" class="panel"><button class="close-btn" onclick="closePanel('s3-kit-detail')">&#x2715;</button><h4>Welcome Kit Contents</h4><div class="owner-row"><span class="badge b-human">Bobby / Brock</span></div><div class="panel-body">Currently contains leftover Christmas swag. Proper contents and budget to be defined. Goal: something that feels premium and personal when it lands on their desk. Could include branded items, a handwritten note, a summary card of their AM contact details. Bobby ships within 3 business days of contract signing.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-kit-detail" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-kit-detail')">Save note</button></div></div><div id="s3-wwpw" class="panel"><button class="close-btn" onclick="closePanel('s3-wwpw')">&#x2715;</button><h4>"Working With PW" Document</h4><div class="owner-row"><span class="badge b-ai">Claude produces</span><span class="badge b-human">AM reviews</span></div><div class="panel-body">A short, clean document that sets the tone for how the relationship works. Not a legal document. Not a compliance guide. A communication guide. Claude produces a personalised version for each client. AM reviews before sending. Should feel like a welcome letter from a trusted partner, not an onboarding packet from a vendor.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-wwpw" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-wwpw')">Save note</button></div></div><div id="s3-wwpw-detail" class="panel"><button class="close-btn" onclick="closePanel('s3-wwpw-detail')">&#x2715;</button><h4>"Working With PW" — Contents</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-human">AM personalises</span></div><div class="panel-body">Covers: who we are and what we believe in · meet your AM · how we communicate (preferred channels, response times) · what we need from you to do our best work · how to flag an issue or urgent situation · what great looks like when we work well together · one sentence on what happens next. No project details. No compliance specifics. Pure relationship setup.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-wwpw-detail" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-wwpw-detail')">Save note</button></div></div><div id="s3-introcall" class="panel"><button class="close-btn" onclick="closePanel('s3-introcall')">&#x2715;</button><h4>AM Introduction Call</h4><div class="owner-row"><span class="badge b-human">AM</span><span class="badge b-auto">Otter records</span></div><div class="panel-body">AM reaches out within 48 hours of onboarding email to schedule a short 15-20 min call. Optional but strongly encouraged. Goal: put a voice to the name, answer any early questions, build rapport before the work begins. Explicitly not a project call — if project questions come up, note them and schedule a separate call. Otter records. Claude extracts key points → Notion client brain.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-introcall" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-introcall')">Save note</button></div></div><div id="s3-brain" class="panel"><button class="close-btn" onclick="closePanel('s3-brain')">&#x2715;</button><h4>Notion Client Brain Page Created</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Auto-created</span></div><div class="panel-body">Claude creates the dedicated Notion client brain page. Pre-populated from: Stage 2 Otter transcript, prior emails, intro call transcript if completed. Includes: client contact details, communication preferences noted during calls, AM profile, any early signals about what matters to this client. This page grows automatically with every future interaction. ⚠ HOOK/CLAUDE: Notion page creation via MCP — buildable today.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-brain" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-brain')">Save note</button></div></div><div id="s3-complete" class="panel"><button class="close-btn" onclick="closePanel('s3-complete')">&#x2715;</button><h4>Onboarding Complete</h4><div class="owner-row"><span class="badge b-human">AM confirms</span></div><div class="panel-body">Client has: met their AM, received the welcome kit, received the Working With PW document, and had an intro call if they wanted one. Notion brain is live. Communication expectations are set. Stage 3 is done. The relationship is established. Now we wait for the first project.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-complete" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-complete')">Save note</button></div></div><div id="s3-handoff" class="panel"><button class="close-btn" onclick="closePanel('s3-handoff')">&#x2715;</button><h4>→ Stage 4: Active Project Loop</h4><div class="owner-row"><span class="badge b-auto">Trigger: first project starts</span></div><div class="panel-body">Stage 4 begins when the client's first project starts — not when onboarding completes. A client could be in Stage 3 (onboarded, no active project) for days or weeks before Stage 4 begins. That gap is managed through Stage 5 retention touchpoints until a project kicks off.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-handoff" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-handoff')">Save note</button></div></div>
+</div>
+</div>
+<script>
+const STORAGE_KEY = 'pw_flowchart_notes_v1';
+
+function getNotes() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function saveNote(id) {
+  const ta = document.getElementById('note-' + id);
+  if (!ta) return;
+  const notes = getNotes();
+  notes[id] = ta.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  const btn = ta.nextElementSibling;
+  btn.textContent = 'Saved ✓';
+  setTimeout(() => btn.textContent = 'Save note', 1400);
+  const node = document.getElementById('n-' + id);
+  if (node && ta.value.trim()) node.classList.add('has-note');
+  else if (node) node.classList.remove('has-note');
+}
+
+function loadNotes() {
+  const notes = getNotes();
+  Object.entries(notes).forEach(([id, val]) => {
+    const ta = document.getElementById('note-' + id);
+    if (ta && val) {
+      ta.value = val;
+      const node = document.getElementById('n-' + id);
+      if (node) node.classList.add('has-note');
+    }
+  });
+}
+
+function showPanel(id, triggerEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const wrap = document.getElementById('fcwrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const trigRect = triggerEl.getBoundingClientRect();
+  let left = trigRect.left - wrapRect.left + trigRect.width / 2 - 140;
+  let top = trigRect.top - wrapRect.top + trigRect.height + 8;
+  left = Math.max(4, Math.min(left, wrapRect.width - 292));
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.classList.add('open');
+}
+
+function closePanel(id) {
+  const p = document.getElementById(id);
+  if (p) p.classList.remove('open');
+}
+
+function searchNodes(q) {
+  document.querySelectorAll('.node-box').forEach(n => n.classList.remove('highlight-match'));
+  if (!q.trim()) return;
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.node-box').forEach(n => {
+    const s = (n.getAttribute('data-search') || '') + ' ' + (n.textContent || '');
+    if (s.toLowerCase().includes(lq)) n.classList.add('highlight-match');
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.node-box') && !e.target.closest('.panel')) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  }
+});
+
+loadNotes();
+document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+</script>
+</body>
+</html>

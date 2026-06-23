@@ -167,6 +167,15 @@ Color system:
 
 ---
 
+## Key Integration Components
+
+Full integration roadmap lives in Notion:
+notion.so/3742e7f35b1f81e0acb5f10de32cca8a
+
+Organized by phase, type, status, and owner. Check this page before starting any new integration work.
+
+---
+
 ## Open Hooks (items awaiting Francis / future build)
 
 - B2B Rocket sequence rebuild (all CA sequences in Brock's voice)
@@ -238,6 +247,66 @@ Francis's principle: step-by-step · bite off small chunks · solve thoroughly b
 - Francis will not expose existing workflows yet — hooks remain typed and named but uncalled until Francis opens them.
 - General architecture alignment confirmed. Edge cases will surface and be solved as encountered.
 - The sync layer (Phase 2) is identified as the hardest single piece and must be solved before anything else is built on top of it.
+
+---
+
+---
+
+## Stage 4 — Active Project Loop: Key Architecture Decisions
+
+### Data Source
+All project-level compliance data lives in Zoho Projects (portal ID: 829542738).
+Every project has a task list (e.g. "CA STATE PROJECT") with individual tasks for:
+CPR (weekly, one task per week period) · eCPR (paired with each CPR) · DAS 140/142 · 
+Prevailing Wages · Fringe Benefit Statement · Digital File Setup · Training Contributions
+
+Claude reads all of this via Zoho Projects MCP — no manual data entry needed.
+100+ active projects accessible. Task dates, completion status, assigned owner, 
+quantity, and billing details (Performing/Non Performing) all readable.
+
+### Dashboard Operating Modes
+
+**Mode 1 — Automated execution (Compex available):**
+Claude detects need → surfaces in dashboard → AM approves → ⚠ HOOK/COMPEX fires →
+Compex executes → completion signal → Claude marks complete in Zoho Projects →
+syncs to Notion client brain → alert clears from dashboard.
+
+**Mode 2 — Human-assisted execution (no Compex automation yet):**
+Claude detects need → surfaces in dashboard → AM does the work manually →
+AM marks complete (in dashboard chat, or directly in Zoho Projects) →
+Claude detects completion via Zoho MCP → syncs to Notion → alert clears.
+Source of "done" signal does not matter — Claude picks it up wherever it happens.
+
+This two-mode model means the dashboard is fully usable TODAY for all tasks,
+regardless of which Compex automations exist. Mode 2 is the bridge until Phase 4 is complete.
+
+### Dashboard Display Requirements
+The dashboard must have two layers:
+
+**Layer 1 — The Overview (what you see first):**
+All assigned clients/projects · status indicators · alert counts · color-coded urgency.
+Late CPRs · expiring PWCRs · pending DAS forms · rate increases due · open tasks.
+Same data Megan's spreadsheet tracks — but pulled live from Zoho Projects, not manually.
+Per-consultant view: each AM sees only their assigned projects.
+Lead view: sees all projects across the team.
+
+**Layer 2 — The Action Layer (drill into a project/client):**
+Claude conversation interface for that client/project.
+All open tasks listed with due dates and urgency.
+Every task is actionable from here — AM never needs to log into Zoho separately.
+"Mark complete" fires Mode 1 or Mode 2 depending on whether Compex automation exists.
+The Wizard of PW is accessible from this same window.
+
+### Megan's Spreadsheet Role
+Megan's Labor Compliance Command Center (Google Sheets) is a manually maintained mirror
+of data that already exists in Zoho Projects. It is a valuable reference for:
+- The correct alert logic (what to flag, what thresholds to use)
+- The field mapping (CPR date, eCPR date, DAS status, PWCR expiration, rate increase date)
+- The dashboard layout and visual design to replicate/improve upon
+
+The destination is Claude reading Zoho Projects directly and surfacing the same alerts
+automatically. The spreadsheet stays as-is until the dashboard replaces it.
+Do not try to sync the spreadsheet — build on top of Zoho Projects directly.
 
 ---
 
