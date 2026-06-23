@@ -15,6 +15,9 @@ $action = {
     $name = $Event.SourceEventArgs.Name
     $changeType = $Event.SourceEventArgs.ChangeType
 
+    # Ignore .git internals
+    if ($path -like "*.git*") { return }
+
     Write-Host ""
     Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Detected $changeType`: $name" -ForegroundColor Cyan
 
