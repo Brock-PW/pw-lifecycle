@@ -556,8 +556,15 @@ function actionable(t){
   return effectiveStatus(t)!=="complete" && effectiveStatus(t)!=="blocked" && t.tier!=="francis";
 }
 function tierScore(t){
-  if(t.tier==="leverage")     return 0;
-  if(t.tier==="revenue")      return 100 + (t.revOrder||9)*10;
+  // Leverage stages 1-2 first (enable lead capture before anything else)
+  if(t.tier==="leverage" && (t.s===1||t.s===2)) return 0 + (t.s||9);
+  // Revenue in sequence (DIR→Ads→Social→Outreach→Consultation)
+  if(t.tier==="revenue")      return 20 + (t.revOrder||9)*10;
+  // Leverage stages 3-6 (build as clients start arriving)
+  if(t.tier==="leverage" && t.s>=3) return 120 + (t.s||9);
+  // Leverage cross-cutting (s=0, e.g. Gmail connections)
+  if(t.tier==="leverage")     return 10;
+  // Completeness last
   if(t.tier==="completeness") return 300;
   return 400;
 }
