@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PW &mdash; Stage 3 — Onboarding</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #2c2c2a; min-height: 100vh; }
+
+  header { background: #2c2c2a; color: #f5f4f0; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 15px; font-weight: 500; letter-spacing: .02em; }
+  header .meta { font-size: 12px; color: #888780; }
+  .version-badge { background: #3C3489; color: #EEEDFE; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-left: 12px; }
+
+  .toolbar { background: #fff; border-bottom: 0.5px solid #d3d1c7; padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .toolbar-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #5F5E5A; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .search-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .search-wrap input { border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 5px 10px; font-size: 12px; background: #f5f4f0; color: #2c2c2a; outline: none; width: 180px; }
+  .search-wrap input:focus { border-color: #7F77DD; }
+
+  .canvas { padding: 24px 32px; display: flex; justify-content: center; }
+  .fc-wrap { position: relative; width: 100%; max-width: 1400px; }
+
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; }
+  .node-box { cursor: pointer; }
+  .node-box:hover rect, .node-box:hover polygon { filter: brightness(0.94); }
+
+  .panel {
+    display: none; position: fixed; z-index: 200;
+    background: #fff; border: 0.5px solid #b4b2a9;
+    border-radius: 10px; padding: 16px 18px; width: 280px;
+    font-size: 13px; line-height: 1.6; color: #5F5E5A;
+    box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  }
+  .panel.open { display: block; }
+  .panel h4 { font-size: 14px; font-weight: 500; color: #2c2c2a; margin-bottom: 8px; padding-right: 20px; }
+  .panel .close-btn { position: absolute; top: 12px; right: 14px; cursor: pointer; color: #888780; font-size: 16px; line-height: 1; background: none; border: none; }
+  .panel .owner-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 0.5px solid; font-weight: 500; }
+  .b-ai { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
+  .b-human { background: #E1F5EE; border-color: #5DCAA5; color: #085041; }
+  .b-client { background: #FAECE7; border-color: #F0997B; color: #712B13; }
+  .b-auto { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
+  .panel-body { font-size: 12px; color: #5F5E5A; line-height: 1.6; }
+  .panel .note-area { margin-top: 10px; border-top: 0.5px solid #d3d1c7; padding-top: 10px; }
+  .panel .note-area textarea { width: 100%; border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 7px 9px; font-size: 11px; font-family: inherit; color: #2c2c2a; background: #f5f4f0; resize: vertical; min-height: 56px; outline: none; }
+  .panel .note-area textarea:focus { border-color: #7F77DD; }
+  .panel .note-area label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; display: block; margin-bottom: 4px; }
+  .panel .save-note { margin-top: 6px; font-size: 11px; padding: 4px 10px; border: 0.5px solid #d3d1c7; border-radius: 6px; background: #f5f4f0; cursor: pointer; color: #5F5E5A; }
+  .panel .save-note:hover { background: #e1f5ee; border-color: #5DCAA5; color: #085041; }
+  .has-note rect, .has-note polygon { stroke-width: 1.5 !important; }
+
+  .highlight-match rect, .highlight-match polygon { stroke: #7F77DD !important; stroke-width: 2 !important; }
+
+  @media print {
+    header, .toolbar { display: none; }
+    .canvas { padding: 0; }
+    .panel { display: none !important; }
+  }
+</style>
+<style>
+  .fc-wrap { position: relative; width: 100%; max-width: 1600px; }
+  .breadcrumb { font-size: 12px; color: #888780; display: flex; align-items: center; gap: 6px; }
+  .breadcrumb a { color: #7F77DD; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:10px;flex:1">
+    <div class="breadcrumb">
+      <a href="/">&#8592; Lifecycle Overview</a>
+      <span style="color:#ccc">&#8250;</span>
+      <span style="color:#f5f4f0">Stage 3 — Onboarding</span>
+    </div>
+    <span class="version-badge">v1.0</span>
+  </div>
+  <span class="meta" style="font-size:11px;color:#aaa;font-style:italic;margin-left:12px">Contract signed → relationship established · no project work · pure client handshake</span>
+  <span class="meta" id="last-updated" style="margin-left:16px">Last updated: May 26, 2026</span>
+</header>
+
+<div class="toolbar">
+  <span class="toolbar-label">Owner key</span>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#EEEDFE;border:1px solid #AFA9EC"></div>AI agent</div>
+    <div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1px solid #5DCAA5"></div>Brock / team</div>
+    <div class="leg"><div class="leg-dot" style="background:#FAECE7;border:1px solid #F0997B"></div>Client action</div>
+    <div class="leg"><div class="leg-dot" style="background:#FAEEDA;border:1px solid #EF9F27"></div>Automated trigger</div>
+    <div class="leg"><div class="leg-dot" style="background:#F1EFE8;border:1px solid #B4B2A9;transform:rotate(45deg);border-radius:1px"></div>Decision</div>
+  </div>
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search nodes..." oninput="searchNodes(this.value)">
+  </div>
+</div>
+
+<div class="canvas">
+<div class="fc-wrap" id="fcwrap">
+<svg id="fcsvg" viewBox="0 0 1000 994" style="width:100%;display:block;overflow:visible">
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+  <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text x="500" y="24" text-anchor="middle" style="font-size:13px;font-weight:600;letter-spacing:.08em;fill:#2c2c2a">STAGE 3 — ONBOARDING</text><text x="500" y="52" text-anchor="middle" style="font-size:10px;font-weight:600;letter-spacing:.08em;fill:#888780">Client relationship handshake · no project work · sets the tone for everything that follows</text><g class="node-box" id="n-s3-trigger" data-search="" onclick="showPanel('s3-trigger',this)"><rect x="170" y="72" width="660" height="61" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="500" y="94" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Trigger: Contract Signed + Retainer Paid</text><foreignObject x="186" y="107" width="628" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#854F0B;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Zoho deal stage → "Active Client" · Stage 3 fires automatically · ⚠ HOOK/ZOHO: stage change trigger</div></foreignObject></g><line x1="500" y1="137" x2="500" y2="153" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-assign" data-search="" onclick="showPanel('s3-assign',this)"><rect x="170" y="157" width="660" height="77" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="500" y="179" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Account Manager Assigned</text><foreignObject x="186" y="192" width="628" height="43"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Brock assigns the AM in Zoho · AM is notified immediately · AM reviews the Stage 2 Otter transcript and pre-call brief before any client contact · ⚠ HOOK/ZOHO: AM assignment + notification</div></foreignObject></g><line x1="500" y1="238" x2="500" y2="254" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><text x="500" y="266" text-anchor="middle" style="font-size:10px;font-weight:600;letter-spacing:.08em;fill:#888780">THREE THINGS FIRE SIMULTANEOUSLY</text><line x1="190" y1="284" x2="810" y2="284" stroke="#B4B2A9" stroke-width="1"/><line x1="190" y1="284" x2="190" y2="300" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="500" y1="284" x2="500" y2="300" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="810" y1="284" x2="810" y2="300" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-email" data-search="onboarding email auto-sends AM introduces" onclick="showPanel('s3-email',this)"><rect x="60" y="300" width="260" height="101" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="190" y="322" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Onboarding Email</text><foreignObject x="76" y="335" width="228" height="67"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Auto-sends · Claude drafts · AM reviews · warm welcome · introduces AM · sets expectations · tells them what comes next</div></foreignObject></g><g class="node-box" id="n-s3-kit" data-search="welcome kit physical send Bobby swag" onclick="showPanel('s3-kit',this)"><rect x="370" y="300" width="260" height="96" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="500" y="322" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Welcome Kit — Physical Send</text><foreignObject x="386" y="335" width="228" height="62"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#854F0B;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Task auto-created in Zoho · assigned to Bobby · swag package · budget TBD · ⚠ HOOK/ZOHO: Bobby task creation</div></foreignObject></g><g class="node-box" id="n-s3-wwpw" data-search="working with PW document communication expectations" onclick="showPanel('s3-wwpw',this)"><rect x="680" y="300" width="260" height="108" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="810" y="322" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">"Working With PW" Doc</text><foreignObject x="696" y="335" width="228" height="74"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Claude produces · AM reviews · digital send · who we are · how we communicate · what great looks like · how to get the most out of us</div></foreignObject></g><line x1="190" y1="401" x2="190" y2="420" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="500" y1="396" x2="500" y2="420" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="810" y1="408" x2="810" y2="420" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-email-detail" data-search="onboarding email contents AM bio response time" onclick="showPanel('s3-email-detail',this)"><rect x="60" y="420" width="260" height="108" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="190" y="442" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Email Contents</text><foreignObject x="76" y="455" width="228" height="74"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">AM name + bio + photo link · direct contact details · response time commitment · what happens next · tone: warm + personal + confident</div></foreignObject></g><g class="node-box" id="n-s3-kit-detail" data-search="welcome kit contents swag Bobby ships 3 days" onclick="showPanel('s3-kit-detail',this)"><rect x="370" y="420" width="260" height="96" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="500" y="442" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Kit Contents</text><foreignObject x="386" y="455" width="228" height="62"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#854F0B;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Swag package · contents TBD · budget to be assigned · Bobby ships within 3 business days of contract signing</div></foreignObject></g><g class="node-box" id="n-s3-wwpw-detail" data-search="working with PW covers team communication channels flag issue" onclick="showPanel('s3-wwpw-detail',this)"><rect x="680" y="420" width="260" height="117" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="810" y="442" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Document Covers</text><foreignObject x="696" y="455" width="228" height="83"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Who we are · our team · how we communicate · response times · preferred channels · what we need from you · how to flag an issue · what great looks like</div></foreignObject></g><line x1="190" y1="528" x2="190" y2="557" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="500" y1="516" x2="500" y2="557" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="810" y1="537" x2="810" y2="557" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="190" y1="557" x2="810" y2="557" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="500" y1="557" x2="500" y2="577" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-introcall" data-search="" onclick="showPanel('s3-introcall',this)"><rect x="170" y="577" width="660" height="80" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="500" y="599" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">AM Introduction Call (Optional)</text><foreignObject x="186" y="612" width="628" height="46"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">AM reaches out within 48 hours · short call · 15-20 min · put a voice to the name · answer any initial questions · not a project call · Otter records · ⚠ HOOK/CLAUDE: Otter transcript → Notion client brain</div></foreignObject></g><line x1="500" y1="661" x2="500" y2="677" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-brain" data-search="" onclick="showPanel('s3-brain',this)"><rect x="170" y="681" width="660" height="83" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="500" y="703" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Notion Client Brain Page Created</text><foreignObject x="186" y="716" width="628" height="49"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Claude creates a dedicated Notion page for this client · pre-populated from Stage 2 Otter transcript + emails + any intro call · AM profile attached · communication preferences noted · ⚠ HOOK/CLAUDE: Notion client page creation</div></foreignObject></g><line x1="500" y1="768" x2="500" y2="784" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-complete" data-search="" onclick="showPanel('s3-complete',this)"><rect x="170" y="788" width="660" height="71" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="500" y="810" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Onboarding Complete</text><foreignObject x="186" y="823" width="628" height="37"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Client has met their AM · received the welcome kit · received "Working With PW" doc · Notion brain is live · relationship is established · Stage 3 is done</div></foreignObject></g><line x1="500" y1="863" x2="500" y2="879" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s3-handoff" data-search="" onclick="showPanel('s3-handoff',this)"><rect x="170" y="883" width="660" height="71" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.2"/><text x="500" y="905" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#5F5E5A">→ Stage 4: Active Project Loop</text><foreignObject x="186" y="918" width="628" height="37"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#888780;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">When first project starts · project-specific setup and ongoing compliance work begins there · client stays in Stage 3 state until first project is initiated</div></foreignObject></g>
+</svg>
+<div id="s3-trigger" class="panel"><button class="close-btn" onclick="closePanel('s3-trigger')">&#x2715;</button><h4>Trigger: Contract Signed + Retainer Paid</h4><div class="owner-row"><span class="badge b-auto">Zoho trigger</span></div><div class="panel-body">The moment contract is signed and retainer is paid in Stage 2, Zoho updates the deal stage to Active Client and Stage 3 fires automatically. Nothing manual. The onboarding sequence begins within minutes of the signature.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-trigger" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-trigger')">Save note</button></div></div><div id="s3-assign" class="panel"><button class="close-btn" onclick="closePanel('s3-assign')">&#x2715;</button><h4>Account Manager Assigned</h4><div class="owner-row"><span class="badge b-human">Brock</span><span class="badge b-auto">Zoho notifies AM</span></div><div class="panel-body">Brock assigns the account manager in Zoho. AM is notified immediately. Before making any contact, the AM reads the Stage 2 Otter transcript and pre-call brief so they walk into the relationship already knowing the client's situation. No cold introductions.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-assign" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-assign')">Save note</button></div></div><div id="s3-email" class="panel"><button class="close-btn" onclick="closePanel('s3-email')">&#x2715;</button><h4>Onboarding Email</h4><div class="owner-row"><span class="badge b-ai">Claude drafts</span><span class="badge b-human">AM reviews</span></div><div class="panel-body">Auto-sends within minutes of contract signing. Claude drafts in the AM's voice. AM reviews before it goes out. Warm, personal, confident. Not a template — it references specific things from the consultation call. Sets the tone for the entire relationship.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-email" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-email')">Save note</button></div></div><div id="s3-email-detail" class="panel"><button class="close-btn" onclick="closePanel('s3-email-detail')">&#x2715;</button><h4>Onboarding Email Contents</h4><div class="owner-row"><span class="badge b-ai">Claude drafts</span></div><div class="panel-body">Introduces the AM by name with a brief bio and photo. Provides direct contact details (email + phone). States response time commitment. Explains clearly what happens next. References something specific from the consultation call to show they were listening. Tone: warm, capable, like a trusted expert they're lucky to have.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-email-detail" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-email-detail')">Save note</button></div></div><div id="s3-kit" class="panel"><button class="close-btn" onclick="closePanel('s3-kit')">&#x2715;</button><h4>Welcome Kit — Physical Send</h4><div class="owner-row"><span class="badge b-human">Bobby</span><span class="badge b-auto">Zoho task</span></div><div class="panel-body">Task auto-created in Zoho and assigned to Bobby the moment contract signs. Bobby ships the swag package within 3 business days. Contents TBD — budget to be assigned by Brock. The physical touch matters. Something landing on their desk reinforces that they signed with a real, premium company.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-kit" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-kit')">Save note</button></div></div><div id="s3-kit-detail" class="panel"><button class="close-btn" onclick="closePanel('s3-kit-detail')">&#x2715;</button><h4>Welcome Kit Contents</h4><div class="owner-row"><span class="badge b-human">Bobby / Brock</span></div><div class="panel-body">Currently contains leftover Christmas swag. Proper contents and budget to be defined. Goal: something that feels premium and personal when it lands on their desk. Could include branded items, a handwritten note, a summary card of their AM contact details. Bobby ships within 3 business days of contract signing.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-kit-detail" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-kit-detail')">Save note</button></div></div><div id="s3-wwpw" class="panel"><button class="close-btn" onclick="closePanel('s3-wwpw')">&#x2715;</button><h4>"Working With PW" Document</h4><div class="owner-row"><span class="badge b-ai">Claude produces</span><span class="badge b-human">AM reviews</span></div><div class="panel-body">A short, clean document that sets the tone for how the relationship works. Not a legal document. Not a compliance guide. A communication guide. Claude produces a personalised version for each client. AM reviews before sending. Should feel like a welcome letter from a trusted partner, not an onboarding packet from a vendor.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-wwpw" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-wwpw')">Save note</button></div></div><div id="s3-wwpw-detail" class="panel"><button class="close-btn" onclick="closePanel('s3-wwpw-detail')">&#x2715;</button><h4>"Working With PW" — Contents</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-human">AM personalises</span></div><div class="panel-body">Covers: who we are and what we believe in · meet your AM · how we communicate (preferred channels, response times) · what we need from you to do our best work · how to flag an issue or urgent situation · what great looks like when we work well together · one sentence on what happens next. No project details. No compliance specifics. Pure relationship setup.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-wwpw-detail" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-wwpw-detail')">Save note</button></div></div><div id="s3-introcall" class="panel"><button class="close-btn" onclick="closePanel('s3-introcall')">&#x2715;</button><h4>AM Introduction Call</h4><div class="owner-row"><span class="badge b-human">AM</span><span class="badge b-auto">Otter records</span></div><div class="panel-body">AM reaches out within 48 hours of onboarding email to schedule a short 15-20 min call. Optional but strongly encouraged. Goal: put a voice to the name, answer any early questions, build rapport before the work begins. Explicitly not a project call — if project questions come up, note them and schedule a separate call. Otter records. Claude extracts key points → Notion client brain.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-introcall" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-introcall')">Save note</button></div></div><div id="s3-brain" class="panel"><button class="close-btn" onclick="closePanel('s3-brain')">&#x2715;</button><h4>Notion Client Brain Page Created</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Auto-created</span></div><div class="panel-body">Claude creates the dedicated Notion client brain page. Pre-populated from: Stage 2 Otter transcript, prior emails, intro call transcript if completed. Includes: client contact details, communication preferences noted during calls, AM profile, any early signals about what matters to this client. This page grows automatically with every future interaction. ⚠ HOOK/CLAUDE: Notion page creation via MCP — buildable today.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-brain" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-brain')">Save note</button></div></div><div id="s3-complete" class="panel"><button class="close-btn" onclick="closePanel('s3-complete')">&#x2715;</button><h4>Onboarding Complete</h4><div class="owner-row"><span class="badge b-human">AM confirms</span></div><div class="panel-body">Client has: met their AM, received the welcome kit, received the Working With PW document, and had an intro call if they wanted one. Notion brain is live. Communication expectations are set. Stage 3 is done. The relationship is established. Now we wait for the first project.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-complete" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-complete')">Save note</button></div></div><div id="s3-handoff" class="panel"><button class="close-btn" onclick="closePanel('s3-handoff')">&#x2715;</button><h4>→ Stage 4: Active Project Loop</h4><div class="owner-row"><span class="badge b-auto">Trigger: first project starts</span></div><div class="panel-body">Stage 4 begins when the client's first project starts — not when onboarding completes. A client could be in Stage 3 (onboarded, no active project) for days or weeks before Stage 4 begins. That gap is managed through Stage 5 retention touchpoints until a project kicks off.</div><div class="note-area"><label>Notes</label><textarea id="note-s3-handoff" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s3-handoff')">Save note</button></div></div>
+</div>
+</div>
+<script>
+const STORAGE_KEY = 'pw_flowchart_notes_v1';
+
+function getNotes() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function saveNote(id) {
+  const ta = document.getElementById('note-' + id);
+  if (!ta) return;
+  const notes = getNotes();
+  notes[id] = ta.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  const btn = ta.nextElementSibling;
+  btn.textContent = 'Saved ✓';
+  setTimeout(() => btn.textContent = 'Save note', 1400);
+  const node = document.getElementById('n-' + id);
+  if (node && ta.value.trim()) node.classList.add('has-note');
+  else if (node) node.classList.remove('has-note');
+}
+
+function loadNotes() {
+  const notes = getNotes();
+  Object.entries(notes).forEach(([id, val]) => {
+    const ta = document.getElementById('note-' + id);
+    if (ta && val) {
+      ta.value = val;
+      const node = document.getElementById('n-' + id);
+      if (node) node.classList.add('has-note');
+    }
+  });
+}
+
+function showPanel(id, triggerEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const wrap = document.getElementById('fcwrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const trigRect = triggerEl.getBoundingClientRect();
+  let left = trigRect.left - wrapRect.left + trigRect.width / 2 - 140;
+  let top = trigRect.top - wrapRect.top + trigRect.height + 8;
+  left = Math.max(4, Math.min(left, wrapRect.width - 292));
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.classList.add('open');
+}
+
+function closePanel(id) {
+  const p = document.getElementById(id);
+  if (p) p.classList.remove('open');
+}
+
+function searchNodes(q) {
+  document.querySelectorAll('.node-box').forEach(n => n.classList.remove('highlight-match'));
+  if (!q.trim()) return;
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.node-box').forEach(n => {
+    const s = (n.getAttribute('data-search') || '') + ' ' + (n.textContent || '');
+    if (s.toLowerCase().includes(lq)) n.classList.add('highlight-match');
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.node-box') && !e.target.closest('.panel')) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  }
+});
+
+loadNotes();
+document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+</script>
+</body>
+</html>

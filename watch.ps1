@@ -10,6 +10,18 @@ $watcher.Filter = "*.*"
 $watcher.IncludeSubdirectories = $true   # ← watches channels/ and any future subfolders
 $watcher.EnableRaisingEvents = $true
 
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+function Show-Notification($title, $message) {
+    $notify = New-Object System.Windows.Forms.NotifyIcon
+    $notify.Icon = [System.Drawing.SystemIcons]::Information
+    $notify.Visible = $true
+    $notify.ShowBalloonTip(6000, $title, $message, [System.Windows.Forms.ToolTipIcon]::Info)
+    Start-Sleep -Seconds 7
+    $notify.Dispose()
+}
+
 $action = {
     $path = $Event.SourceEventArgs.FullPath
     $name = $Event.SourceEventArgs.Name
@@ -30,7 +42,13 @@ $action = {
     git commit -m $msg
     git push origin main
 
-    Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Pushed → Netlify deploying..." -ForegroundColor Green
+    if ($?) {
+        Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Pushed → Netlify deploying..." -ForegroundColor Green
+        Show-Notification "PW Lifecycle - Pushed" "$name pushed to main. Netlify deploying now."
+    } else {
+        Write-Host "[$([datetime]::Now.ToString('HH:mm:ss'))] Push failed." -ForegroundColor Red
+        Show-Notification "PW Lifecycle - Push Failed" "$name was NOT pushed. Check credentials or network."
+    }
 }
 
 Register-ObjectEvent $watcher "Created" -Action $action | Out-Null
