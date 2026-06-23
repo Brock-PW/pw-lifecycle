@@ -106,12 +106,24 @@ Leverage first because it compounds. DIR data second because it seeds everything
 
 ---
 
+## Sync Layer Ownership (clarified June 23, 2026)
+
+**Brock + Claude build all system connections that are NOT compliance document execution.**
+This includes: Zoho webhooks, Gmail → Notion pipelines, Otter → Notion pipeline, Google Drive indexing, Asana, Google Calendar, and any automation that moves relationship data, communication data, or operational status between tools.
+
+**Francis builds compliance document execution only.**
+CPR production, DAS forms, eCPR uploads, CAC invoices, fringe statements — the actual document generation and platform submission via Compex. Nothing else.
+
+The distinction: if a hook is moving **relationship or communication data** between systems → Brock + Claude own it. If a hook is triggering **compliance document production or platform submission** → Francis owns it.
+
+Previously many HOOK/SYNC items were incorrectly assigned to Francis. They are ours.
+
 ## Email Sync — Full Team Required (updated June 23, 2026)
 
-The sync layer must connect Gmail for ALL client-facing team members. Until all are connected, the client brain is incomplete for any thread that didn't go through Brock.
+The sync layer must connect Gmail for ALL client-facing team members. Until all are connected, the client brain is incomplete for any thread that didn't go through Brock. Brock + Claude build all of these.
 
 - **Brock** — already connected via MCP in this project
-- **Anthy** — account manager, all client day-to-day communication — HOOK/SYNC · Phase 2 · HIGHEST PRIORITY
+- **Anthy** — account manager, all client day-to-day communication — HOOK/SYNC · Phase 2 · HIGH PRIORITY
 - **Rachel** — billing and compliance threads — HOOK/SYNC · Phase 2
 - **Megan** — industry relationships, consultation calls — HOOK/SYNC · Phase 2
 - **Future AMs** — same pattern as each is hired
@@ -240,15 +252,15 @@ notion.so/3742e7f35b1f81e0acb5f10de32cca8a
 
 ## Open Hooks (items awaiting Francis / future build)
 
-**Sync layer (Phase 2 — all blocked until webhook infrastructure exists):**
-- Zoho webhook infrastructure — BLOCKER — Francis
-- Anthy Gmail → Notion auto-extraction — HOOK/SYNC — Francis + Claude — HIGHEST PRIORITY
-- Rachel Gmail → Notion auto-extraction — HOOK/SYNC — Francis + Claude
-- Megan Gmail → Notion auto-extraction — HOOK/SYNC — Francis + Claude
-- Otter.ai → Notion auto-extraction pipeline — HOOK/SYNC — Francis + Claude
-- Zoho Projects task complete → Notion — HOOK/SYNC
-- Zoho stage change → Notion — HOOK/SYNC
-- Zoho → QuickBooks billing integration — HOOK/COMPEX — Francis
+**Sync layer (Phase 2 — Brock + Claude build all of these except QuickBooks):**
+- Zoho webhook infrastructure — HOOK/SYNC — Brock + Claude — build via Netlify Functions
+- Anthy Gmail → Notion auto-extraction — HOOK/SYNC — Brock + Claude — HIGH PRIORITY
+- Rachel Gmail → Notion auto-extraction — HOOK/SYNC — Brock + Claude
+- Megan Gmail → Notion auto-extraction — HOOK/SYNC — Brock + Claude
+- Otter.ai → Notion auto-extraction pipeline — HOOK/SYNC — Brock + Claude
+- Zoho Projects task complete → Notion — HOOK/SYNC — Brock + Claude
+- Zoho stage change → Notion — HOOK/SYNC — Brock + Claude
+- Zoho → QuickBooks billing integration — HOOK/COMPEX — Francis (billing system, Francis's domain)
 
 **Revenue channels (Phase 1 — Brock + Claude):**
 - DIR email scrape execution and list cleaning — HOOK/CLAUDE — Revenue tier 1
