@@ -1,187 +1,723 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PW &mdash; Stage 2 — Consultation & Close</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #2c2c2a; min-height: 100vh; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PW — Stage 2 — Consultation & Close</title>
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #F8F7F4;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
 
-  header { background: #2c2c2a; color: #f5f4f0; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  header h1 { font-size: 15px; font-weight: 500; letter-spacing: .02em; }
-  header .meta { font-size: 12px; color: #888780; }
-  .version-badge { background: #3C3489; color: #EEEDFE; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-left: 12px; }
+    /* ── Nav ── */
+    .nav {
+      padding: 16px 32px;
+      font-size: 13px;
+      color: #888;
+      border-bottom: 1px solid #E5E3DC;
+      background: #fff;
+    }
+    .nav a { color: #4A5F8A; text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
 
-  .toolbar { background: #fff; border-bottom: 0.5px solid #d3d1c7; padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .toolbar-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; }
-  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
-  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #5F5E5A; }
-  .leg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-  .search-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-  .search-wrap input { border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 5px 10px; font-size: 12px; background: #f5f4f0; color: #2c2c2a; outline: none; width: 180px; }
-  .search-wrap input:focus { border-color: #7F77DD; }
+    /* ── Header ── */
+    .page-header {
+      background: #fff;
+      border-bottom: 1px solid #E5E3DC;
+      padding: 28px 32px 24px;
+    }
+    .page-header .version { font-size: 11px; color: #aaa; margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .page-header h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
+    .page-header .subtitle { font-size: 14px; color: #666; line-height: 1.5; }
 
-  .canvas { padding: 24px 32px; display: flex; justify-content: center; }
-  .fc-wrap { position: relative; width: 100%; max-width: 1400px; }
+    /* ── SOP Banner ── */
+    .sop-banner {
+      margin: 24px 32px 0;
+      background: #EDF0F7;
+      border: 1px solid #C5CEDF;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .sop-banner-icon { font-size: 20px; flex-shrink: 0; }
+    .sop-banner-text { flex: 1; }
+    .sop-banner-text strong { font-size: 14px; color: #2D3F6B; display: block; margin-bottom: 2px; }
+    .sop-banner-text span { font-size: 13px; color: #4A5F8A; }
+    .sop-banner-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      background: #4A5F8A;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .sop-banner-link:hover { background: #3a4f7a; }
 
-  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; }
-  .node-box { cursor: pointer; }
-  .node-box:hover rect, .node-box:hover polygon { filter: brightness(0.94); }
+    /* ── Owner key ── */
+    .owner-key {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 32px;
+      font-size: 12px;
+      color: #555;
+      border-bottom: 1px solid #E5E3DC;
+      background: #fff;
+    }
+    .key-item { display: flex; align-items: center; gap: 6px; }
+    .key-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .key-dot.ai { background: #AFA9EC; }
+    .key-dot.human { background: #5DCAA5; }
+    .key-dot.client { background: #F0997B; }
+    .key-dot.auto { background: #EF9F27; }
+    .key-dot.decision { background: #B4B2A9; }
 
-  .panel {
-    display: none; position: fixed; z-index: 200;
-    background: #fff; border: 0.5px solid #b4b2a9;
-    border-radius: 10px; padding: 16px 18px; width: 280px;
-    font-size: 13px; line-height: 1.6; color: #5F5E5A;
-    box-shadow: 0 8px 32px rgba(0,0,0,.12);
-  }
-  .panel.open { display: block; }
-  .panel h4 { font-size: 14px; font-weight: 500; color: #2c2c2a; margin-bottom: 8px; padding-right: 20px; }
-  .panel .close-btn { position: absolute; top: 12px; right: 14px; cursor: pointer; color: #888780; font-size: 16px; line-height: 1; background: none; border: none; }
-  .panel .owner-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-  .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 0.5px solid; font-weight: 500; }
-  .b-ai { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
-  .b-human { background: #E1F5EE; border-color: #5DCAA5; color: #085041; }
-  .b-client { background: #FAECE7; border-color: #F0997B; color: #712B13; }
-  .b-auto { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
-  .panel-body { font-size: 12px; color: #5F5E5A; line-height: 1.6; }
-  .panel .note-area { margin-top: 10px; border-top: 0.5px solid #d3d1c7; padding-top: 10px; }
-  .panel .note-area textarea { width: 100%; border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 7px 9px; font-size: 11px; font-family: inherit; color: #2c2c2a; background: #f5f4f0; resize: vertical; min-height: 56px; outline: none; }
-  .panel .note-area textarea:focus { border-color: #7F77DD; }
-  .panel .note-area label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #888780; display: block; margin-bottom: 4px; }
-  .panel .save-note { margin-top: 6px; font-size: 11px; padding: 4px 10px; border: 0.5px solid #d3d1c7; border-radius: 6px; background: #f5f4f0; cursor: pointer; color: #5F5E5A; }
-  .panel .save-note:hover { background: #e1f5ee; border-color: #5DCAA5; color: #085041; }
-  .has-note rect, .has-note polygon { stroke-width: 1.5 !important; }
+    /* ── Flow canvas ── */
+    .flow { padding: 32px 32px 0; max-width: 900px; margin: 0 auto; }
 
-  .highlight-match rect, .highlight-match polygon { stroke: #7F77DD !important; stroke-width: 2 !important; }
+    /* ── Stage label ── */
+    .stage-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4A5F8A;
+      background: #EDF0F7;
+      border: 1px solid #C5CEDF;
+      border-radius: 4px;
+      padding: 6px 14px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
 
-  @media print {
-    header, .toolbar { display: none; }
-    .canvas { padding: 0; }
-    .panel { display: none !important; }
-  }
-</style>
-<style>
-  .fc-wrap { position: relative; width: 100%; max-width: 1600px; }
-  .breadcrumb { font-size: 12px; color: #888780; display: flex; align-items: center; gap: 6px; }
-  .breadcrumb a { color: #7F77DD; text-decoration: none; }
-  .breadcrumb a:hover { text-decoration: underline; }
-</style>
+    /* ── Node base ── */
+    .node {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      position: relative;
+      transition: box-shadow 0.15s;
+    }
+    .node:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.10); }
+    .node .node-owner {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 4px;
+      opacity: 0.75;
+    }
+    .node .node-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .node .node-sub { font-size: 13px; opacity: 0.8; line-height: 1.5; }
+
+    /* Node colour variants */
+    .node.ai { background: #EEEDFE; border: 1px solid #AFA9EC; color: #3C3489; }
+    .node.human { background: #E1F5EE; border: 1px solid #5DCAA5; color: #085041; }
+    .node.client { background: #FAECE7; border: 1px solid #F0997B; color: #4A1B0C; }
+    .node.auto { background: #FAEEDA; border: 1px solid #EF9F27; color: #412402; }
+    .node.neutral { background: #F1EFE8; border: 1px solid #B4B2A9; color: #2C2C2A; }
+
+    /* ── Diamond decision ── */
+    .decision-wrap { display: flex; justify-content: center; margin: 16px 0 8px; }
+    .diamond-label {
+      background: #F1EFE8;
+      border: 1.5px solid #B4B2A9;
+      border-radius: 6px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #444;
+      text-align: center;
+      position: relative;
+    }
+    .diamond-label::before {
+      content: '◆';
+      display: block;
+      font-size: 10px;
+      color: #B4B2A9;
+      margin-bottom: 3px;
+    }
+
+    /* ── Arrow ── */
+    .arrow {
+      text-align: center;
+      color: #B4B2A9;
+      font-size: 20px;
+      line-height: 1;
+      margin: 4px 0;
+    }
+    .arrow-label {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      margin-top: -2px;
+      margin-bottom: 4px;
+    }
+
+    /* ── Branch layout ── */
+    .branch-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 8px 0;
+    }
+    .branch-col { display: flex; flex-direction: column; }
+    .branch-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #888;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    /* ── Sequence timeline ── */
+    .sequence-block {
+      background: #fff;
+      border: 1px solid #E5E3DC;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 8px;
+    }
+    .sequence-block .seq-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #4A5F8A;
+      margin-bottom: 12px;
+    }
+    .seq-row {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      margin-bottom: 0;
+    }
+    .seq-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 28px;
+      flex-shrink: 0;
+    }
+    .seq-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #4A5F8A;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .seq-line {
+      flex: 1;
+      width: 1px;
+      background: #D5D3CC;
+      margin: 3px 0;
+    }
+    .seq-row:last-child .seq-line { display: none; }
+    .seq-right { padding-bottom: 12px; flex: 1; }
+    .seq-row:last-child .seq-right { padding-bottom: 0; }
+    .seq-day { font-size: 11px; font-weight: 600; color: #888; margin-bottom: 2px; }
+    .seq-action { font-size: 13px; color: #1a1a1a; line-height: 1.5; }
+    .seq-note { font-size: 12px; color: #888; margin-top: 3px; line-height: 1.4; font-style: italic; }
+
+    .reset-note {
+      background: #FFF8EC;
+      border: 1px solid #EF9F27;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #633806;
+      margin-top: 12px;
+      line-height: 1.55;
+    }
+    .reset-note strong { display: block; margin-bottom: 3px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── Outcome row ── */
+    .outcome-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .outcome-card {
+      border: 1px solid #E5E3DC;
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: #fff;
+      text-align: center;
+    }
+    .outcome-card .outcome-dest {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .outcome-card .outcome-trigger {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.45;
+    }
+
+    /* ── Flag node ── */
+    .flag-node {
+      border-left: 3px solid #EF9F27;
+      background: #FAEEDA;
+      border-radius: 0 8px 8px 0;
+      border-top: 1px solid #EF9F27;
+      border-right: 1px solid #EF9F27;
+      border-bottom: 1px solid #EF9F27;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #412402;
+    }
+    .flag-node strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #BA7517; margin-bottom: 2px; }
+
+    /* ── Slide-over panel ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+    }
+    .overlay.open { display: block; }
+    .panel {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 400px;
+      max-width: 95vw;
+      background: #fff;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+    }
+    .panel.open { transform: translateX(0); }
+    .panel-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid #E5E3DC;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .panel-header-text { flex: 1; }
+    .panel-header-text .panel-owner {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #888;
+      margin-bottom: 3px;
+    }
+    .panel-header-text h2 { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+    .panel-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #888;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .panel-close:hover { background: #F1EFE8; color: #1a1a1a; }
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 20px;
+    }
+    .panel-body p { font-size: 14px; color: #333; line-height: 1.65; margin-bottom: 12px; }
+    .panel-body ul { padding-left: 18px; margin-bottom: 12px; }
+    .panel-body li { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 4px; }
+    .panel-body .label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #888;
+      margin: 16px 0 6px;
+    }
+    .panel-notes { border-top: 1px solid #E5E3DC; padding: 14px 20px; }
+    .panel-notes label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #888; display: block; margin-bottom: 6px; }
+    .panel-notes textarea {
+      width: 100%;
+      height: 72px;
+      border: 1px solid #D5D3CC;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: none;
+      color: #1a1a1a;
+      background: #FAFAF8;
+    }
+    .panel-notes textarea:focus { outline: none; border-color: #4A5F8A; }
+    .panel-notes button {
+      margin-top: 8px;
+      font-size: 12px;
+      padding: 6px 14px;
+      background: #4A5F8A;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .panel-notes button:hover { background: #3a4f7a; }
+
+    /* ── Divider ── */
+    .section-gap { height: 24px; }
+  </style>
 </head>
 <body>
-<header>
-  <div style="display:flex;align-items:center;gap:10px;flex:1">
-    <div class="breadcrumb">
-      <a href="/">&#8592; Lifecycle Overview</a>
-      <span style="color:#ccc">&#8250;</span>
-      <span style="color:#f5f4f0">Stage 2 — Consultation & Close</span>
+
+<div class="nav">
+  <a href="/">← Lifecycle Overview</a> › Stage 2 — Consultation & Close
+</div>
+
+<div class="page-header">
+  <div class="version">v2.0 · Last updated: June 23, 2026</div>
+  <h1>Stage 2 — Consultation & Close</h1>
+  <div class="subtitle">Consultation call booked → pre-call brief → call → estimate → follow-up sequence → contract executed → Stage 3</div>
+</div>
+
+<!-- SOP Banner -->
+<div class="sop-banner">
+  <div class="sop-banner-icon">📋</div>
+  <div class="sop-banner-text">
+    <strong>Stage 2 Standard Operating Procedure</strong>
+    <span>Full process detail, human actions, technology, and follow-up sequence rules</span>
+  </div>
+  <a class="sop-banner-link" href="https://www.notion.so/3882e7f35b1f8151875cf59b3c9e8269" target="_blank">Open SOP →</a>
+</div>
+
+<div class="owner-key">
+  <div class="key-item"><div class="key-dot ai"></div> AI agent</div>
+  <div class="key-item"><div class="key-dot human"></div> Brock / team</div>
+  <div class="key-item"><div class="key-dot client"></div> Client action</div>
+  <div class="key-item"><div class="key-dot auto"></div> Automated trigger</div>
+  <div class="key-item"><div class="key-dot decision"></div> Decision</div>
+</div>
+
+<div class="flow">
+  <div class="stage-label">Stage 2 — Consultation & Close · All Stage 1 activity leads here</div>
+
+  <!-- Entry -->
+  <div class="node neutral" onclick="openPanel('entry')">
+    <div class="node-owner">Stage 1 output</div>
+    <div class="node-title">All Stage 1 Activity Leads Here</div>
+    <div class="node-sub">Every channel · every sequence · every touch in Stage 1 has one goal: book this consultation call</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Call scheduled -->
+  <div class="node auto" onclick="openPanel('scheduled')">
+    <div class="node-owner">Zoho · Google Calendar · Otter</div>
+    <div class="node-title">Consultation Call Scheduled</div>
+    <div class="node-sub">Call on Google Calendar · Google Meet link sent · Otter configured to record · recording is non-negotiable — all post-call automation depends on it</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Pre-call brief -->
+  <div class="node ai" onclick="openPanel('brief')">
+    <div class="node-owner">AI agent · Dashboard</div>
+    <div class="node-title">AI Pre-Call Brief</div>
+    <div class="node-sub">Claude surfaces before the call · whatever Stage 1 captured: how they found us, prior emails, company name, project mentions · sometimes a full brief, sometimes almost nothing · ⚠ HOOK/CLAUDE: Zoho lookup + Gmail scan</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Consultation call -->
+  <div class="node human" onclick="openPanel('call')">
+    <div class="node-owner">Brock / team · Otter records</div>
+    <div class="node-title">Consultation Call</div>
+    <div class="node-sub">30–60 min · gather: location, DIR #, project duration, client type, employee count, contractor count (if oversight), decision maker, who receives emails, follow-up window</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Human action: confirm call complete -->
+  <div class="node auto" onclick="openPanel('confirm')">
+    <div class="node-owner">Human action · Dashboard trigger</div>
+    <div class="node-title">Confirm Call Complete in Dashboard</div>
+    <div class="node-sub">Assigned consultant marks call complete · this single action fires all post-call automation · nothing runs until confirmed</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Lead type decision -->
+  <div class="decision-wrap">
+    <div class="diamond-label">Client type?</div>
+  </div>
+
+  <div class="branch-row">
+    <div class="branch-col">
+      <div class="branch-label">Standard PW Contractor</div>
+      <div class="node human" onclick="openPanel('standard')">
+        <div class="node-owner">Brock / Anthy</div>
+        <div class="node-title">Standard PW Contractor</div>
+        <div class="node-sub">Performing public works · needs CPR, DAS forms, rates, ECPR, CAC</div>
+      </div>
     </div>
-    <span class="version-badge">v1.2</span>
+    <div class="branch-col">
+      <div class="branch-label">Sub Oversight</div>
+      <div class="node human" onclick="openPanel('suboverview')">
+        <div class="node-owner">Brock / Anthy</div>
+        <div class="node-title">Sub Oversight Client</div>
+        <div class="node-sub">Prime managing subs · joint liability · larger call audience possible</div>
+      </div>
+    </div>
   </div>
-  <span class="meta" style="font-size:11px;color:#aaa;font-style:italic;margin-left:12px">Consultation call booked → pre-call brief → call → 2 paths → estimate → close</span>
-  <span class="meta" id="last-updated" style="margin-left:16px">Last updated: May 26, 2026</span>
-</header>
 
-<div class="toolbar">
-  <span class="toolbar-label">Owner key</span>
-  <div class="legend">
-    <div class="leg"><div class="leg-dot" style="background:#EEEDFE;border:1px solid #AFA9EC"></div>AI agent</div>
-    <div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1px solid #5DCAA5"></div>Brock / team</div>
-    <div class="leg"><div class="leg-dot" style="background:#FAECE7;border:1px solid #F0997B"></div>Client action</div>
-    <div class="leg"><div class="leg-dot" style="background:#FAEEDA;border:1px solid #EF9F27"></div>Automated trigger</div>
-    <div class="leg"><div class="leg-dot" style="background:#F1EFE8;border:1px solid #B4B2A9;transform:rotate(45deg);border-radius:1px"></div>Decision</div>
+  <!-- Mid-project rescue flags -->
+  <div class="flag-node" onclick="openPanel('rescue')">
+    <strong>⚑ Watch for: Mid-Project Rescue</strong>
+    Active project with missed CPRs, DIR notice received, or subs non-compliant — treat as urgent · estimate includes restitution line items · compress close timeline
   </div>
-  <div class="search-wrap">
-    <input type="text" id="search" placeholder="Search nodes..." oninput="searchNodes(this.value)">
+
+  <div class="arrow">↓</div>
+
+  <!-- Notion page created -->
+  <div class="node ai" onclick="openPanel('notion')">
+    <div class="node-owner">AI agent · Otter transcript trigger</div>
+    <div class="node-title">Notion Client Brain Page Created</div>
+    <div class="node-sub">Named after the account (the business), not the contact · primary contact recorded inside · created on completed call — not before · all future emails and transcripts route here automatically</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Build estimate -->
+  <div class="node ai" onclick="openPanel('estimate')">
+    <div class="node-owner">AI agent · Brock reviews</div>
+    <div class="node-title">Build Compliance Estimate (PDF)</div>
+    <div class="node-sub">Claude extracts inputs from Otter transcript · generates itemized PDF estimate · mid-project rescue adds restitution line items · assigned consultant reviews before package is sent · ⚠ HOOK/COMPEX: estimate_generator</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Send full package -->
+  <div class="node human" onclick="openPanel('package')">
+    <div class="node-owner">Assigned consultant approves · same day</div>
+    <div class="node-title">Review & Send Full Package — Day 0</div>
+    <div class="node-sub">Claude drafts cover email · assigned consultant reviews and approves before sending · package: personalized email + PDF estimate + contract + PW overview doc · nothing sends without approval</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Follow-up sequence -->
+  <div class="sequence-block" onclick="openPanel('sequence')">
+    <div class="seq-title">Follow-Up Sequence — Assigned consultant approves each email</div>
+    <div class="seq-row">
+      <div class="seq-left"><div class="seq-dot"></div><div class="seq-line"></div></div>
+      <div class="seq-right">
+        <div class="seq-day">Day 0 — same day as call</div>
+        <div class="seq-action">Full package sent. Sequence begins.</div>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-left"><div class="seq-dot"></div><div class="seq-line"></div></div>
+      <div class="seq-right">
+        <div class="seq-day">Day 3</div>
+        <div class="seq-action">First follow-up · contextual to this prospect · drawn from Otter + all Notion context</div>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-left"><div class="seq-dot"></div><div class="seq-line"></div></div>
+      <div class="seq-right">
+        <div class="seq-day">Day 8</div>
+        <div class="seq-action">Second follow-up · updated with any new replies or context logged to Notion</div>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-left"><div class="seq-dot"></div><div class="seq-line"></div></div>
+      <div class="seq-right">
+        <div class="seq-day">Day 13</div>
+        <div class="seq-action">Third follow-up · always angled toward contract signature</div>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-left"><div class="seq-dot"></div><div class="seq-line"></div></div>
+      <div class="seq-right">
+        <div class="seq-day">Day 27 — final touch</div>
+        <div class="seq-action">Low-pressure, genuine close of the loop</div>
+        <div class="seq-note">No response after Day 27 → Stage 5 resurrection queue</div>
+      </div>
+    </div>
+    <div class="reset-note">
+      <strong>⟳ Sequence reset rule</strong>
+      Any response from the prospect — question, objection, anything — resets the sequence to Day 0. Assigned consultant answers the question. Claude drafts a new Day 0 email from all accumulated context. Sequence always drives toward contract signature.
+    </div>
+  </div>
+
+  <div class="arrow">↓</div>
+
+  <!-- Contract returned -->
+  <div class="node client" onclick="openPanel('contractreturned')">
+    <div class="node-owner">Client action</div>
+    <div class="node-title">Prospect Returns Signed Contract</div>
+    <div class="node-sub">Dashboard alerts Brock · Claude drafts Stage 3 welcome email and surfaces it simultaneously</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Brock executes -->
+  <div class="node human" onclick="openPanel('execute')">
+    <div class="node-owner">Brock — sole executor</div>
+    <div class="node-title">Brock Counter-Signs & Returns Executed Contract</div>
+    <div class="node-sub">Brock executes contract · reviews Claude-drafted Stage 3 welcome email · confirms sent in dashboard · this single action closes Stage 2 and opens Stage 3 automatically</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Outcomes -->
+  <div class="outcome-row">
+    <div class="outcome-card">
+      <div class="outcome-dest">→ Stage 3 Onboarding</div>
+      <div class="outcome-trigger">Brock confirms executed contract sent — triggers automatically</div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-dest">→ Sequence resets</div>
+      <div class="outcome-trigger">Prospect responds with questions at any point</div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-dest">→ Stage 5 Resurrection</div>
+      <div class="outcome-trigger">No response after Day 27 final touch</div>
+    </div>
+  </div>
+
+  <div class="section-gap"></div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+<!-- Panel -->
+<div class="panel" id="panel">
+  <div class="panel-header">
+    <div class="panel-header-text">
+      <div class="panel-owner" id="panel-owner"></div>
+      <h2 id="panel-title"></h2>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+  <div class="panel-notes">
+    <label>Notes</label>
+    <textarea id="panel-notes-text" placeholder="Add notes for this step…"></textarea>
+    <button onclick="saveNote()">Save note</button>
   </div>
 </div>
 
-<div class="canvas">
-<div class="fc-wrap" id="fcwrap">
-<svg id="fcsvg" viewBox="0 0 1200 1232" style="width:100%;display:block;overflow:visible">
-<defs>
-<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-  <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"
-        stroke-linecap="round" stroke-linejoin="round"/>
-</marker>
-</defs>
-<text x="500" y="24" text-anchor="middle" style="font-size:13px;font-weight:600;letter-spacing:.08em;fill:#2c2c2a">STAGE 2 — CONSULTATION & CLOSE</text><g class="node-box" id="n-s2-s1note" data-search="" onclick="showPanel('s2-s1note',this)"><rect x="160" y="50" width="680" height="61" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.2"/><text x="500" y="72" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#5F5E5A">All Stage 1 Activity Leads Here</text><foreignObject x="176" y="85" width="648" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#888780;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Every channel · every sequence · every touch in Stage 1 has one goal: book this consultation call</div></foreignObject></g><line x1="500" y1="115" x2="500" y2="131" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-booked" data-search="" onclick="showPanel('s2-booked',this)"><rect x="160" y="135" width="680" height="61" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="500" y="157" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Consultation Call Scheduled</text><foreignObject x="176" y="170" width="648" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#854F0B;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Call is on the calendar · Otter is set up to record · Brock is assigned</div></foreignObject></g><line x1="500" y1="200" x2="500" y2="216" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-brief" data-search="" onclick="showPanel('s2-brief',this)"><rect x="160" y="220" width="680" height="79" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="500" y="242" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">AI Pre-Call Brief — Dashboard</text><foreignObject x="176" y="255" width="648" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Claude surfaces before the call · LinkedIn profile · Google search · Zoho history · prior emails · contractor size + trade type · Brock walks in prepared · ⚠ HOOK/CLAUDE: web search + Zoho lookup + Gmail scan</div></foreignObject></g><line x1="500" y1="303" x2="500" y2="319" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-call" data-search="" onclick="showPanel('s2-call',this)"><rect x="160" y="323" width="680" height="78" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="500" y="345" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Consultation Call</text><foreignObject x="176" y="358" width="648" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Brock leads · 30-60 min · Otter records · scope project · funding type · DIR number · classifications · CPR platform · requirements · duration · employee count · identify if mid-project rescue applies</div></foreignObject></g><line x1="500" y1="405" x2="500" y2="421" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-leadtype" data-search="lead type standard sub oversight" onclick="showPanel('s2-leadtype',this)"><polygon points="500,425 556,465 500,505 444,465" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.2"/><text x="500" y="465" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Lead type?</text></g><line x1="230" y1="525" x2="770" y2="525" stroke="#B4B2A9" stroke-width="1"/><line x1="230" y1="525" x2="230" y2="545" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="770" y1="525" x2="770" y2="545" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><text x="230" y="517" text-anchor="middle" style="font-size:10px;font-weight:600;letter-spacing:.08em;fill:#085041">Standard PW Contractor</text><text x="770" y="517" text-anchor="middle" style="font-size:10px;font-weight:600;letter-spacing:.08em;fill:#085041">Sub Oversight</text><line x1="444" y1="465" x2="230" y2="465" stroke="#B4B2A9" stroke-width="1"/><line x1="230" y1="465" x2="230" y2="525" stroke="#B4B2A9" stroke-width="1"/><line x1="556" y1="465" x2="770" y2="465" stroke="#B4B2A9" stroke-width="1"/><line x1="770" y1="465" x2="770" y2="525" stroke="#B4B2A9" stroke-width="1"/><g class="node-box" id="n-s2-standard" data-search="standard PW contractor" onclick="showPanel('s2-standard',this)"><rect x="50" y="545" width="360" height="87" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="230" y="567" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Standard PW Contractor</text><foreignObject x="66" y="580" width="328" height="53"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Performing public works · needs CPR + DAS forms + rates + ECPR + CAC · mid-project rescue applies if behind or received DIR notice</div></foreignObject></g><g class="node-box" id="n-s2-sub" data-search="sub oversight prime contractor" onclick="showPanel('s2-sub',this)"><rect x="590" y="545" width="360" height="89" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="770" y="567" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">Sub Oversight</text><foreignObject x="606" y="580" width="328" height="55"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Prime contractor managing subs · joint liability · larger call audience possible · mid-project rescue applies if subs are non-compliant</div></foreignObject></g><line x1="230" y1="632" x2="230" y2="646" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><line x1="770" y1="634" x2="770" y2="646" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-rescue-l" data-search="mid project rescue restitution" onclick="showPanel('s2-rescue-l',this)"><rect x="50" y="646" width="360" height="91" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="1.2"/><text x="230" y="668" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#712B13">⚑ Mid-Project Rescue?</text><foreignObject x="66" y="681" width="328" height="57"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#993C1D;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Behind on CPRs · DIR notice received · restitution needed · estimate includes restitution ($35/employee/week) · urgency higher · close faster</div></foreignObject></g><g class="node-box" id="n-s2-rescue-r" data-search="mid project rescue sub oversight" onclick="showPanel('s2-rescue-r',this)"><rect x="590" y="646" width="360" height="86" rx="10" fill="#FAECE7" stroke="#F0997B" stroke-width="1.2"/><text x="770" y="668" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#712B13">⚑ Mid-Project Rescue?</text><foreignObject x="606" y="681" width="328" height="52"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#993C1D;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Subs non-compliant · prime at risk · back-compliance needed · estimate includes sub restitution review · audit risk assessment</div></foreignObject></g><line x1="230" y1="737" x2="230" y2="757" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="770" y1="732" x2="770" y2="757" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="230" y1="757" x2="770" y2="757" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5,4"/><line x1="500" y1="757" x2="500" y2="777" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-estimate" data-search="" onclick="showPanel('s2-estimate',this)"><rect x="160" y="777" width="680" height="79" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.2"/><text x="500" y="799" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#3C3489">Build Compliance Estimate</text><foreignObject x="176" y="812" width="648" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#534AB7;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Claude reads Otter transcript + emails · extracts project details · generates itemized estimate · mid-project rescue adds restitution line items · Brock reviews before send · ⚠ HOOK/COMPEX: estimate_generator</div></foreignObject></g><line x1="500" y1="860" x2="500" y2="876" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-package" data-search="" onclick="showPanel('s2-package',this)"><rect x="160" y="880" width="680" height="68" rx="10" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="500" y="902" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#633806">Send Full Package</text><foreignObject x="176" y="915" width="648" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#854F0B;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Brock sends same day · compliance estimate · price flyer · contract · Standard Process SOP · Claude drafts cover email · Brock reviews and sends</div></foreignObject></g><line x1="500" y1="948" x2="500" y2="1008" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-signed" data-search="contract signed retainer paid" onclick="showPanel('s2-signed',this)"><polygon points="500,1008 556,1048 500,1088 444,1048" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.2"/><text x="500" y="1048" text-anchor="middle" dominant-baseline="central" style="font-size:12px;font-weight:500;fill:#444441">Contract signed?</text></g><line x1="556" y1="1048" x2="880" y2="1048" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><text x="718" y="1038" text-anchor="middle" style="font-size:10px;font-weight:600;letter-spacing:.08em;fill:#888780">No response</text><rect x="880" y="1026" width="200" height="48" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="980" y="1042" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">T+2 — Gentle Nudge</text><foreignObject x="886" y="1054" width="188" height="18"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:9.5px;color:#854F0B;text-align:center;line-height:1.3;overflow:hidden">"Just checking in — any questions?" · Claude auto-sends</div></foreignObject><line x1="980" y1="1074" x2="980" y2="1082" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><rect x="880" y="1086" width="200" height="48" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="980" y="1102" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">T+5 — Add Urgency</text><foreignObject x="886" y="1114" width="188" height="18"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:9.5px;color:#854F0B;text-align:center;line-height:1.3;overflow:hidden">DAS 140 10-day window · cost of delay · Claude auto-sends</div></foreignObject><line x1="980" y1="1134" x2="980" y2="1142" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><rect x="880" y="1146" width="200" height="48" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.2"/><text x="980" y="1162" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#633806">T+14 — Brock Personal</text><foreignObject x="886" y="1174" width="188" height="18"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:9.5px;color:#854F0B;text-align:center;line-height:1.3;overflow:hidden">Final touch · short + warm · Claude drafts · Brock sends</div></foreignObject><line x1="980" y1="1194" x2="980" y2="1202" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><rect x="880" y="1206" width="200" height="48" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1.2"/><text x="980" y="1222" text-anchor="middle" dominant-baseline="central" style="font-size:11px;font-weight:600;fill:#5F5E5A">Tagged Cold in Zoho</text><foreignObject x="886" y="1234" width="188" height="18"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:9.5px;color:#888780;text-align:center;line-height:1.3;overflow:hidden">No response → Stage 6 stagnant client recovery</div></foreignObject><text x="500" y="1106" text-anchor="middle" style="font-size:10px;font-weight:600;letter-spacing:.08em;fill:#085041">Yes — signed + retainer paid</text><line x1="500" y1="1116" x2="500" y2="1124" stroke="#B4B2A9" stroke-width="1.5" marker-end="url(#arr)"/><g class="node-box" id="n-s2-handoff" data-search="" onclick="showPanel('s2-handoff',this)"><rect x="160" y="1124" width="680" height="68" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1.2"/><text x="500" y="1146" text-anchor="middle" dominant-baseline="central" style="font-size:14px;font-weight:600;fill:#085041">→ Stage 3: Onboarding</text><foreignObject x="176" y="1159" width="648" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;color:#0F6E56;text-align:center;line-height:1.5;word-wrap:break-word;overflow:hidden">Contract signed · retainer received · ⚠ HOOK/ZOHO: deal stage → "Active Client" · trigger Stage 3 onboarding sequence · assign account manager</div></foreignObject></g>
-</svg>
-<div id="s2-s1note" class="panel"><button class="close-btn" onclick="closePanel('s2-s1note')">&#x2715;</button><h4>All Stage 1 Activity Leads Here</h4><div class="owner-row"><span class="badge b-auto">Stage 1 output</span></div><div class="panel-body">Every channel in Stage 1 has one bottom-of-funnel goal: book this consultation call. Stage 2 assumes the call is already on the calendar.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-s1note" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-s1note')">Save note</button></div></div><div id="s2-booked" class="panel"><button class="close-btn" onclick="closePanel('s2-booked')">&#x2715;</button><h4>Consultation Call Scheduled</h4><div class="owner-row"><span class="badge b-auto">Zoho</span><span class="badge b-auto">Otter</span></div><div class="panel-body">Call is booked. Zoho record exists or is created. Otter is configured to record. Brock is assigned. This is where Stage 2 begins.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-booked" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-booked')">Save note</button></div></div><div id="s2-brief" class="panel"><button class="close-btn" onclick="closePanel('s2-brief')">&#x2715;</button><h4>AI Pre-Call Brief</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Dashboard</span></div><div class="panel-body">Before the call Claude surfaces a brief in the dashboard: LinkedIn profile, Google search, Zoho history, prior emails, contractor size and trade type. Brock walks into every call prepared. ⚠ HOOK/CLAUDE: web search + Zoho MCP + Gmail scan — buildable today.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-brief" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-brief')">Save note</button></div></div><div id="s2-call" class="panel"><button class="close-btn" onclick="closePanel('s2-call')">&#x2715;</button><h4>Consultation Call</h4><div class="owner-row"><span class="badge b-human">Brock</span><span class="badge b-auto">Otter records</span></div><div class="panel-body">30-60 minutes. Brock leads. Otter records automatically. Key: project type, funding type, DIR number, classifications, CPR platform, project requirements (Section 3, PLA, Skilled & Trained, OCIP), duration, employee count. Identify during the call if mid-project rescue applies.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-call" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-call')">Save note</button></div></div><div id="s2-leadtype" class="panel"><button class="close-btn" onclick="closePanel('s2-leadtype')">&#x2715;</button><h4>Lead Type Decision</h4><div class="owner-row"><span class="badge b-human">Brock</span></div><div class="panel-body">Two client types: Standard PW Contractor and Sub Oversight. Mid-project rescue is a condition that applies to either — not a separate type.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-leadtype" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-leadtype')">Save note</button></div></div><div id="s2-standard" class="panel"><button class="close-btn" onclick="closePanel('s2-standard')">&#x2715;</button><h4>Standard PW Contractor</h4><div class="owner-row"><span class="badge b-human">Brock / Anthy</span></div><div class="panel-body">Most common. Contractor performing public works. Needs CPR production, DAS forms, rate calculation, ECPR upload, CAC invoices. Mid-project rescue applies if behind on CPRs or received DIR notice.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-standard" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-standard')">Save note</button></div></div><div id="s2-sub" class="panel"><button class="close-btn" onclick="closePanel('s2-sub')">&#x2715;</button><h4>Sub Oversight</h4><div class="owner-row"><span class="badge b-human">Brock / Anthy</span></div><div class="panel-body">Prime contractor managing subs. Joint liability exposure. Call may include CEO, CFO, HR, accountants. Same close process, different estimate. Mid-project rescue applies if subs are non-compliant.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-sub" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-sub')">Save note</button></div></div><div id="s2-rescue-l" class="panel"><button class="close-btn" onclick="closePanel('s2-rescue-l')">&#x2715;</button><h4>⚑ Mid-Project Rescue — Standard PW</h4><div class="owner-row"><span class="badge b-human">Brock / Anthy</span></div><div class="panel-body">Contractor is already on a project and is behind, missed CPRs, or received DIR notice. Estimate includes restitution calculation ($35/employee/week) and catch-up CPR production. Higher urgency — faster close.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-rescue-l" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-rescue-l')">Save note</button></div></div><div id="s2-rescue-r" class="panel"><button class="close-btn" onclick="closePanel('s2-rescue-r')">&#x2715;</button><h4>⚑ Mid-Project Rescue — Sub Oversight</h4><div class="owner-row"><span class="badge b-human">Brock / Anthy</span></div><div class="panel-body">Subs are non-compliant. Prime at risk of joint liability. Estimate includes sub restitution review and audit risk assessment. Higher urgency — faster close.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-rescue-r" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-rescue-r')">Save note</button></div></div><div id="s2-estimate" class="panel"><button class="close-btn" onclick="closePanel('s2-estimate')">&#x2715;</button><h4>Build Compliance Estimate</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-human">Brock reviews</span></div><div class="panel-body">Claude reads Otter transcript + emails, extracts project details, generates itemized estimate. Mid-project rescue adds restitution line items. Brock reviews before sending. ⚠ HOOK/COMPEX: estimate_generator — Megan's Claude estimator is the destination. Manual Claude process bridges until ready.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-estimate" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-estimate')">Save note</button></div></div><div id="s2-package" class="panel"><button class="close-btn" onclick="closePanel('s2-package')">&#x2715;</button><h4>Send Full Package</h4><div class="owner-row"><span class="badge b-human">Brock</span><span class="badge b-ai">Claude drafts</span></div><div class="panel-body">Brock sends same day as the call. Compliance estimate, price flyer, contract link, Standard Process SOP PDF. Claude drafts personalised cover email. Brock reviews and sends.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-package" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-package')">Save note</button></div></div><div id="s2-signed" class="panel"><button class="close-btn" onclick="closePanel('s2-signed')">&#x2715;</button><h4>Contract Signed?</h4><div class="owner-row"><span class="badge b-auto">Zoho</span></div><div class="panel-body">Zoho monitors signature status. Retainer ($500, fully refundable) required alongside contract. Signed + retainer paid → Stage 3. No response → T+2, T+5, T+14 follow-up sequence.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-signed" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-signed')">Save note</button></div></div><div id="s2-t2" class="panel"><button class="close-btn" onclick="closePanel('s2-t2')">&#x2715;</button><h4>T+2 — Gentle Nudge</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Auto-sends</span></div><div class="panel-body">Sent 2 days after the package. "Just checking in — did you get a chance to review everything? Happy to answer any questions." Claude drafts and sends automatically.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-t2" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-t2')">Save note</button></div></div><div id="s2-t5" class="panel"><button class="close-btn" onclick="closePanel('s2-t5')">&#x2715;</button><h4>T+5 — Add Urgency</h4><div class="owner-row"><span class="badge b-ai">Claude</span><span class="badge b-auto">Auto-sends</span></div><div class="panel-body">Sent 5 days after the package. Mentions the DAS 140 10-day window — if they recently signed a project contract, the clock is running. Makes the cost of delay concrete. Claude drafts and sends automatically.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-t5" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-t5')">Save note</button></div></div><div id="s2-t14" class="panel"><button class="close-btn" onclick="closePanel('s2-t14')">&#x2715;</button><h4>T+14 — Brock Personal</h4><div class="owner-row"><span class="badge b-human">Brock</span><span class="badge b-ai">Claude drafts</span></div><div class="panel-body">Final touch. Brock personal outreach — short, warm, direct. Claude drafts, Brock reviews and sends personally. After this, no response → tagged cold in Zoho → Stage 6 stagnant recovery.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-t14" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-t14')">Save note</button></div></div><div id="s2-cold" class="panel"><button class="close-btn" onclick="closePanel('s2-cold')">&#x2715;</button><h4>Tagged Cold in Zoho</h4><div class="owner-row"><span class="badge b-auto">Zoho</span><span class="badge b-ai">Claude</span></div><div class="panel-body">No response after T+14. Claude tags the lead as cold in Zoho. Enters Stage 6 stagnant client recovery. Periodic light-touch re-engagement managed there.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-cold" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-cold')">Save note</button></div></div><div id="s2-handoff" class="panel"><button class="close-btn" onclick="closePanel('s2-handoff')">&#x2715;</button><h4>→ Stage 3: Onboarding</h4><div class="owner-row"><span class="badge b-auto">Zoho trigger</span></div><div class="panel-body">Contract signed and retainer received. Zoho deal stage updates to Active Client automatically. Stage 3 onboarding sequence fires. Account manager is assigned.</div><div class="note-area"><label>Notes</label><textarea id="note-s2-handoff" placeholder="Add a note..."></textarea><button class="save-note" onclick="saveNote('s2-handoff')">Save note</button></div></div>
-</div>
-</div>
 <script>
-const STORAGE_KEY = 'pw_flowchart_notes_v1';
-
-function getNotes() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
-}
-
-function saveNote(id) {
-  const ta = document.getElementById('note-' + id);
-  if (!ta) return;
-  const notes = getNotes();
-  notes[id] = ta.value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-  const btn = ta.nextElementSibling;
-  btn.textContent = 'Saved ✓';
-  setTimeout(() => btn.textContent = 'Save note', 1400);
-  const node = document.getElementById('n-' + id);
-  if (node && ta.value.trim()) node.classList.add('has-note');
-  else if (node) node.classList.remove('has-note');
-}
-
-function loadNotes() {
-  const notes = getNotes();
-  Object.entries(notes).forEach(([id, val]) => {
-    const ta = document.getElementById('note-' + id);
-    if (ta && val) {
-      ta.value = val;
-      const node = document.getElementById('n-' + id);
-      if (node) node.classList.add('has-note');
+  const CARDS = {
+    entry: {
+      owner: "Stage 1 output",
+      title: "All Stage 1 Activity Leads Here",
+      body: `<p>Every channel in Stage 1 has one bottom-of-funnel goal: book this consultation call. Stage 2 assumes the call is already on the calendar.</p><p>The lead exists in Zoho. No Notion client brain page is created yet — that happens after the call is completed.</p>`
+    },
+    scheduled: {
+      owner: "Zoho · Google Calendar · Otter",
+      title: "Consultation Call Scheduled",
+      body: `<p>Call is booked in Google Calendar. A Google Meet link is sent to the prospect. Whether the call runs on Meet or flips to a direct phone call, it must be recorded in Otter.ai.</p><div class="label">Non-negotiable rule</div><p>The Otter recording is the trigger for all post-call automation. No recording = nothing fires.</p><div class="label">Calendar invite naming</div><p>The invite must always contain the lead name — e.g. "Jane Doe" or "Jane Doe — Larry's Construction" if the company is known. This is how Claude and Zoho connect the Otter transcript to the correct record.</p>`
+    },
+    brief: {
+      owner: "AI agent · Dashboard",
+      title: "AI Pre-Call Brief",
+      body: `<p>Before the call, Claude surfaces a brief in the dashboard drawn from whatever Stage 1 captured.</p><div class="label">What it may include</div><ul><li>How they found PW</li><li>Prior email threads</li><li>Company name and size</li><li>Project mentions</li><li>Prior compliance history</li></ul><p>Sometimes this is a full brief. Sometimes it's almost nothing. Use what exists — don't manufacture what isn't there.</p><div class="label">Hook</div><p>⚠ HOOK/CLAUDE: Zoho MCP lookup + Gmail scan — buildable today</p>`
+    },
+    call: {
+      owner: "Brock / team · Otter records",
+      title: "Consultation Call",
+      body: `<p>30–60 minutes. Assigned consultant leads. Otter records automatically.</p><div class="label">What to gather on the call</div><ul><li>Location</li><li>DIR number (if they have one)</li><li>Project duration</li><li>Sub or oversight client</li><li>Active employee count</li><li>Number of contractors (if oversight)</li><li>Decision maker</li><li>Who receives emails</li><li>Expected response window</li><li>Best time to follow up</li></ul><div class="label">What the human does</div><ul><li>Builds rapport</li><li>Listens for compliance gaps</li><li>Presents PW as the solution</li><li>Gathers all estimate inputs</li><li>Confirms follow-up window before hanging up</li></ul><p>The estimate is not presented on the call — it goes in the Day 0 follow-up package because the inputs are gathered live.</p>`
+    },
+    confirm: {
+      owner: "Human action · Dashboard trigger",
+      title: "Confirm Call Complete in Dashboard",
+      body: `<p>After the call ends, the assigned consultant marks it complete in the dashboard. This is the trigger for all post-call automation.</p><div class="label">What fires on confirmation</div><ul><li>Otter transcript extracted by Claude</li><li>Notion client brain page created (account name)</li><li>PDF estimate drafted</li><li>Day 0 follow-up package drafted and surfaced for approval</li><li>Zoho stage updated to Consultation Completed</li><li>Follow-up tasks created in Zoho</li></ul><p>Nothing in this list fires until the consultant confirms. This is an intentional gate — it ensures Otter has finished processing before Claude attempts to read the transcript.</p>`
+    },
+    standard: {
+      owner: "Brock / Anthy",
+      title: "Standard PW Contractor",
+      body: `<p>Most common client type. Contractor performing public works who needs full-service compliance.</p><div class="label">Services</div><ul><li>CPR production</li><li>DAS 140 / 142 forms</li><li>Prevailing wage rate calculation</li><li>ECPR upload to CA DIR</li><li>CAC training contribution invoices</li><li>Fringe benefit statements</li></ul><div class="label">Mid-project rescue applies if</div><ul><li>Behind on CPRs</li><li>Received a DIR notice</li><li>Restitution owed</li></ul>`
+    },
+    suboverview: {
+      owner: "Brock / Anthy",
+      title: "Sub Oversight Client",
+      body: `<p>Prime contractor who wants compliance monitoring over their subcontractors. Key risk: prime contractors are jointly liable for sub non-compliance penalties.</p><div class="label">Services</div><ul><li>Sub Oversight package — document collection, quality review, sub correspondence, compliance monitoring</li><li>Subcontractor Start Up Fee: $200/sub</li></ul><div class="label">Call notes</div><p>Call audience may include CEO, CFO, HR, and accountants. Larger organizations may require special handling — flag for Brock if so.</p>`
+    },
+    rescue: {
+      owner: "Brock / Anthy",
+      title: "Mid-Project Rescue",
+      body: `<p>A condition that applies to either client type — not a separate type. Treat as urgent when identified.</p><div class="label">Standard PW rescue signals</div><ul><li>Behind on CPRs</li><li>DIR notice received</li><li>Restitution owed</li></ul><div class="label">Sub Oversight rescue signals</div><ul><li>Subs non-compliant</li><li>Prime at risk of joint liability penalty</li><li>Audit risk present</li></ul><div class="label">Estimate impact</div><p>Restitution calculation added as a line item: $35/employee/week. Close timeline compressed — urgency is high.</p>`
+    },
+    notion: {
+      owner: "AI agent · Otter transcript trigger",
+      title: "Notion Client Brain Page Created",
+      body: `<p>Created immediately after the call is confirmed complete — not on lead creation, not on booked call.</p><div class="label">Naming convention</div><p>Always named after the account (the business), not the contact. Example: "Larry's Construction" not "Jane Doe." If the company name is unknown at call time, the placeholder is "Jane Doe — company TBD" and it updates automatically when confirmed.</p><div class="label">What it captures</div><ul><li>Otter transcript summary</li><li>All estimate inputs from the call</li><li>Primary contact and decision maker</li><li>Email recipients</li><li>Follow-up window preference</li></ul><p>All future emails and transcripts from any team member route to this page automatically. It is the single source of truth for this client relationship.</p>`
+    },
+    estimate: {
+      owner: "AI agent · Assigned consultant reviews",
+      title: "Build Compliance Estimate (PDF)",
+      body: `<p>Claude reads the Otter transcript, extracts all project inputs, and generates a full itemized PDF estimate.</p><div class="label">Inputs used</div><ul><li>Location</li><li>Project duration</li><li>Employee / contractor count</li><li>Client type (Standard PW or Sub Oversight)</li><li>Mid-project rescue flag if applicable</li></ul><div class="label">Output</div><p>Itemized PDF estimate. If mid-project rescue: restitution line items added at $35/employee/week.</p><p>Assigned consultant reviews before the package is sent. Not auto-sent.</p><div class="label">Hook</div><p>⚠ HOOK/COMPEX: estimate_generator — Megan's Claude estimator is the destination. Manual Claude process bridges until ready.</p>`
+    },
+    package: {
+      owner: "Assigned consultant approves · same day",
+      title: "Review & Send Full Package — Day 0",
+      body: `<p>Claude drafts the full package immediately after call is confirmed complete. It surfaces to the assigned consultant for review and approval. Goal: same-day send.</p><div class="label">Package contents</div><ul><li>Personalized cover email (drafted by Claude, contextual to the call)</li><li>PDF estimate</li><li>Contract</li><li>PW overview document</li></ul><div class="label">Approval rule</div><p>Nothing in the package sends without the assigned consultant's explicit approval. They can adjust tone or content before approving.</p>`
+    },
+    sequence: {
+      owner: "AI agent · Assigned consultant approves each",
+      title: "Follow-Up Sequence",
+      body: `<p>Each follow-up email is contextual to this specific prospect — not templated. Claude draws from the Otter transcript and all accumulated Notion context (emails, conversations, notes) when drafting each one.</p><div class="label">Cadence</div><ul><li><strong>Day 0:</strong> Full package sent</li><li><strong>Day 3:</strong> First follow-up surfaced for approval</li><li><strong>Day 8:</strong> Second follow-up surfaced for approval</li><li><strong>Day 13:</strong> Third follow-up surfaced for approval</li><li><strong>Day 27:</strong> Final touch — low pressure, genuine</li></ul><div class="label">Reset rule</div><p>Any response from the prospect resets the sequence to Day 0. Assigned consultant answers the question. Claude drafts a new Day 0 drawing from all context. The reset sequence runs the same cadence and always drives toward contract signature.</p><div class="label">Stop rule</div><p>Sequence stops permanently when the executed contract is confirmed sent by Brock.</p><div class="label">No response rule</div><p>No response after Day 27 → prospect moves to Stage 5 resurrection queue.</p>`
+    },
+    contractreturned: {
+      owner: "Client action",
+      title: "Prospect Returns Signed Contract",
+      body: `<p>When the prospect returns a signed contract, the dashboard alerts Brock directly. At the same moment, Claude drafts the Stage 3 welcome email and surfaces it for Brock to review alongside the execution task.</p><p>Brock is currently the sole contract executor — this task always routes to Brock regardless of which consultant owns the client.</p>`
+    },
+    execute: {
+      owner: "Brock — sole executor",
+      title: "Brock Counter-Signs & Returns Executed Contract",
+      body: `<p>Brock receives the alert, counter-signs the contract, reviews the Claude-drafted Stage 3 welcome email, and confirms both sent in the dashboard.</p><div class="label">What this single confirmation triggers</div><ul><li>Stage 2 closes in Zoho</li><li>Zoho deal stage updates to Active Client</li><li>Stage 3 onboarding sequence fires automatically</li><li>Account manager assigned</li><li>Notion client brain page updated with contract signed date</li></ul><p>This is the Stage 2 exit event and the Stage 3 entry trigger. One action, multiple consequences — all automatic.</p>`
     }
-  });
-}
+  };
 
-function showPanel(id, triggerEl) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
-  const panel = document.getElementById(id);
-  if (!panel) return;
-  const wrap = document.getElementById('fcwrap');
-  const wrapRect = wrap.getBoundingClientRect();
-  const trigRect = triggerEl.getBoundingClientRect();
-  let left = trigRect.left - wrapRect.left + trigRect.width / 2 - 140;
-  let top = trigRect.top - wrapRect.top + trigRect.height + 8;
-  left = Math.max(4, Math.min(left, wrapRect.width - 292));
-  panel.style.left = left + 'px';
-  panel.style.top = top + 'px';
-  panel.classList.add('open');
-}
-
-function closePanel(id) {
-  const p = document.getElementById(id);
-  if (p) p.classList.remove('open');
-}
-
-function searchNodes(q) {
-  document.querySelectorAll('.node-box').forEach(n => n.classList.remove('highlight-match'));
-  if (!q.trim()) return;
-  const lq = q.toLowerCase();
-  document.querySelectorAll('.node-box').forEach(n => {
-    const s = (n.getAttribute('data-search') || '') + ' ' + (n.textContent || '');
-    if (s.toLowerCase().includes(lq)) n.classList.add('highlight-match');
-  });
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.node-box') && !e.target.closest('.panel')) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
+  function openPanel(id) {
+    const card = CARDS[id];
+    if (!card) return;
+    document.getElementById('panel-owner').textContent = card.owner;
+    document.getElementById('panel-title').textContent = card.title;
+    document.getElementById('panel-body').innerHTML = card.body;
+    const saved = localStorage.getItem('note_' + id) || '';
+    document.getElementById('panel-notes-text').value = saved;
+    document.getElementById('panel-notes-text').dataset.id = id;
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('panel').classList.add('open');
   }
-});
 
-loadNotes();
-document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+  function closePanel() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('panel').classList.remove('open');
+  }
+
+  function saveNote() {
+    const ta = document.getElementById('panel-notes-text');
+    localStorage.setItem('note_' + ta.dataset.id, ta.value);
+    const btn = document.querySelector('.panel-notes button');
+    btn.textContent = 'Saved ✓';
+    setTimeout(() => btn.textContent = 'Save note', 1500);
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
 </script>
 </body>
 </html>
