@@ -153,79 +153,6 @@ CPR production, DAS forms, eCPR upload, CAC invoices, fringe statements. Never s
 
 ---
 
-## SOP System (added June 23, 2026)
-
-Every process in the lifecycle has a corresponding SOP. SOPs are the machine spec — they define what Claude does, what the human does, what technology is running, and what success looks like. The dashboard is built on top of these SOPs so that for every lead, prospect, and client, the system knows the next human action and what's waiting for approval.
-
-**SOP structure (7 fields):**
-1. Goal — one sentence, what this process accomplishes
-2. Pre-work — what exists before the process starts
-3. On the process — what to gather or accomplish
-4. Roles — Claude vs. human, explicitly separated
-5. Human actions in order — every approval, trigger, and decision point
-6. Follow-up sequence — if applicable, with reset rules
-7. Technology & automations — every tool running in the background
-8. What success looks like — short, concrete, measurable
-9. Watch for — the real failure modes, not an exhaustive list
-10. What happens next — 2-3 outcomes with triggers
-11. Notes — living field, editable by the assigned consultant in Notion
-
-**Who builds which SOPs:**
-- Stages 1, 2, 3, 5, 6 — Brock + Claude
-- Stage 4 touch points — Brock + Claude
-- Stage 4 compliance execution — provided by lead consultants (Megan, Anthy)
-
-**Where SOPs live in Notion:**
-📋 Prevailing Wisdom — SOPs: 3882e7f3-5b1f-8102-8903-e288a32e078c
-└── Stage 2 — Consultation Call SOP: 3882e7f3-5b1f-8151-875c-f59b3c9e8269
-
-**SOP connection to flowchart (future):**
-Each card on the lifecycle site will link to its SOP. Clicking a card opens the SOP as a slide-in panel — the SOP comes to the user, they don't leave the flowchart.
-
----
-
-## Zoho Lead → Account/Contact Architecture (locked June 23, 2026)
-
-This distinction drives all Notion naming, dashboard display, and routing logic.
-
-**Before conversion:** A Lead — always a person. Example: Jane Doe at Larry's Construction.
-
-**After conversion:** Two records created simultaneously:
-- **Account** — Larry's Construction (the business, parent record, owns all projects)
-- **Contact** — Jane Doe (the person, lives under the account)
-
-**The rule:** All projects in Zoho are assigned to the Account, not the Contact. One Account can have multiple Contacts.
-
----
-
-## Notion Client Brain — Naming Convention (locked June 23, 2026)
-
-**All Notion client brain pages are named after the Account (the business), never the Contact (the person).**
-
-- Page name: Larry's Construction
-- Primary contact recorded inside the page: Jane Doe
-- All emails from Jane Doe → routed to Larry's Construction page automatically
-- All Otter transcripts mentioning Jane Doe → routed to Larry's Construction page
-- Page is never renamed when a lead converts — it was always the account name
-
-**When company name is unknown at time of call:**
-Placeholder: "Jane Doe — company TBD" → updated automatically when company name is confirmed from the call or from Zoho conversion.
-
-**When the Notion page is created:**
-On completed call — not on booked call, not on lead creation. A booked call that doesn't happen does not create a client brain page.
-
----
-
-## Calendar & Otter Recording Rule (locked June 23, 2026)
-
-Every consultation call is scheduled via Google Calendar with a Google Meet link. Whether it runs on Meet or flips to a direct call, it must always be recorded in Otter.ai.
-
-**The Otter recording is the trigger for all post-call automation.** No Otter recording = no automation fires.
-
-**Calendar invite naming convention:** The invite must always contain the lead name (e.g. "Jane Doe" or "Jane Doe — Larry's Construction" if the company is known). This is how Claude and Zoho connect the Otter transcript to the correct record.
-
----
-
 ## File Structure
 
 ```
@@ -264,10 +191,6 @@ Sub-pages:
 - Stage 4 — Active Project Loop: 35e2e7f3-5b1f-81f1-9fee-f1e359a303ab
 - Stage 5 — Retention: 35e2e7f3-5b1f-8187-af04-c114cb6339fd
 - Stage 6 — Project Closeout: 35e2e7f3-5b1f-8121-b3b8-f18c8415b130
-
-**SOPs section (added June 23, 2026):**
-- 📋 Prevailing Wisdom — SOPs: 3882e7f3-5b1f-8102-8903-e288a32e078c
-  - Stage 2 — Consultation Call SOP: 3882e7f3-5b1f-8151-875c-f59b3c9e8269
 
 **Notion update rule:** Every time an HTML page is updated, the corresponding Notion sub-page must be updated in the same session. Never push an HTML change without updating Notion.
 
