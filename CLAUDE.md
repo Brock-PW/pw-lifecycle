@@ -248,23 +248,7 @@ pw-lifecycle/
 
 ## Notion Structure
 
-Main lifecycle page: notion.so/35e2e7f35b1f812d8e7cec432f027512
-
-Sub-pages:
-- Stage 1: 35e2e7f3-5b1f-8146-9208-cb4c1865995b
-- Stage 2: 35e2e7f3-5b1f-81a8-b680-caf9216c7e13
-- Stage 3: 35e2e7f3-5b1f-81cb-83fc-cd6a411e957b
-- Stage 4: 35e2e7f3-5b1f-81f1-9fee-f1e359a303ab
-- Stage 5: 35e2e7f3-5b1f-8187-af04-c114cb6339fd
-- Stage 6: 35e2e7f3-5b1f-8121-b3b8-f18c8415b130
-- PW Technology Architecture: 3722e7f3-5b1f-81b0-89a3-e20843163a47
-- Wizard of PW Knowledge Base: 3722e7f3-5b1f-8100-bbf5-e9ab55035a39
-- Active Clients: 3742e7f3-5b1f-8130-aa09-f8616efb29f5
-- Key Integration Components: 3742e7f3-5b1f-81e0-acb5-f10de32cca8a
-- Standard Construction Client Brain: 3742e7f3-5b1f-8157-b403-d9161d1703cd
-
-**Notion update rule:** Every HTML change → update corresponding Notion sub-page same session.
-**Notion confirmation rule:** End of every session → ✅ Notion updated: [page] — [what changed]
+See full Notion Structure section below (after Three-Way Sync Rule) for all page IDs, SOPs section, and update rules.
 
 ---
 
@@ -349,7 +333,7 @@ Leverage first because it compounds. DIR data second because it seeds everything
 
 Every process in the lifecycle has a corresponding SOP. SOPs define what Claude does, what the human does, what technology is running, and what success looks like. The dashboard is built on top of these SOPs so that for every lead, prospect, and client, the system knows the next human action and what's waiting for approval.
 
-**SOP structure (10 fields):**
+**SOP structure (11 fields):**
 1. Goal — one sentence, what this process accomplishes
 2. Pre-work — what exists before the process starts
 3. On the process — what to gather or accomplish
@@ -360,6 +344,7 @@ Every process in the lifecycle has a corresponding SOP. SOPs define what Claude 
 8. What success looks like — short, concrete, measurable
 9. Watch for — the real failure modes, not an exhaustive list
 10. What happens next — 2-3 outcomes with triggers
+11. Notes — living field, editable by the assigned consultant in Notion after real-world use
 
 **Where SOPs live in Notion:**
 📋 Prevailing Wisdom — SOPs: 3882e7f3-5b1f-8102-8903-e288a32e078c
@@ -396,6 +381,7 @@ One Account can have multiple Contacts.
 - Primary contact recorded inside the page: Jane Doe
 - All emails from Jane Doe → routed to Larry's Construction page automatically
 - All Otter transcripts mentioning Jane Doe → routed to Larry's Construction page
+- Page is never renamed when a lead converts — it was always the account name
 
 **When company name is unknown at time of call:**
 Placeholder: "Jane Doe — company TBD" → updated automatically when company confirmed.
@@ -434,16 +420,46 @@ Priority order:
 
 ---
 
-## Three-Way Sync Rule
+## Three-Way Sync Rule (locked June 23, 2026)
 
 **CLAUDE.md, the relevant HTML pages, and Notion must always be in sync. No exceptions.**
 
-If any one of the three is updated, the other two must be updated in the same session.
+If any one of the three is updated, the other two must be updated in the same session before closing. Nothing is independent. Nothing is fragmented. At the end of every session, all three reflect the same decisions.
 
 End-of-session checklist:
 1. ✅ CLAUDE.md updated with all decisions made this session
 2. ✅ Relevant HTML pages updated to reflect CLAUDE.md changes
 3. ✅ Notion updated with a one-line confirmation summary
+
+If a session ends without all three checked, the system is out of sync. Call it out and fix it before moving on.
+
+**Notion confirmation rule:** At the end of every session, confirm Notion was updated with a one-line summary:
+✅ Notion updated: [sub-page name] — [what changed]
+
+---
+
+## Notion Structure
+
+Main lifecycle page: notion.so/35e2e7f35b1f812d8e7cec432f027512
+
+Sub-pages:
+- Stage 1 — Lead Generation: 35e2e7f3-5b1f-8146-9208-cb4c1865995b
+- Stage 2 — Consultation & Close: 35e2e7f3-5b1f-81a8-b680-caf9216c7e13
+- Stage 3 — Onboarding: 35e2e7f3-5b1f-81cb-83fc-cd6a411e957b
+- Stage 4 — Active Project Loop: 35e2e7f3-5b1f-81f1-9fee-f1e359a303ab
+- Stage 5 — Retention: 35e2e7f3-5b1f-8187-af04-c114cb6339fd
+- Stage 6 — Project Closeout: 35e2e7f3-5b1f-8121-b3b8-f18c8415b130
+- PW Technology Architecture: 3722e7f3-5b1f-81b0-89a3-e20843163a47
+- Wizard of PW Knowledge Base: 3722e7f3-5b1f-8100-bbf5-e9ab55035a39
+- Active Clients: 3742e7f3-5b1f-8130-aa09-f8616efb29f5
+- Key Integration Components: 3742e7f3-5b1f-81e0-acb5-f10de32cca8a
+- Standard Construction Client Brain: 3742e7f3-5b1f-8157-b403-d9161d1703cd
+
+**SOPs section (added June 23, 2026):**
+- 📋 Prevailing Wisdom — SOPs: 3882e7f3-5b1f-8102-8903-e288a32e078c
+  - Stage 2 — Consultation Call SOP: 3882e7f3-5b1f-8151-875c-f59b3c9e8269
+
+**Notion update rule:** Every time an HTML page is updated, the corresponding Notion sub-page must be updated in the same session. Never push an HTML change without updating Notion.
 
 ---
 
